@@ -3,6 +3,8 @@ package dependencyInjection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import pageObjects.BasePage;
+import pageObjects.LoginPage;
 import utilities.ConfigReader;
 import utilities.ExcelReader;
 import utilities.Helper;
@@ -15,6 +17,8 @@ public class TestContext {
 	private ExcelReader excelReader = new ExcelReader();
 	private ConfigReader configReader;
 	private Helper helper;
+	private BasePage basePage;
+	private LoginPage loginPage;
 	
 	public DriverManager getDriverManager() {
 		return driverManager==null ? driverManager=new DriverManager() : driverManager;
@@ -34,5 +38,13 @@ public class TestContext {
 	
 	public Helper getHelper() {
 		return helper==null ? helper=new Helper(DriverManager.getDriver()) : helper;
+		
 	}
+	public BasePage getBasePage() {
+		return basePage==null ? basePage=new BasePage(DriverManager.getDriver()) : basePage;
+	}
+	public LoginPage getLoginPage() {
+		return loginPage==null ? loginPage=new LoginPage(DriverManager.getDriver()) : loginPage;
+	}
+	
 }
