@@ -1,5 +1,6 @@
 target/
 test-output/
+allure-results/
 
 # Compiled class file
 *.class
