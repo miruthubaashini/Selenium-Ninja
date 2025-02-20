@@ -1,4 +1,0 @@
-@class
-Feature: Class feature
-  
-
