@@ -2,6 +2,7 @@ package pageObjects;
 
 import java.util.List;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -19,6 +20,7 @@ public class ProgramPart1Page {
 	}
 	
 	@FindBy (xpath="//span[normalize-space()='Logout']") WebElement logout;
+	@FindBy (xpath = "//span[normalize-space()='Program']")WebElement clickOnProgram;
 	@FindBy (xpath ="//span[normalize-space()='LMS - Learning Management System']") WebElement LMStext;
 	@FindBy (xpath ="//thead[@class='p-datatable-thead']//tr//th") List<WebElement> pageHeading;
 	@FindBy (xpath ="//div[normalize-space()='Manage Program']")WebElement ManageProgramText;
@@ -26,7 +28,7 @@ public class ProgramPart1Page {
 	@FindBy (xpath ="//button[normalize-space()='Add New Program']")WebElement addNewProgram;
 	@FindBy (xpath = "//button[@class='p-button-danger p-button p-component p-button-icon-only']")WebElement deleteIcon;
 	@FindBy (xpath = "//span[@class='p-input-icon-left']")WebElement searchBoxText;
-	
+	@FindBy (xpath = "//div[@class='p-checkbox-box']")WebElement checkBox;
 	
 	
 	
@@ -43,6 +45,12 @@ public class ProgramPart1Page {
             return false;
         }
 	}
+	
+	public void clickOnProgram() {
+		
+		clickOnProgram.click();
+	}
+	
 	
 	public String LMSText() {
 		
@@ -81,7 +89,9 @@ public class ProgramPart1Page {
 	
 	public String searchBoxText() {
 		
-		return searchBoxText.getAttribute("placeholder");
+		 JavascriptExecutor js = (JavascriptExecutor) driver;
+	        // JavaScript to get the placeholder attribute directly
+	       return (String) js.executeScript("return arguments[0].getAttribute('placeholder')");
 	}
 	
 }

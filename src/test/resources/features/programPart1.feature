@@ -20,16 +20,12 @@ Feature: Validating LMS Program module
     Then Admin should be able to see LMS - Learning Management System
 
   @pageNames
-  Scenario: Verify all Mnages page haeading names in Menu bar
+  Scenario: Verify Manages pages all heading names in Menu bar
     Then Admin should see the page names in order Home,Program,Batch,Class,Edit/delete on Mange program page
 
   @manageProgHeading
   Scenario: Verify Manage Program Heading
     Then Admin should be able to see Manage Program heading
-
-  @pageHeadings
-  Scenario: Verify headings on Manage Page
-    Then Admin should able to see Program name, description, and status for each program
 
   @addProgramOption
   Scenario: Verify Add New Program after clicking on Program in menu bar

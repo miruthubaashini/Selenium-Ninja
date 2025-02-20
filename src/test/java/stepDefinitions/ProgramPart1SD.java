@@ -36,6 +36,7 @@ public class ProgramPart1SD {
 	@When("Admin click Program in bar menu")
 	public void admin_click_program_in_bar_menu() {
 	    
+		testContext.getProgramPart1Page().clickOnProgram();
 	    
 	}
 
@@ -79,14 +80,7 @@ public class ProgramPart1SD {
 	public void admin_should_be_able_to_see_manage_program_heading() {
 	    
 		String manageProgramText = testContext.getProgramPart1Page().manageProgram();
-		Assert.assertEquals(manageProgramText, prop.getProperty("managePgrm")); 
-	    
-	}
-
-	@Then("Admin should able to see Program name, description, and status for each program")
-	public void admin_should_able_to_see_program_name_description_and_status_for_each_program() {
-	    
-	    
+		Assert.assertEquals(manageProgramText, prop.getProperty("managePgrm"));    
 	}
 
 	@When("Admin clicks on Program option in menu bar")
@@ -114,7 +108,11 @@ public class ProgramPart1SD {
 
 	@Then("Admin should see Search bar with text as Search in Program page")
 	public void admin_should_see_search_bar_with_text_as_search_in_program_page() {
-	    
+	 
+		String searchText = testContext.getProgramPart1Page().searchBoxText();
+		Assert.assertEquals(searchText, prop.getProperty("searchText"),"Search...");
+
+		
 	}
 
 	@Then("Admin should see checkbox default state as unchecked beside Program Name on Manage Program")
