@@ -150,7 +150,7 @@
  Scenario: Validate Edit icon feature in any row
 	Given Admin is on the Batch page	
   When 	Admin clicks the edit icon on batch page	
-	Then Admin should see the Batch details pop up window
+	Then Admin should see the Batch Details pop up window
 
 @batch_edit_icon_validation_2
  Scenario: Validate Edit icon feature in any row
@@ -209,54 +209,54 @@
     
     @batch_delete_5 
     Scenario: Validate single row delete with checkbox
-    Given Admin is on the batch page
+    Given Admin is on the Batch page
     When Admin clicks on the delete icon under the Manage batch header
     Then The respective row in the table should be deleted on batch page
     
     @batch_delete_6
     Scenario: Validate multiple row delete with checkbox
-    Given Admin is on the batch page
+    Given Admin is on the Batch page
     When Admin clicks on the delete icon under the Manage batch header	
     Then The respective row in the table should be deleted on batch page
 
 
   @batch_pagination
    @batch_pagination_1
-    Scenario: Validate next page link	
-     Given Admin is on the batch page
-     When	 Admin clicks next page link on the data table on batch page	
-     Then Admin should see the Next enabled link on batch page
+    Scenario: Validate next page link
+    Given Admin is on the Batch page
+    When Admin clicks next page link on the data table on batch page	
+    Then Admin should see the Next enabled link on batch page
   
   
    @batch_pagination_2  
     Scenario: validate last page link	
-     Given Admin is on the batch page
+     Given Admin is on the Batch page
 	   When Admin clicks last page link on the data table	on batch page
      Then Admin should see the last page link with next page link disabled on the table on batch page
 
 
     @batch_pagination_3
       Scenario: validate the previous page link
-       Given 	Admin is on the batch page	
+       Given 	Admin is on the Batch page	
        When 	Admin clicks previous page link on the data table	on batch page
        Then 	Admin should see the previous page on the table on batch page
 
 
      @batch_pagination_4
        Scenario: validate the first page link
-	      Given Admin is on the batch page
+	      Given Admin is on the Batch page
 		     When Admin clicks first page link on the data table on batch page
 		     Then Admin should see the very first page on the data table on batch page
 
      @batch_Search
        Scenario: validate search box functionality
-         Given Admin is on the batch page
+         Given Admin is on the Batch page
 		     When Admin enters the batch name in the search text box	
 	       Then Admin should see the filtered batches in the data table
 	  
       @batch_Logout
        Scenario: Validate logout option in the header is visible and enabled from the batch page
-         Given Admin is on the batch page
+         Given Admin is on the Batch page
 		     When Admin clicks on the logout button	on batch page
 	       Then Admin should see the Login screen Page
 	  
