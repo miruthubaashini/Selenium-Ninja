@@ -1,8 +1,12 @@
 package stepDefinitions;
 
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import dependencyInjection.TestContext;
 import io.cucumber.datatable.DataTable;
@@ -11,7 +15,7 @@ import io.cucumber.java.en.*;
 public class ClassPageSD {
 
 	TestContext testContext;
-	//private SoftAssert softAssert = new SoftAssert();
+	private SoftAssert softAssert = new SoftAssert();
 
 	public ClassPageSD (TestContext testContext) {
 		this.testContext = testContext;
@@ -45,43 +49,48 @@ public class ClassPageSD {
 
 	@Then("Admin sees the Search bar on Manage Class page")
 	public void admin_sees_the_search_bar_on_manage_class_page() {
-	    
-	    
+		Assert.assertTrue(testContext.getClassPage().classSearchBox().isDisplayed());	    
 	}
 
-	@Then("Admin sees the following data table headings:")
+	@Then("Admin sees the following data table headings on the Manage Class page:")
 	public void admin_sees_the_following_data_table_headings(DataTable dataTable) {
-	    
-	    
+		List<String> columnHeaders = dataTable.asList(String.class);		
+		List<String> actualColumnHeaders = testContext.getClassPage().getDatatableHeaders();
+		
+		Assert.assertEquals(actualColumnHeaders, columnHeaders);	    
 	}
 
-	@Then("Admin sees the text {string} and pagination controls below the data table")
-	public void admin_sees_the_text_and_pagination_controls_below_the_data_table(String string) {
-	    
-	    
+	@Then("Admin sees the text {string} below the data table on Manage Class page")
+	public void admin_sees_the_text_below_the_data_table(String paginationText) {
+		Assert.assertTrue(testContext.getClassPage().checkPaginationTextMatches(paginationText));        
+	}
+	
+	@Then("admin sees the pagination controls below the data table on Manage Class page")
+	public void admin_sees_the_pagination_controls_below_the_data_table() {
+		softAssert.assertTrue(testContext.getClassPage().isPaginationFirstButtonVisible());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationPreviousButtonVisible());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonVisible());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationLastButtonVisible());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationPagesButtonAvailable());
+
 	}
 
-	@Then("Admin sees the sort icon for the following data table headings:")
+	@Then("Admin sees the sort icon for the following data table headings on the Manage Class page:")
 	public void admin_sees_the_sort_icon_for_the_following_data_table_headings(DataTable dataTable) {
-	    
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
-	    
+		List<String> columnHeaders = dataTable.asList(String.class);
+		for (String columnHeader: columnHeaders) {
+			softAssert.assertTrue(testContext.getClassPage().checkSortIcon(columnHeader).isDisplayed());
+		}
 	}
 
 	@Then("Admin sees the Delete button on Manage Class page")
 	public void admin_sees_the_delete_button_on_manage_class_page() {
-	    
-	    
+		Assert.assertTrue(testContext.getClassPage().isDeleteButtonVisible());	    
 	}
 
 	@Then("Admin sees the {string} on Manage Class page")
-	public void admin_sees_the_on_manage_class_page(String string) {
-	    
+	public void admin_sees_the_on_manage_class_page(String footerText) {
+		Assert.assertTrue(testContext.getClassPage().checkFooterTextMatches(footerText));
 	    
 	}
 
