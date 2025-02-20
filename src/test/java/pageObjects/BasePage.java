@@ -2,11 +2,14 @@ package pageObjects;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BasePage {
@@ -33,34 +36,7 @@ public class BasePage {
 			return true;
 		} 
 		return false;
-	}
-	
-	
-	//Should go in LoginPage.java
-	@FindBy (id= "username") WebElement usernameField;
-	@FindBy (id= "password") WebElement passwordField;
-	@FindBy (id= "mat-select-value-1") WebElement roleField;
-	@FindBy (className= "mat-option-text") List<WebElement> roleDropdown;
-	@FindBy (id= "login") WebElement loginButton;
-	
-	public void enterUsername(String userName) {
-		usernameField.sendKeys(userName);
-	}
-	
-	public void enterPassword(String password) {
-		passwordField.sendKeys(password);
-	}
-	
-	public void clickRoleDD() {
-		roleField.click();
-	}
-	
-	public void selectUserRole(String role) {
-		roleDropdown.stream().filter(r->r.getText().equals(role)).forEach(e->e.click());
-	}
-	
-	public void clickLoginbtn() {
-		loginButton.click();
-	}
-	
+	}	
+
+
 }
