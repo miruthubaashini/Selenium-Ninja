@@ -36,6 +36,8 @@ public class ClassPage extends BasePage {
 	private WebElement paginatorNextButton;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]/span")
 	private WebElement paginatorLastButton;
+	@FindBy(xpath = "//button[contains(@class,'p-paginator-page')]")
+	private List<WebElement> paginatorPages;	
 	@FindBy(xpath = "//div[contains(@class,'p-datatable-footer')]/div")
 	private WebElement datatableFooterText;
 
@@ -101,6 +103,13 @@ public class ClassPage extends BasePage {
 	public boolean isPaginationLastButtonVisible() {
 		return paginatorLastButton.isDisplayed();
 	}
+	
+	public boolean isPaginationPagesButtonAvailable() {
+		if (paginatorPages.size()>=1) {
+			return true;
+		}
+		return false;
+	}	
 
 	public boolean checkFooterTextMatches(String text) {
 		String footerText = datatableFooterText.getText();

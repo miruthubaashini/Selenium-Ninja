@@ -71,6 +71,7 @@ public class ClassPageSD {
 		softAssert.assertTrue(testContext.getClassPage().isPaginationPreviousButtonVisible());
 		softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonVisible());
 		softAssert.assertTrue(testContext.getClassPage().isPaginationLastButtonVisible());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationPagesButtonAvailable());
 
 	}
 
