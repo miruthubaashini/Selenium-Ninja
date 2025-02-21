@@ -78,7 +78,7 @@ Feature: Class feature
       | Notes         |
       | Recording     |   
   
-  @wipLater     
+       
   Scenario Outline: Validate add new class with valid data in only mandatory fields
   	Given Admin is on the Class Details Popup window
     When Admin enters mandatory fields in the Class Details form from "<sheetName>" and <rowNum>
@@ -92,58 +92,59 @@ Feature: Class feature
       | ClassData |     3 | 
       | ClassData |     4 | 
       | ClassData |     5 | 
-  @wip  
+ 
   Scenario: Validate updation of No of Classes on selecting class dates
   	Given Admin is on the Class Details Popup window
     When Admin selects class dates in date picker 
-    Then Admin sees the No of Classes value is added automatically      
-  @wip  
+    	| 03/28/2025 |
+
+    Then Admin sees the No of Classes value is added automatically  
+        
+  @toCheck  
   Scenario: Validate weekend dates are disabled in Class Dates calendar
   	Given Admin is on the Class Details Popup window
     When Admin clicks date picker 
     Then Admin sees weekends dates are disabled in the calender
   
-  @wip  
+    
   Scenario Outline: Validate add new class with valid data in only optional fields
   	Given Admin is on the Class Details Popup window
     When Admin enters only optional fields in the Class Details form from "<sheetName>" and <rowNum>
+    And  admin clicks on Save button
     Then Admin sees error messages below each mandatory fields    
     
   Examples: 
       | sheetName | rowNum | 
       | ClassData |     6 |
-      | ClassData |     7 |   
-      | ClassData |     8 | 
-      | ClassData |     9 | 
-      | ClassData |     10 |    
+         
  
  	#for invalid data scenario create test scripts to enter the values rather than selecting from dropdown or date picker
- 	@wip
+ 	
   Scenario Outline: Validate add new class with invalid data
   	Given Admin is on the Class Details Popup window
     When Admin enters invalid data in all the fields in the Class Details form from "<sheetName>" and <rowNum>
-    Then Admin sees error messages below each mandatory fields    
+    And  admin clicks on Save button
+    Then Admin sees error messages below each fields    
     
   Examples: 
       | sheetName | rowNum | 
-      | ClassData |     11 |
-      | ClassData |     12 |   
-      | ClassData |     13 | 
-      | ClassData |     14 | 
-      | ClassData |     15 | 
-      | ClassData |     16 |
-      | ClassData |     17 |
-  @wip    
+      | ClassData |     7 |
+      | ClassData |     8 |   
+      | ClassData |     9 | 
+      | ClassData |     10 | 
+
+     
   Scenario: Validate Cancel button on Class Details form
   	Given Admin is on the Class Details Popup window
     When Admin clicks Cancel button on Class Details form
     Then Admin sees the Class Details popup window getting closed      
-   @wip   
+     
   Scenario: Validate Close(X) button on Class Details form
   	Given Admin is on the Class Details Popup window
     When Admin clicks Close(X) button on Class Details form
-    Then Admin sees the Class Details popup window getting closed        
-   @wip   
+    Then Admin sees the Class Details popup window getting closed  
+          
+   @toCheck   
   Scenario: Validate Save button on Class Details form
   	Given Admin is on the Class Details Popup window
   	When Admin enters the values for input fields on Class Details form

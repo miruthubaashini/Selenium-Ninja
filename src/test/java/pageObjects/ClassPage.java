@@ -19,7 +19,7 @@ public class ClassPage extends BasePage {
 		super(driver);
 	}
 
-	@FindBy (xpath= "//span[text()='Class']") 
+	@FindBy(xpath = "//span[text()='Class']")
 	private WebElement classLink;
 	@FindBy(xpath = "//mat-card-title/div[1]")
 	private WebElement classHeader;
@@ -94,6 +94,20 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//table[contains(@class,'p-datepicker-calendar')]//td[not(contains(@class, 'p-datepicker-other-month'))]")
 	private List<WebElement> calenderDateList;
 
+	// Mandatory field error message
+	@FindBy(xpath = "//label[text()='Batch Name']/following-sibling::small")
+	private WebElement batchNameFieldErrorMessage;
+	@FindBy(xpath = "//label[text()='Class Topic ']/following-sibling::small")
+	private WebElement classTopicFieldErrorMessage;
+	@FindBy(xpath = "//label[text()=' Select Class Dates ']/following-sibling::small")
+	private WebElement classDatesFieldErrorMessage;
+	@FindBy(xpath = "//label[text()='No of Classes']/following-sibling::small")
+	private WebElement noOfClassesFieldErrorMessage;
+	@FindBy(xpath = "//label[text()='Staff Name']/following-sibling::small")
+	private WebElement staffNameFieldErrorMessage;
+	@FindBy(xpath = "//div[contains(@class,'radio')]/following-sibling::small")
+	private WebElement statusFieldErrorMessage;
+
 	public boolean getClassHeader(String header) {
 		if (classHeader.getText().equals(header)) {
 			return true;
@@ -130,12 +144,18 @@ public class ClassPage extends BasePage {
 	}
 
 	public void clickAddNewClassButton() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (addNewClassButton.isDisplayed()) {
 			addNewClassButton.click();
 		} else {
 			classLink.click();
 			addNewClassButton.click();
-		}		
+		}
 	}
 	// ------------------------------------------------------
 
@@ -205,8 +225,8 @@ public class ClassPage extends BasePage {
 			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
 		// Select Batch Name from dropdown
 		wait.until(ExpectedConditions.elementToBeClickable(batchNameDropdownIcon)).click();
-	
-		for (WebElement batchNameItem: batchNameDropdownItems) {
+
+		for (WebElement batchNameItem : batchNameDropdownItems) {
 			if (batchNameItem.getText().equals(batchName)) {
 				batchNameItem.click();
 				break;
@@ -214,38 +234,44 @@ public class ClassPage extends BasePage {
 		}
 
 		// Enter class topic
-		classTopicInput.sendKeys(classTopic);
+		if (classTopic != null) {
+			classTopicInput.sendKeys(classTopic);
+		}
 
 		// Enter class description
-		classDescriptionInput.sendKeys(classDescription);
+		if (classDescription != null) {
+			classDescriptionInput.sendKeys(classDescription);
+		}
 
 		// Select class dates
-		datePicker(classDate);
+		System.out.println("======================== > " + classDate);
+		if (classDate != null && !classDate.isEmpty()) {
+			// Open date picker
+			calenderIcon.click();
+			datePicker(classDate);
 
-		js.executeScript("document.body.click();");
-
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// to close the date picker popup
+			js.executeScript("document.body.click();");
 		}
-		
+
 		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		
+
 		// Select staff name from dropdown
-		staffNameDropdownIcon.click();
-		for (WebElement staffNameItem: staffNameDropdownItems) {
-			if (staffNameItem.getText().equals(staffName)) {
-				staffNameItem.click();
-				break;
+		if (staffName != null) {
+			staffNameDropdownIcon.click();
+			for (WebElement staffNameItem : staffNameDropdownItems) {
+				if (staffNameItem.getText().equals(staffName)) {
+					staffNameItem.click();
+					break;
+				}
 			}
 		}
 
 		// Select status radio button
-		statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
-				.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
-
+		if (status != null) {
+			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
+					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
+		}
 		// Enter class comments
 		classCommentsInput.sendKeys(classComments);
 
@@ -253,63 +279,157 @@ public class ClassPage extends BasePage {
 		classNotesInput.sendKeys(classNotes);
 
 		// Enter class recordings
-		classRecordingsInput.sendKeys(classRecordingPath); 
+		classRecordingsInput.sendKeys(classRecordingPath);
 	}
-	
-	//To check if input field text box is present
-	public boolean isInputFieldPresent(String inputField) {		
-		switch(inputField.trim()) {
-		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("..")).isDisplayed(); 
-		case "Class Topic": return classTopicInput.isDisplayed();  
-		case "Class Description": return classDescriptionInput.isDisplayed();  
-		case "Select Class Dates": return calenderIcon.findElement(By.xpath("..")).isDisplayed(); 
-		case "No of Classes": return classNoInput.isDisplayed(); 
-		case "Staff Name": return staffNameDropdownIcon.findElement(By.xpath("..")).isDisplayed(); 
+
+	// To check if input field text box is present
+	public boolean isInputFieldPresent(String inputField) {
+		switch (inputField.trim()) {
+		case "Batch Name":
+			return batchNameDropdownIcon.findElement(By.xpath("..")).isDisplayed();
+		case "Class Topic":
+			return classTopicInput.isDisplayed();
+		case "Class Description":
+			return classDescriptionInput.isDisplayed();
+		case "Select Class Dates":
+			return calenderIcon.findElement(By.xpath("..")).isDisplayed();
+		case "No of Classes":
+			return classNoInput.isDisplayed();
+		case "Staff Name":
+			return staffNameDropdownIcon.findElement(By.xpath("..")).isDisplayed();
 		case "Status": {
-			for (WebElement status:statusRadioButtons) {
+			for (WebElement status : statusRadioButtons) {
 				if (status.isDisplayed()) {
 					return true;
-				}				
-			} return false;
+				}
+			}
+			return false;
 		}
-			
-		case "Comments": return classCommentsInput.isDisplayed(); 
-		case "Notes": return classNotesInput.isDisplayed(); 
-		case "Recording": return classRecordingsInput.isDisplayed();
-		default: return false;
+
+		case "Comments":
+			return classCommentsInput.isDisplayed();
+		case "Notes":
+			return classNotesInput.isDisplayed();
+		case "Recording":
+			return classRecordingsInput.isDisplayed();
+		default:
+			return false;
 		}
 	}
 
-	//To check if input field label is present
-	public boolean isInputFieldLabelPresent(String inputField) {		
-		switch(inputField.trim()) {
-		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label")).isDisplayed(); 
-		case "Class Topic": return classTopicInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();  
-		case "Class Description": return classDescriptionInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();  
-		case "Select Class Dates": return calenderIcon.findElement(By.xpath("ancestor::p-calendar/preceding-sibling::label")).isDisplayed(); 
-		case "No of Classes": return classNoInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed(); 
-		case "Staff Name": return staffNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label")).isDisplayed(); 
-		case "Status": return statusRadioButtons.get(0).findElement(By.xpath("preceding-sibling::div/lable")).isDisplayed();					
-		case "Comments": return classCommentsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed(); 
-		case "Notes": return classNotesInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed(); 
-		case "Recording": return classRecordingsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
-		default: return false;
+	// To check if input field label is present
+	public boolean isInputFieldLabelPresent(String inputField) {
+		switch (inputField.trim()) {
+		case "Batch Name":
+			return batchNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label"))
+					.isDisplayed();
+		case "Class Topic":
+			return classTopicInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Class Description":
+			return classDescriptionInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Select Class Dates":
+			return calenderIcon.findElement(By.xpath("ancestor::p-calendar/preceding-sibling::label")).isDisplayed();
+		case "No of Classes":
+			return classNoInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Staff Name":
+			return staffNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label"))
+					.isDisplayed();
+		case "Status":
+			return statusRadioButtons.get(0).findElement(By.xpath("preceding-sibling::div/lable")).isDisplayed();
+		case "Comments":
+			return classCommentsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Notes":
+			return classNotesInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Recording":
+			return classRecordingsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		default:
+			return false;
 		}
 	}
-	
+
 	public void clickSaveButton() {
 		saveButton.click();
+	}
+
+	public void clickCancelButton() {
+		cancelButton.click();
+	}
+
+	public void clickCloseIcon() {
+		closeIcon.click();
 	}
 
 	public String getSuccessToastMessage() {
 		return successToastMessage.getText();
 	}
-	
-	
-	
-	
+
+	// To select Class Dates from date picker
+	public void selectClassDates(String classDate) {
+		wait.until(ExpectedConditions.elementToBeClickable(calenderIcon)).click();
+
+		datePicker(classDate);
+	}
+
+	// To check if No of Classes field is auto-populated after dates selection
+	public boolean isNoOfClassesPopulated() {
+		if (classNoInput.getDomAttribute("class").contains("p-filled")) {
+			return true;
+		}
+		return false;
+	}
+
+	// Mandatory fields error message
+	public boolean isBatchNameFieldErrorMessageDisplayed() {
+		if (batchNameFieldErrorMessage.getText().equals("Batch Name is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isClassTopicFieldErrorMessageDisplayed() {
+		if (classTopicFieldErrorMessage.getText().equals("Class Topic is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isClassDatesFieldErrorMessageDisplayed() {
+		if (classDatesFieldErrorMessage.getText().equals("Class Date is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isNoOfClassesFieldErrorMessageDisplayed() {
+		if (noOfClassesFieldErrorMessage.getText().equals("No. of Classes is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isStaffNameFieldErrorMessageDisplayed() {
+		if (staffNameFieldErrorMessage.getText().equals("Staff Name is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isStatusFieldErrorMessageDisplayed() {
+		if (statusFieldErrorMessage.getText().equals("Status is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	// To check Class Details Form is closed upon clicking Close/Cancel button
+	public boolean isClassDetailsDialogClosed() {
+		wait.until(ExpectedConditions.invisibilityOf(classDetailsPupup));
+		return true;
+	}
+
+	// Date picker logic to select date from calender
 	public void datePicker(String classDate) {
-		System.out.println("====================================== "+classDate);
+		System.out.println("====================================== " + classDate);
 		String[] classdate = classDate.split("/");
 		String month = classdate[0];
 		String date = classdate[1];
@@ -358,9 +478,6 @@ public class ClassPage extends BasePage {
 			System.out.println("Enter a valid month");
 		}
 
-		// Open date picker
-		calenderIcon.click();
-
 		// Select month and year
 		while (true) {
 			if (calenderYear.getText().equals(year) && calenderMonth.getText().equals(monthName)) {
@@ -371,16 +488,15 @@ public class ClassPage extends BasePage {
 
 		// Select date from calender
 		if (calenderDateList.isEmpty()) {
-		    System.out.println("No calendar dates found.");
+			System.out.println("No calendar dates found.");
 		} else {
-		    for (WebElement calenderDate : calenderDateList) {
-		        if (calenderDate.getText().equals(date)) {
-		            calenderDate.click();
-		            break;
-		        }
-		    }
+			for (WebElement calenderDate : calenderDateList) {
+				if (calenderDate.getText().equals(date)) {
+					calenderDate.click();
+					break;
+				}
+			}
 		}
-		//calenderDateList.stream().filter(d -> d.getText().equals(date)).forEach(dt -> dt.click());
 	}
 
 }
