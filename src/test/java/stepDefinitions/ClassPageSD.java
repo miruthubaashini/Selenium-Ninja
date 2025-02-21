@@ -94,6 +94,132 @@ public class ClassPageSD {
 	    
 	}
 
+	//---------------Add new class test cases-------------
+	
+	@Given("Admin is on Manage Class page")
+	public void admin_is_on_manage_class_page() {
+		testContext.getBasePage().clickClass();
+	}	
 
+	@When("Admin clicks Add New Class from the Class dropdown")
+	public void admin_clicks_add_new_class_from_the_class_dropdown() {
+		testContext.getClassPage().clickAddNewClassButton();	    
+	}
+
+	@Then("Admin sees the Class Details popup with SAVE and CANCEL button and Close\\(X) Icon")
+	public void admin_sees_the_class_details_popup_with_save_and_cancel_button_and_close_x_icon() {
+		softAssert.assertTrue(testContext.getClassPage().isClassDetailsPopupDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isSaveButtonDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isCancelButtonDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isCloseIconDisplayed());	    
+	}
+
+	@Then("Admin sees few input fields and their respective text boxes in the Class Details form")
+	public void admin_sees_few_input_fields_and_their_respective_text_boxes_in_the_class_details_form() {
+	    
+	    
+	}
+
+	@Given("Admin is on the Class Details Popup window")
+	public void admin_is_on_the_class_details_popup_window() {
+	    
+	    
+	}
+
+	@When("Admin enters mandatory fields in the Class Details form from {string} and {int}")
+	public void admin_enters_mandatory_fields_in_the_class_details_form_from_and(String string, Integer int1) {
+	    
+	    
+	}
+
+	@When("admin clicks on Save button")
+	public void admin_clicks_on_save_button() {
+	    
+	    
+	}
+
+	@Then("Admin gets the message {string} on Manage Class page")
+	public void admin_gets_the_message_on_manage_class_page(String string) {
+	    
+	    
+	}
+
+	@When("Admin selects class dates in date picker")
+	public void admin_selects_class_dates_in_date_picker() {
+	    
+	    
+	}
+
+	@Then("Admin sees the No of Classes value is added automatically")
+	public void admin_sees_the_no_of_classes_value_is_added_automatically() {
+	    
+	    
+	}
+
+	@When("Admin clicks date picker")
+	public void admin_clicks_date_picker() {
+	    
+	    
+	}
+
+	@Then("Admin sees weekends dates are disabled in the calender")
+	public void admin_sees_weekends_dates_are_disabled_in_the_calender() {
+	    
+	    
+	}
+
+	@When("Admin enters only optional fields in the Class Details form from {string} and {int}")
+	public void admin_enters_only_optional_fields_in_the_class_details_form_from_and(String string, Integer int1) {
+	    
+	    
+	}
+
+	@Then("Admin sees error messages below each mandatory fields")
+	public void admin_sees_error_messages_below_each_mandatory_fields() {
+	    
+	    
+	}
+
+	@When("Admin enters invalid data in all the fields in the Class Details form from {string} and {int}")
+	public void admin_enters_invalid_data_in_all_the_fields_in_the_class_details_form_from_and(String string, Integer int1) {
+	    
+	    
+	}
+
+	@When("Admin clicks Cancel button on Class Details form")
+	public void admin_clicks_cancel_button_on_class_details_form() {
+	    
+	    
+	}
+
+	@Then("Admin sees the Class Details popup window getting closed")
+	public void admin_sees_the_class_details_popup_window_getting_closed() {
+	    
+	    
+	}
+
+	@When("Admin clicks Close\\(X) button on Class Details form")
+	public void admin_clicks_close_x_button_on_class_details_form() {
+	    
+	    
+	}
+
+	@When("Admin enters the values for input fields on Class Details form")
+	public void admin_enters_the_values_for_input_fields_on_class_details_form() {
+	    
+	    
+	}
+
+	@When("Admin clicks Save button on Class Details form")
+	public void admin_clicks_save_button_on_class_details_form() {
+	    
+	    
+	}
+
+	@Then("Admin sees success message and new class is added to the data table")
+	public void admin_sees_success_message_and_new_class_is_added_to_the_data_table() {
+	    
+	    
+	}
 
 }
