@@ -115,15 +115,19 @@ public class ClassPageSD {
 	}
 
 	@Then("Admin sees few input fields and their respective text boxes in the Class Details form")
-	public void admin_sees_few_input_fields_and_their_respective_text_boxes_in_the_class_details_form() {
-	    
+	public void admin_sees_few_input_fields_and_their_respective_text_boxes_in_the_class_details_form(DataTable dataTable) {
+		List<String> inputFieldNames = dataTable.asList(String.class);
+		for (String inputField: inputFieldNames) {
+			softAssert.assertTrue(testContext.getClassPage().isInputFieldLabelPresent(inputField));
+			softAssert.assertTrue(testContext.getClassPage().isInputFieldPresent(inputField));
+		}
 	    
 	}
 
 	@Given("Admin is on the Class Details Popup window")
 	public void admin_is_on_the_class_details_popup_window() {
-	    
-	    
+		testContext.getBasePage().clickClass();	
+		testContext.getClassPage().clickAddNewClassButton();
 	}
 
 	@When("Admin enters mandatory fields in the Class Details form from {string} and {int}")

@@ -76,6 +76,7 @@ public class ClassPage extends BasePage {
 	private WebElement classNotesInput;
 	@FindBy(id = "classRecordingPath")
 	private WebElement classRecordingsInput;
+	
 
 	// date picker
 	@FindBy(xpath = "//button[contains(@class,'p-datepicker-trigger')]")
@@ -221,7 +222,7 @@ public class ClassPage extends BasePage {
 
 		// Select status radio button
 		statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
-				.forEach(s -> s.findElement(By.xpath("/p-radiobutton/div/div[2]")).click());
+				.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
 
 		// Enter class comments
 		classCommentsInput.sendKeys(classComments);
@@ -235,12 +236,12 @@ public class ClassPage extends BasePage {
 	
 	public boolean isInputFieldPresent(String inputField) {		
 		switch(inputField.trim()) {
-		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("/parent::div")).isDisplayed(); 
+		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("..")).isDisplayed(); 
 		case "Class Topic": return classTopicInput.isDisplayed();  
 		case "Class Description": return classDescriptionInput.isDisplayed();  
-		case "Select Class Dates": return calenderIcon.findElement(By.xpath("/parent::span")).isDisplayed(); 
+		case "Select Class Dates": return calenderIcon.findElement(By.xpath("..")).isDisplayed(); 
 		case "No of Classes": return classNoInput.isDisplayed(); 
-		case "Staff Name": return staffNameDropdownIcon.findElement(By.xpath("/parent::div")).isDisplayed(); 
+		case "Staff Name": return staffNameDropdownIcon.findElement(By.xpath("..")).isDisplayed(); 
 		case "Status": {
 			for (WebElement status:statusRadioButtons) {
 				if (status.isDisplayed()) {
@@ -256,16 +257,32 @@ public class ClassPage extends BasePage {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/* /ancestor::p-dropdown/preceding-sibling::label
+	/preceding-sibling::label
+	 /preceding-sibling::label
+	  //ancestor::p-calendar/preceding-sibling::label
+	  /preceding-sibling::label
+	/ancestor::p-dropdown/preceding-sibling::label
+	/preceding-sibling::div/lable
+	/preceding-sibling::label
+	 /preceding-sibling::label
+	  /preceding-sibling::label
+	 /	*/
+	public boolean isInputFieldLabelPresent(String inputField) {		
+		switch(inputField.trim()) {
+		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label")).isDisplayed(); 
+		case "Class Topic": return classTopicInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();  
+		case "Class Description": return classDescriptionInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();  
+		case "Select Class Dates": return calenderIcon.findElement(By.xpath("ancestor::p-calendar/preceding-sibling::label")).isDisplayed(); 
+		case "No of Classes": return classNoInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed(); 
+		case "Staff Name": return staffNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label")).isDisplayed(); 
+		case "Status": return statusRadioButtons.get(0).findElement(By.xpath("preceding-sibling::div/lable")).isDisplayed();					
+		case "Comments": return classCommentsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed(); 
+		case "Notes": return classNotesInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed(); 
+		case "Recording": return classRecordingsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		default: return false;
+		}
+	}
 	
 
 	public void datePicker(String classDate) {
