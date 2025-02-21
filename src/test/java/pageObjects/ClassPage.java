@@ -6,16 +6,21 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class ClassPage extends BasePage {
+	JavascriptExecutor js = (JavascriptExecutor) driver;
 
 	public ClassPage(WebDriver driver) {
 		super(driver);
 	}
 
+	@FindBy(xpath = "//span[text()='Class']")
+	private WebElement classLink;
 	@FindBy(xpath = "//mat-card-title/div[1]")
 	private WebElement classHeader;
 	@FindBy(className = "p-input-icon-left")
@@ -24,6 +29,8 @@ public class ClassPage extends BasePage {
 	private List<WebElement> datatableHeaders;
 	@FindBy(xpath = "//div[@class='box']//button")
 	private WebElement deleteButton;
+	@FindBy(css = "[role='menuitem']")
+	private WebElement addNewClassButton;
 
 	// Pagination and footer related objects
 	@FindBy(xpath = "//p-paginator/div/span[contains(@class,'p-paginator-current')]")
@@ -37,9 +44,69 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]/span")
 	private WebElement paginatorLastButton;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-page')]")
-	private List<WebElement> paginatorPages;	
+	private List<WebElement> paginatorPages;
 	@FindBy(xpath = "//div[contains(@class,'p-datatable-footer')]/div")
 	private WebElement datatableFooterText;
+
+	// Class Details form related objects
+	@FindBy(xpath = "//div[@role='dialog']")
+	private WebElement classDetailsPupup;
+	@FindBy(css = "[label='Cancel']")
+	private WebElement cancelButton;
+	@FindBy(css = "[label='Save']")
+	private WebElement saveButton;
+	@FindBy(xpath = "//span[contains(@class,'p-dialog-header-close-icon')]")
+	private WebElement closeIcon;
+	@FindBy(xpath = "//label[text()='Batch Name']/following-sibling::p-dropdown/div/div[2]")
+	private WebElement batchNameDropdownIcon;
+	@FindBy(xpath = "//ul//span")
+	private List<WebElement> batchNameDropdownItems;
+	@FindBy(id = "classTopic")
+	private WebElement classTopicInput;
+	@FindBy(id = "classDescription")
+	private WebElement classDescriptionInput;
+	@FindBy(id = "classNo")
+	private WebElement classNoInput;
+	@FindBy(xpath = "//label[text()='Staff Name']/following-sibling::p-dropdown/div/div[2]")
+	private WebElement staffNameDropdownIcon;
+	@FindBy(xpath = "//p-dropdown[@id='staffId']//p-dropdownitem//span")
+	private List<WebElement> staffNameDropdownItems;
+	@FindBy(xpath = "//div[@class='radio ng-star-inserted']/div[@class='ng-star-inserted']")
+	private List<WebElement> statusRadioButtons;
+	@FindBy(id = "classComments")
+	private WebElement classCommentsInput;
+	@FindBy(id = "classNotes")
+	private WebElement classNotesInput;
+	@FindBy(id = "classRecordingPath")
+	private WebElement classRecordingsInput;
+	@FindBy(xpath = "//p-toastitem//div[contains(@class,'p-toast-detail')]")
+	private WebElement successToastMessage;
+
+	// date picker
+	@FindBy(xpath = "//button[contains(@class,'p-datepicker-trigger')]")
+	private WebElement calenderIcon;
+	@FindBy(xpath = "//span[contains(@class,'p-datepicker-year')]")
+	private WebElement calenderYear;
+	@FindBy(xpath = "//span[contains(@class,'p-datepicker-month')]")
+	private WebElement calenderMonth;
+	@FindBy(className = "p-datepicker-next-icon")
+	private WebElement datepickerNextIcon;
+	@FindBy(xpath = "//table[contains(@class,'p-datepicker-calendar')]//td[not(contains(@class, 'p-datepicker-other-month'))]")
+	private List<WebElement> calenderDateList;
+
+	// Mandatory field error message
+	@FindBy(xpath = "//label[text()='Batch Name']/following-sibling::small")
+	private WebElement batchNameFieldErrorMessage;
+	@FindBy(xpath = "//label[text()='Class Topic ']/following-sibling::small")
+	private WebElement classTopicFieldErrorMessage;
+	@FindBy(xpath = "//label[text()=' Select Class Dates ']/following-sibling::small")
+	private WebElement classDatesFieldErrorMessage;
+	@FindBy(xpath = "//label[text()='No of Classes']/following-sibling::small")
+	private WebElement noOfClassesFieldErrorMessage;
+	@FindBy(xpath = "//label[text()='Staff Name']/following-sibling::small")
+	private WebElement staffNameFieldErrorMessage;
+	@FindBy(xpath = "//div[contains(@class,'radio')]/following-sibling::small")
+	private WebElement statusFieldErrorMessage;
 
 	public boolean getClassHeader(String header) {
 		if (classHeader.getText().equals(header)) {
@@ -76,8 +143,22 @@ public class ClassPage extends BasePage {
 		deleteButton.click();
 	}
 
-	//------------------------------------------------------
-	
+	public void clickAddNewClassButton() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (addNewClassButton.isDisplayed()) {
+			addNewClassButton.click();
+		} else {
+			classLink.click();
+			addNewClassButton.click();
+		}
+	}
+	// ------------------------------------------------------
+
 	// Pagination and footer related methods
 	public boolean checkPaginationTextMatches(String text) {
 		String paginationText = datatablePaginationText.getText();
@@ -103,13 +184,13 @@ public class ClassPage extends BasePage {
 	public boolean isPaginationLastButtonVisible() {
 		return paginatorLastButton.isDisplayed();
 	}
-	
+
 	public boolean isPaginationPagesButtonAvailable() {
-		if (paginatorPages.size()>=1) {
+		if (paginatorPages.size() >= 1) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
 	public boolean checkFooterTextMatches(String text) {
 		String footerText = datatableFooterText.getText();
@@ -119,5 +200,303 @@ public class ClassPage extends BasePage {
 
 		return matcher.matches();
 	}
-	//------------------------------------------------------------
+	// ------------------------------------------------------------
+
+	// Class Details form related methods
+
+	public boolean isClassDetailsPopupDisplayed() {
+		return classDetailsPupup.isDisplayed();
+	}
+
+	public boolean isCancelButtonDisplayed() {
+		return cancelButton.isDisplayed();
+	}
+
+	public boolean isSaveButtonDisplayed() {
+		return saveButton.isDisplayed();
+	}
+
+	public boolean isCloseIconDisplayed() {
+		return closeIcon.isDisplayed();
+	}
+
+	// To enter values in class details form
+	public void fillClassDetailsForm(String batchName, String classTopic, String classDescription, String classDate,
+			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
+		// Select Batch Name from dropdown
+		wait.until(ExpectedConditions.elementToBeClickable(batchNameDropdownIcon)).click();
+
+		for (WebElement batchNameItem : batchNameDropdownItems) {
+			if (batchNameItem.getText().equals(batchName)) {
+				batchNameItem.click();
+				break;
+			}
+		}
+
+		// Enter class topic
+		if (classTopic != null) {
+			classTopicInput.sendKeys(classTopic);
+		}
+
+		// Enter class description
+		if (classDescription != null) {
+			classDescriptionInput.sendKeys(classDescription);
+		}
+
+		// Select class dates
+		System.out.println("======================== > " + classDate);
+		if (classDate != null && !classDate.isEmpty()) {
+			// Open date picker
+			calenderIcon.click();
+			datePicker(classDate);
+
+			// to close the date picker popup
+			js.executeScript("document.body.click();");
+		}
+
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+
+		// Select staff name from dropdown
+		if (staffName != null) {
+			staffNameDropdownIcon.click();
+			for (WebElement staffNameItem : staffNameDropdownItems) {
+				if (staffNameItem.getText().equals(staffName)) {
+					staffNameItem.click();
+					break;
+				}
+			}
+		}
+
+		// Select status radio button
+		if (status != null) {
+			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
+					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
+		}
+		// Enter class comments
+		classCommentsInput.sendKeys(classComments);
+
+		// Enter class notes
+		classNotesInput.sendKeys(classNotes);
+
+		// Enter class recordings
+		classRecordingsInput.sendKeys(classRecordingPath);
+	}
+
+	// To check if input field text box is present
+	public boolean isInputFieldPresent(String inputField) {
+		switch (inputField.trim()) {
+		case "Batch Name":
+			return batchNameDropdownIcon.findElement(By.xpath("..")).isDisplayed();
+		case "Class Topic":
+			return classTopicInput.isDisplayed();
+		case "Class Description":
+			return classDescriptionInput.isDisplayed();
+		case "Select Class Dates":
+			return calenderIcon.findElement(By.xpath("..")).isDisplayed();
+		case "No of Classes":
+			return classNoInput.isDisplayed();
+		case "Staff Name":
+			return staffNameDropdownIcon.findElement(By.xpath("..")).isDisplayed();
+		case "Status": {
+			for (WebElement status : statusRadioButtons) {
+				if (status.isDisplayed()) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		case "Comments":
+			return classCommentsInput.isDisplayed();
+		case "Notes":
+			return classNotesInput.isDisplayed();
+		case "Recording":
+			return classRecordingsInput.isDisplayed();
+		default:
+			return false;
+		}
+	}
+
+	// To check if input field label is present
+	public boolean isInputFieldLabelPresent(String inputField) {
+		switch (inputField.trim()) {
+		case "Batch Name":
+			return batchNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label"))
+					.isDisplayed();
+		case "Class Topic":
+			return classTopicInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Class Description":
+			return classDescriptionInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Select Class Dates":
+			return calenderIcon.findElement(By.xpath("ancestor::p-calendar/preceding-sibling::label")).isDisplayed();
+		case "No of Classes":
+			return classNoInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Staff Name":
+			return staffNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label"))
+					.isDisplayed();
+		case "Status":
+			return statusRadioButtons.get(0).findElement(By.xpath("preceding-sibling::div/lable")).isDisplayed();
+		case "Comments":
+			return classCommentsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Notes":
+			return classNotesInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		case "Recording":
+			return classRecordingsInput.findElement(By.xpath("preceding-sibling::label")).isDisplayed();
+		default:
+			return false;
+		}
+	}
+
+	public void clickSaveButton() {
+		saveButton.click();
+	}
+
+	public void clickCancelButton() {
+		cancelButton.click();
+	}
+
+	public void clickCloseIcon() {
+		closeIcon.click();
+	}
+
+	public String getSuccessToastMessage() {
+		return successToastMessage.getText();
+	}
+
+	// To select Class Dates from date picker
+	public void selectClassDates(String classDate) {
+		wait.until(ExpectedConditions.elementToBeClickable(calenderIcon)).click();
+
+		datePicker(classDate);
+	}
+
+	// To check if No of Classes field is auto-populated after dates selection
+	public boolean isNoOfClassesPopulated() {
+		if (classNoInput.getDomAttribute("class").contains("p-filled")) {
+			return true;
+		}
+		return false;
+	}
+
+	// Mandatory fields error message
+	public boolean isBatchNameFieldErrorMessageDisplayed() {
+		if (batchNameFieldErrorMessage.getText().equals("Batch Name is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isClassTopicFieldErrorMessageDisplayed() {
+		if (classTopicFieldErrorMessage.getText().equals("Class Topic is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isClassDatesFieldErrorMessageDisplayed() {
+		if (classDatesFieldErrorMessage.getText().equals("Class Date is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isNoOfClassesFieldErrorMessageDisplayed() {
+		if (noOfClassesFieldErrorMessage.getText().equals("No. of Classes is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isStaffNameFieldErrorMessageDisplayed() {
+		if (staffNameFieldErrorMessage.getText().equals("Staff Name is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isStatusFieldErrorMessageDisplayed() {
+		if (statusFieldErrorMessage.getText().equals("Status is required.")) {
+			return true;
+		}
+		return false;
+	}
+
+	// To check Class Details Form is closed upon clicking Close/Cancel button
+	public boolean isClassDetailsDialogClosed() {
+		wait.until(ExpectedConditions.invisibilityOf(classDetailsPupup));
+		return true;
+	}
+
+	// Date picker logic to select date from calender
+	public void datePicker(String classDate) {
+		System.out.println("====================================== " + classDate);
+		String[] classdate = classDate.split("/");
+		String month = classdate[0];
+		String date = classdate[1];
+		String year = classdate[2];
+
+		String monthName = null;
+
+		switch (month) {
+		case "01":
+			monthName = "January";
+			break;
+		case "02":
+			monthName = "February";
+			break;
+		case "03":
+			monthName = "March";
+			break;
+		case "04":
+			monthName = "April";
+			break;
+		case "05":
+			monthName = "May";
+			break;
+		case "06":
+			monthName = "June";
+			break;
+		case "07":
+			monthName = "July";
+			break;
+		case "08":
+			monthName = "August";
+			break;
+		case "09":
+			monthName = "September";
+			break;
+		case "10":
+			monthName = "October";
+			break;
+		case "11":
+			monthName = "November";
+			break;
+		case "12":
+			monthName = "December";
+			break;
+		default:
+			System.out.println("Enter a valid month");
+		}
+
+		// Select month and year
+		while (true) {
+			if (calenderYear.getText().equals(year) && calenderMonth.getText().equals(monthName)) {
+				break;
+			}
+			datepickerNextIcon.click();
+		}
+
+		// Select date from calender
+		if (calenderDateList.isEmpty()) {
+			System.out.println("No calendar dates found.");
+		} else {
+			for (WebElement calenderDate : calenderDateList) {
+				if (calenderDate.getText().equals(date)) {
+					calenderDate.click();
+					break;
+				}
+			}
+		}
+	}
+
 }
