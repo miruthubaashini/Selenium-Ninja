@@ -1,5 +1,7 @@
 package stepDefinitions;
 
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -16,6 +18,16 @@ public class ClassPageSD {
 
 	TestContext testContext;
 	private SoftAssert softAssert = new SoftAssert();
+	
+	private String batchname;
+	private String classtopic;
+	private String classdescription;
+	private String classdates;
+	private String staffname;
+	private String classstatus;
+	private String classcomments;
+	private String classnotes;
+	private String recordingpath;
 
 	public ClassPageSD (TestContext testContext) {
 		this.testContext = testContext;
@@ -131,21 +143,29 @@ public class ClassPageSD {
 	}
 
 	@When("Admin enters mandatory fields in the Class Details form from {string} and {int}")
-	public void admin_enters_mandatory_fields_in_the_class_details_form_from_and(String string, Integer int1) {
-	    
-	    
+	public void admin_enters_mandatory_fields_in_the_class_details_form_from_and(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		batchname = data.get("batchName");
+		classtopic = data.get("classTopic");
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
+
+		testContext.getClassPage().fillClassDetailsForm(batchname, classtopic, classdescription, classdates, staffname, classstatus, classcomments, classnotes, recordingpath);
 	}
 
 	@When("admin clicks on Save button")
 	public void admin_clicks_on_save_button() {
-	    
-	    
+		testContext.getClassPage().clickSaveButton();	    
 	}
 
 	@Then("Admin gets the message {string} on Manage Class page")
-	public void admin_gets_the_message_on_manage_class_page(String string) {
-	    
-	    
+	public void admin_gets_the_message_on_manage_class_page(String expectedToastMessage) {
+		Assert.assertEquals(testContext.getClassPage().getSuccessToastMessage(),expectedToastMessage);	    
 	}
 
 	@When("Admin selects class dates in date picker")

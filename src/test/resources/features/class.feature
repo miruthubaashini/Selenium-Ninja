@@ -57,13 +57,12 @@ Feature: Class feature
     Then Admin sees the "In total there are x classes." on Manage Class page    
     
    # Add new class scenarios
-  @wip 
+  
   Scenario: Validate the Class Details popup
   	Given Admin is on Manage Class page
     When Admin clicks Add New Class from the Class dropdown
-    Then Admin sees the Class Details popup with SAVE and CANCEL button and Close(X) Icon
-       
-   @wipLater 
+    Then Admin sees the Class Details popup with SAVE and CANCEL button and Close(X) Icon       
+   
   Scenario: Validate input fields and their text boxes in Class Details form
   	Given Admin is on Manage Class page
     When Admin clicks Add New Class from the Class dropdown
@@ -84,7 +83,7 @@ Feature: Class feature
   	Given Admin is on the Class Details Popup window
     When Admin enters mandatory fields in the Class Details form from "<sheetName>" and <rowNum>
 		And  admin clicks on Save button
-    Then Admin gets the message "Successful Class created" on Manage Class page
+    Then Admin gets the message "Class Created" on Manage Class page
     
    Examples: 
       | sheetName | rowNum | 

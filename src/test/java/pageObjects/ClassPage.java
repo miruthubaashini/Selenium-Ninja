@@ -10,6 +10,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class ClassPage extends BasePage {
 	JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -18,6 +19,8 @@ public class ClassPage extends BasePage {
 		super(driver);
 	}
 
+	@FindBy (xpath= "//span[text()='Class']") 
+	private WebElement classLink;
 	@FindBy(xpath = "//mat-card-title/div[1]")
 	private WebElement classHeader;
 	@FindBy(className = "p-input-icon-left")
@@ -76,7 +79,8 @@ public class ClassPage extends BasePage {
 	private WebElement classNotesInput;
 	@FindBy(id = "classRecordingPath")
 	private WebElement classRecordingsInput;
-	
+	@FindBy(xpath = "//p-toastitem//div[contains(@class,'p-toast-detail')]")
+	private WebElement successToastMessage;
 
 	// date picker
 	@FindBy(xpath = "//button[contains(@class,'p-datepicker-trigger')]")
@@ -87,7 +91,7 @@ public class ClassPage extends BasePage {
 	private WebElement calenderMonth;
 	@FindBy(className = "p-datepicker-next-icon")
 	private WebElement datepickerNextIcon;
-	@FindBy(xpath = "//table[contains(@class,'p-datepicker-calendar')]//tbody/tr/td[contains(@class, 'ng-tns-c92-193') and not(contains(@class, 'p-datepicker-other-month'))]")
+	@FindBy(xpath = "//table[contains(@class,'p-datepicker-calendar')]//td[not(contains(@class, 'p-datepicker-other-month'))]")
 	private List<WebElement> calenderDateList;
 
 	public boolean getClassHeader(String header) {
@@ -126,7 +130,12 @@ public class ClassPage extends BasePage {
 	}
 
 	public void clickAddNewClassButton() {
-		addNewClassButton.click();
+		if (addNewClassButton.isDisplayed()) {
+			addNewClassButton.click();
+		} else {
+			classLink.click();
+			addNewClassButton.click();
+		}		
 	}
 	// ------------------------------------------------------
 
@@ -195,8 +204,14 @@ public class ClassPage extends BasePage {
 	public void fillClassDetailsForm(String batchName, String classTopic, String classDescription, String classDate,
 			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
 		// Select Batch Name from dropdown
-		batchNameDropdownIcon.click();
-		batchNameDropdownItems.stream().filter(batch -> batch.getText().equals(batchName)).forEach(b -> b.click());
+		wait.until(ExpectedConditions.elementToBeClickable(batchNameDropdownIcon)).click();
+	
+		for (WebElement batchNameItem: batchNameDropdownItems) {
+			if (batchNameItem.getText().equals(batchName)) {
+				batchNameItem.click();
+				break;
+			}
+		}
 
 		// Enter class topic
 		classTopicInput.sendKeys(classTopic);
@@ -215,10 +230,17 @@ public class ClassPage extends BasePage {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+		
 		// Select staff name from dropdown
 		staffNameDropdownIcon.click();
-		staffNameDropdownItems.stream().filter(staff -> staff.getText().equals(staffName)).forEach(s -> s.click());
+		for (WebElement staffNameItem: staffNameDropdownItems) {
+			if (staffNameItem.getText().equals(staffName)) {
+				staffNameItem.click();
+				break;
+			}
+		}
 
 		// Select status radio button
 		statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
@@ -234,6 +256,7 @@ public class ClassPage extends BasePage {
 		classRecordingsInput.sendKeys(classRecordingPath); 
 	}
 	
+	//To check if input field text box is present
 	public boolean isInputFieldPresent(String inputField) {		
 		switch(inputField.trim()) {
 		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("..")).isDisplayed(); 
@@ -256,18 +279,8 @@ public class ClassPage extends BasePage {
 		default: return false;
 		}
 	}
-	
-	/* /ancestor::p-dropdown/preceding-sibling::label
-	/preceding-sibling::label
-	 /preceding-sibling::label
-	  //ancestor::p-calendar/preceding-sibling::label
-	  /preceding-sibling::label
-	/ancestor::p-dropdown/preceding-sibling::label
-	/preceding-sibling::div/lable
-	/preceding-sibling::label
-	 /preceding-sibling::label
-	  /preceding-sibling::label
-	 /	*/
+
+	//To check if input field label is present
 	public boolean isInputFieldLabelPresent(String inputField) {		
 		switch(inputField.trim()) {
 		case "Batch Name": return batchNameDropdownIcon.findElement(By.xpath("ancestor::p-dropdown/preceding-sibling::label")).isDisplayed(); 
@@ -284,8 +297,19 @@ public class ClassPage extends BasePage {
 		}
 	}
 	
+	public void clickSaveButton() {
+		saveButton.click();
+	}
 
+	public String getSuccessToastMessage() {
+		return successToastMessage.getText();
+	}
+	
+	
+	
+	
 	public void datePicker(String classDate) {
+		System.out.println("====================================== "+classDate);
 		String[] classdate = classDate.split("/");
 		String month = classdate[0];
 		String date = classdate[1];
@@ -346,7 +370,17 @@ public class ClassPage extends BasePage {
 		}
 
 		// Select date from calender
-		calenderDateList.stream().filter(d -> d.getText().equals(date)).forEach(dt -> dt.click());
+		if (calenderDateList.isEmpty()) {
+		    System.out.println("No calendar dates found.");
+		} else {
+		    for (WebElement calenderDate : calenderDateList) {
+		        if (calenderDate.getText().equals(date)) {
+		            calenderDate.click();
+		            break;
+		        }
+		    }
+		}
+		//calenderDateList.stream().filter(d -> d.getText().equals(date)).forEach(dt -> dt.click());
 	}
 
 }
