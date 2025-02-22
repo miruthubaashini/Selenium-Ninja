@@ -1,5 +1,6 @@
 package pageObjects;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,10 +12,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ClassPage extends BasePage {
 	JavascriptExecutor js = (JavascriptExecutor) driver;
-
+	//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	
 	public ClassPage(WebDriver driver) {
 		super(driver);
 	}
@@ -32,7 +35,7 @@ public class ClassPage extends BasePage {
 	@FindBy(css = "[role='menuitem']")
 	private WebElement addNewClassButton;
 
-	// Pagination and footer related objects
+	// Pagination and footer related elements
 	@FindBy(xpath = "//p-paginator/div/span[contains(@class,'p-paginator-current')]")
 	private WebElement datatablePaginationText;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-first')]/span")
@@ -48,9 +51,9 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//div[contains(@class,'p-datatable-footer')]/div")
 	private WebElement datatableFooterText;
 
-	// Class Details form related objects
+	// Class Details form related elements
 	@FindBy(xpath = "//div[@role='dialog']")
-	private WebElement classDetailsPupup;
+	private WebElement classDetailsPopup;
 	@FindBy(css = "[label='Cancel']")
 	private WebElement cancelButton;
 	@FindBy(css = "[label='Save']")
@@ -107,7 +110,46 @@ public class ClassPage extends BasePage {
 	private WebElement staffNameFieldErrorMessage;
 	@FindBy(xpath = "//div[contains(@class,'radio')]/following-sibling::small")
 	private WebElement statusFieldErrorMessage;
+	
+	//Sort related elements
+	@FindBy(xpath = "//tbody//td[2]")
+	private List<WebElement> batchNameList;
+	@FindBy(xpath = "//tbody//td[3]")
+	private List<WebElement> classTopicList;
+	@FindBy(xpath = "//tbody//td[4]")
+	private List<WebElement> classDescriptionList;
+	@FindBy(xpath = "//tbody//td[5]")
+	private List<WebElement> statusList;
+	@FindBy(xpath = "//tbody//td[6]")
+	private List<WebElement> classDateList;
+	@FindBy(xpath = "//tbody//td[7]")
+	private List<WebElement> staffNameList;
 
+	//Edit related elements
+	@FindBy(xpath = "//tr[2]//button[@icon='pi pi-pencil']")
+	private WebElement editIcon;	
+	
+	//Edit related methods
+	
+	public void clickEditIcon() {
+		js.executeScript("arguments[0].click();", editIcon);
+	}
+	//====================
+	public boolean isBatchNameFieldDisabled() {		
+		if (batchNameDropdownIcon.findElement(By.xpath("..")).getDomAttribute("class").contains("p-disabled")) {
+			return true;
+		}
+		return false;
+ 	}
+	
+	public boolean isClassTopicFieldDisabled() {		
+		if (classTopicInput.isEnabled()) {
+			return false;
+		}
+		return true;
+ 	}
+	
+	//
 	public boolean getClassHeader(String header) {
 		if (classHeader.getText().equals(header)) {
 			return true;
@@ -124,13 +166,87 @@ public class ClassPage extends BasePage {
 				.collect(Collectors.toList());
 	}
 
+	//Sorting
 	public WebElement checkSortIcon(String columnHeader) {
 		for (WebElement header : datatableHeaders) {
 			if (header.getText().equals(columnHeader)) {
-				return header.findElement(By.tagName("p-sorticon"));
+				return header.findElement(By.tagName("p-sorticon")); //header.findElement(By.tagName("p-sorticon"));
 			}
 		}
 		return null;
+	}
+	
+	public void clickSortIcon(String columnHeader) {
+		System.out.println("==========ColumnHeader from feature: "+ columnHeader);
+		for (WebElement header : datatableHeaders) {
+			System.out.println("==========ColumnHeader from app: "+ header.getText().trim());
+			if (header.getText().trim().equals(columnHeader)) {
+				WebElement sortIcon = header.findElement(By.xpath("p-sorticon/i"));
+				js.executeScript("arguments[0].click();", sortIcon);
+				break;
+			}
+		}
+	}
+	
+	public boolean checkSortedAscending(String columnHeader) {
+		switch (columnHeader.trim()) {
+		case "Batch Name": {
+			List<String> batchNames = batchNameList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> sortedBatchNames = batchNames.stream().sorted().collect(Collectors.toList());
+			
+			if(batchNames.equals(sortedBatchNames)) {
+				return true;
+			}
+			return false;	
+			}
+		case "Class Topic": {
+			List<String> classTopics = classTopicList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> sortedClassTopics = classTopics.stream().sorted().collect(Collectors.toList());
+
+			if(classTopics.equals(sortedClassTopics)) {
+				return true;
+			}
+			return false;	
+			}
+			
+		case "Class Description":{
+			List<String> classDescriptions = classDescriptionList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> sortedClassDescriptions = classDescriptions.stream().sorted().collect(Collectors.toList());
+
+			if(classDescriptions.equals(sortedClassDescriptions)) {
+				return true;
+			}
+			return false;	
+			}
+		case "Class Date":{
+			List<String> classDates = classDateList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> sortedClassDates = classDates.stream().sorted().collect(Collectors.toList());
+
+			if(classDates.equals(sortedClassDates)) {
+				return true;
+			}
+			return false;	
+			}
+		case "Staff Name":{
+			List<String> staffNames = staffNameList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> sortedStaffNames = staffNames.stream().sorted().collect(Collectors.toList());
+
+			if(staffNames.equals(sortedStaffNames)) {
+				return true;
+			}
+			return false;	
+			}
+		case "Status": {
+			List<String> statusL = statusList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> sortedStatus = statusL.stream().sorted().collect(Collectors.toList());
+
+			if(statusL.equals(sortedStatus)) {
+				return true;
+			}
+			return false;	
+			}
+		default: return false;
+	}
 	}
 
 	// Method to check if the Delete button is displayed
@@ -205,7 +321,7 @@ public class ClassPage extends BasePage {
 	// Class Details form related methods
 
 	public boolean isClassDetailsPopupDisplayed() {
-		return classDetailsPupup.isDisplayed();
+		return classDetailsPopup.isDisplayed();
 	}
 
 	public boolean isCancelButtonDisplayed() {
@@ -423,7 +539,7 @@ public class ClassPage extends BasePage {
 
 	// To check Class Details Form is closed upon clicking Close/Cancel button
 	public boolean isClassDetailsDialogClosed() {
-		wait.until(ExpectedConditions.invisibilityOf(classDetailsPupup));
+		wait.until(ExpectedConditions.invisibilityOf(classDetailsPopup));
 		return true;
 	}
 

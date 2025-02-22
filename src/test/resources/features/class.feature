@@ -56,7 +56,7 @@ Feature: Class feature
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin sees the "In total there are x classes." on Manage Class page    
     
-   # Add new class scenarios
+   # ===============================Add new class scenarios ===============================
   
   Scenario: Validate the Class Details popup
   	Given Admin is on Manage Class page
@@ -78,7 +78,7 @@ Feature: Class feature
       | Notes         |
       | Recording     |   
   
-       
+      
   Scenario Outline: Validate add new class with valid data in only mandatory fields
   	Given Admin is on the Class Details Popup window
     When Admin enters mandatory fields in the Class Details form from "<sheetName>" and <rowNum>
@@ -151,8 +151,108 @@ Feature: Class feature
     When Admin clicks Save button on Class Details form
     Then Admin sees success message and new class is added to the data table       
       
+   # ===============================Edit class===============================  
+     
+  Scenario: Validate row level Edit icon
+  	Given Admin is on Manage Class page
+    When Admin clicks on the edit icon on the Manage Class page
+    Then Admin sees a pop up with class details displayed    
       
+  Scenario: Validate batch Name is disabled in Class Details form 
+  	Given Admin is on Manage Class page
+    When Admin clicks on the edit icon on the Manage Class page
+    Then Admin sees that batch Name field is disabled
+  
+  Scenario: Validate batch Name is disabled in Class Details form 
+  	Given Admin is on Manage Class page
+    When Admin clicks on the edit icon on the Manage Class page
+    Then Admin sees that Class Topic field is disabled  
+    
+   
+  Scenario Outline: Validate if the Class Details fields are updated with valid data 
+  	Given Admin is on the Edit Class Popup window
+    When Admin updates the fields with valid data 
+    And  admin clicks on Save button
+    Then Admin gets message "Class Updated" and see the updated values in data table  
+    
+  Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     11 |
       
-      
-      
+  Scenario Outline: Validate if the Class Details fields are updated with invalid data 
+  	Given Admin is on the Edit Class Popup window
+    When Admin updates the fields with invalid data 
+    And  admin clicks on Save button
+    Then Admin sees error messages below each fields
+    
+  Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     12 | 
+    
+  Scenario Outline: Validate if the mandatory fields are updated with valid data 
+  	Given Admin is on the Edit Class Popup window
+    When Admin updates the mandatory fields with valid values  
+    And  admin clicks on Save button
+    Then Admin gets message "Class Updated" and see the updated values in data table   
+ 
+  Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     13 | 
+          
+  Scenario Outline: Validate if the optional fields are updated with valid data 
+  	Given Admin is on the Edit Class Popup window
+    When Admin updates the optional fields with valid values  
+    And  admin clicks on Save button
+    Then Admin gets message "Class Updated" and see the updated values in data table  
+ 
+   Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     14 | 
+         
+  Scenario: Validate Cancel button on Edit popup 
+  	Given Admin is on the Edit Class Popup window
+    When Admin clicks Cancel button on edit popup 
+    Then Admin can see the class details popup disappears and can see nothing changed for particular Class
+    
+     # ===============================Sort class=============================== 
+	
+  Scenario: Validate sort class by Batch Name 
+  	Given Admin is on Manage Class page
+    When Admin clicks on Sort icon next to "Batch Name" table header 
+    Then Admin sees that class details are sorted by "Batch Name"   
+    
+  Scenario: Validate sort class by Class Topic 
+  	Given Admin is on Manage Class page
+    When Admin clicks on Sort icon next to "Class Topic" table header 
+    Then Admin sees that class details are sorted by "Class Topic"  
+  
+  Scenario: Validate sort class by Class Description 
+  	Given Admin is on Manage Class page
+    When Admin clicks on Sort icon next to "Class Description" table header 
+    Then Admin sees that class details are sorted by "Class Description"  
+    
+  Scenario: Validate sort class by Status 
+  	Given Admin is on Manage Class page
+    When Admin clicks on Sort icon next to "Status" table header 
+    Then Admin sees that class details are sorted by "Status"  
+    
+  Scenario: Validate sort class by Class Date 
+  	Given Admin is on Manage Class page
+    When Admin clicks on Sort icon next to "Class Date" table header 
+    Then Admin sees that class details are sorted by "Class Date"  
+    
+  Scenario: Validate sort class by Staff Name 
+  	Given Admin is on Manage Class page
+    When Admin clicks on Sort icon next to "Staff Name" table header 
+    Then Admin sees that class details are sorted by "Staff Name"                      
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
       
