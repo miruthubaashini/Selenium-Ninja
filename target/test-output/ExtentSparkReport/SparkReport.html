@@ -35,7 +35,7 @@
 <a href="#"><span class="badge badge-primary">Orange HRM Demo</span></a>
 </li>
 <li class="m-r-10">
-<a href="#"><span class="badge badge-primary">Feb 19, 2025 03:26:26 PM</span></a>
+<a href="#"><span class="badge badge-primary">Feb 21, 2025 05:24:32 PM</span></a>
 </li>
 </ul>
 </div>
@@ -66,13 +66,13 @@
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0">Started</p>
-<h3>Feb 19, 2025 03:26:26 PM</h3>
+<h3>Feb 21, 2025 05:24:32 PM</h3>
 </div></div>
 </div>
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0">Ended</p>
-<h3>Feb 19, 2025 03:26:33 PM</h3>
+<h3>Feb 21, 2025 05:24:39 PM</h3>
 </div></div>
 </div>
 <div class="col-md-3">
@@ -123,7 +123,7 @@
 </div>
 </div>
 <div class="card-footer">
-<div><small data-tooltip='100%'><b>1</b> scenarios passed</small></div>
+<div><small data-tooltip='100%'><b>2</b> scenarios passed</small></div>
 <div>
 <small data-tooltip='0%'><b>0</b> scenarios failed,
 <b>0</b> skipped, <b data-tooltip='%'>0</b> others
@@ -143,7 +143,7 @@
 </div>
 </div>
 <div class="card-footer">
-<div><small data-tooltip='100%'><b>1</b> steps passed</small></div>
+<div><small data-tooltip='100%'><b>4</b> steps passed</small></div>
 <div>
 <small data-tooltip='0%'><b>0</b> steps failed,
 <b>0</b> skipped, <b data-tooltip='%'>0</b> others
@@ -162,7 +162,7 @@
 </div></div>
 <script>
 var timeline = {
-"Login Page Verification":5.158
+"HomePage":5.886
 };
 </script>
 <div class="row">
@@ -172,7 +172,7 @@ var timeline = {
 <div class="card-body pb-0 pt-0"><table class="table table-sm table-bordered">
 <thead><tr class="bg-gray"><th>Name</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Others</th><th>Passed %</th></tr></thead><tbody>
 <tr>
-<td>@tag</td>
+<td>@pie-chart</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
@@ -219,13 +219,13 @@ failParent: 0,
 warningParent: 0,
 skipParent: 0,
 childCount: 5,
-passChild: 1,
+passChild: 2,
 failChild: 0,
 warningChild: 0,
 skipChild: 0,
 infoChild: 0,
 grandChildCount: 5,
-passGrandChild: 1,
+passGrandChild: 4,
 failGrandChild: 0,
 warningGrandChild: 0,
 skipGrandChild: 0,
@@ -250,7 +250,7 @@ eventsCount: 5,
 <li class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i></a>
 <ul id="tag-toggle" class="dropdown-menu dropdown-md p-v-0">
-<a class="dropdown-item" href="#">@tag</a>
+<a class="dropdown-item" href="#">@pie-chart</a>
 </ul>
 </li>
 </ul>
@@ -261,9 +261,9 @@ eventsCount: 5,
           tag=""
           device="">
           <div class="test-detail">
-            <p class="name">Login  Page Verification</p>
+            <p class="name">HomePage</p>
             <p class="text-sm">
-              <span>3:26:27 PM</span> / <span>00:00:05:158</span>
+              <span>5:24:33 PM</span> / <span>00:00:05:886</span>
               <span class="badge pass-bg log float-right">Pass</span>
             </p>
           </div>
@@ -271,10 +271,10 @@ eventsCount: 5,
 <div class="detail-head">
 <div class="p-v-10">
 <div class="info">
-<h5 class="test-status text-pass">Login Page Verification</h5>
-<span class='badge badge-success'>02.19.2025 3:26:27 PM</span>
-<span class='badge badge-danger'>02.19.2025 3:26:33 PM</span>
-<span class='badge badge-default'>00:00:05:158</span>
+<h5 class="test-status text-pass">HomePage</h5>
+<span class='badge badge-success'>02.21.2025 5:24:33 PM</span>
+<span class='badge badge-danger'>02.21.2025 5:24:39 PM</span>
+<span class='badge badge-default'>00:00:05:886</span>
 &middot; <span class='uri-anchor badge badge-default'>#test-id=1</span>
 <span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
 <span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
@@ -286,13 +286,39 @@ eventsCount: 5,
   <div class="card">
     <div class="card-header" role="tab">
       <div class="card-title">
-        <div class="node" id="2"><span class="badge log pass-bg mr-2">Pass</span>Validate login with valid data in all field</div>
+        <div class="node" id="2"><span class="badge log pass-bg mr-2">Pass</span>Verify user details</div>
       </div>
     </div>
         <div class="collapse">
           <div class="card-body">
               <div class="step pass-bg" title="stepDefinitions.LoginPageSD.admin_user_is_logged_in_with_valid_credentials()">
                 <span>Given Admin user is logged in with valid credentials</span>
+      <div>
+      </div>
+              </div>
+              <div class="step pass-bg" title="stepDefinitions.HomePageSD.admin_should_see_welcome_message_with_user_name_and_role()">
+                <span>Then Admin should see welcome message with user name and role</span>
+      <div>
+      </div>
+              </div>
+          </div>
+        </div>
+  </div>
+  <div class="card">
+    <div class="card-header" role="tab">
+      <div class="card-title">
+        <div class="node" id="3"><span class="badge log pass-bg mr-2">Pass</span>Verify verify pie-chart presence</div>
+      </div>
+    </div>
+        <div class="collapse">
+          <div class="card-body">
+              <div class="step pass-bg" title="stepDefinitions.LoginPageSD.admin_user_is_logged_in_with_valid_credentials()">
+                <span>Given Admin user is logged in with valid credentials</span>
+      <div>
+      </div>
+              </div>
+              <div class="step pass-bg" title="stepDefinitions.HomePageSD.admin_should_see_piechart()">
+                <span>Then Admin should see piechart</span>
       <div>
       </div>
               </div>
@@ -324,12 +350,12 @@ eventsCount: 5,
 <span class="meta">
 <span class='badge log pass-bg'>1</span>
 </span>
-<p class="name">@tag</p>
+<p class="name">@pie-chart</p>
 <p class="duration text-sm">1 tests</p>
 </div>
 <div class="test-contents d-none">
 <div class="info">
-<h4>@tag</h4>
+<h4>@pie-chart</h4>
 <span status="pass" class='badge log pass-bg'>1 passed</span>
 </div>
 <table class='table table-sm mt-4'>
@@ -343,11 +369,11 @@ eventsCount: 5,
 <tbody>
 <tr class="tag-test-status" status="pass">
 <td><span class="badge log pass-bg">Pass</span></td>
-<td>15:26:27 PM</td>
+<td>17:24:33 PM</td>
 <td>
-<a href="#" class="linked" test-id='1' id='2'>Validate login with valid data in all field</a>
+<a href="#" class="linked" test-id='1' id='3'>Verify verify pie-chart presence</a>
 <div class="">
-<span class="badge badge-default">Login Page Verification.Validate login with valid data in all field</span>
+<span class="badge badge-default">HomePage.Verify verify pie-chart presence</span>
 </div>
 </td>
 </tr>

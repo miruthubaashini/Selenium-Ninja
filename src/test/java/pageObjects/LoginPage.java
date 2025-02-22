@@ -1,53 +1,266 @@
 package pageObjects;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import org.languagetool.language.English;
+import org.languagetool.JLanguageTool;
+import org.languagetool.rules.RuleMatch;
+import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByTagName;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+
 
 public class LoginPage extends BasePage {
+	
+	WebDriverWait wait;
 
 	public LoginPage(WebDriver driver) {
 		super(driver);	
+		 this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));  // Adjust timeout as needed
+		   
 	}
-	
-//	@FindBy(xpath="//input[@id=\'username\']")
-//	private WebElement UserName;
-//
-//	@FindBy(xpath="//input[@id=\'password\']")
-//	private WebElement Password;
-//
-//	@FindBy(xpath="//*[@role=\'combobox\']")
-//	private WebElement Role;
-//	
-//	@FindBy(xpath="//button[@id=\"login\"]")
-//	private WebElement Login;
-//
 
+	@FindBy (xpath="//div[@class=\'signin-content\']") WebElement SignInPage;
+	@FindBy (xpath="//p[normalize-space()='Please login to LMS application']") WebElement signInContent;
+	@FindBy(xpath="//div[@class=\"signin-content\"]") WebElement FormContent;
 	@FindBy (id= "username") WebElement usernameField;
 	@FindBy (id= "password") WebElement passwordField;
 	@FindBy (id= "mat-select-value-1") WebElement roleField;
 	@FindBy (className= "mat-option-text") List <WebElement> roleDropdown;
 	@FindBy (id= "login") WebElement loginButton;
+
+	@FindBy (xpath="//*[@id=\'mat-form-field-label-1\']/span[2]") WebElement userStar;
+	@FindBy (xpath="//*[@id=\'mat-form-field-label-3\']/span[2]") WebElement pwdStar;
 	
+	@FindBy(xpath="//img[@src=\'assets/img/LMS-logo.jpg\']") WebElement appImage;
+
 	public void enterUsername(String userName) {
 		usernameField.sendKeys(userName);
 	}
-	
+
 	public void enterPassword(String password) {
 		passwordField.sendKeys(password);
 	}
-	
+
 	public void clickRoleDD() {
 		roleField.click();
 	}
-	
+
 	public void selectUserRole(String role) {
 		roleDropdown.stream().filter(r->r.getText().equals(role)).forEach(e->e.click());
 	}
-	
+
 	public void clickLoginbtn() {
-		loginButton.click();
+		
+		 WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("login"))); // Use the correct ID here
+	        
+	        // Click the button after it's clickable
+	        loginButton.click();	}
+
+	public boolean formLabelDisplayed() {
+		signInContent.isDisplayed();
+		return true;
 	}
+
+	@SuppressWarnings("deprecation")
+	public void textFields()
+	{
+
+		List<WebElement> inputFields=SignInPage.findElements(By.tagName("input"));
+		System.out.println("Input Fields: ");
+		for (WebElement input : inputFields) {
+			System.out.println(input.getAttribute("formcontrolname"));
+		}	
+	}
+	public boolean dropDownDisplay()
+	{
+		return roleField.isDisplayed();
+	}
+
+	@SuppressWarnings("deprecation")
+	public String usernamePlaceholder()
+	{
+		return usernameField.getAttribute("data-placeholder");
+	}
+	@SuppressWarnings("deprecation")
+	public String passwordPlaceholder()
+	{
+		return passwordField.getAttribute("data-placeholder");
+	}
+
+	public boolean userStarDisplayed()
+	{
+		return userStar.isDisplayed();
+	}
+
+	public boolean pwdStarDisplayed()
+	{
+		return pwdStar.isDisplayed();
+	}
+	public String rolePlaceHolder()
+	{
+		System.out.println(roleField.getText());
+		return roleField.getText();
+	}
+
+	public boolean dropDownElementstsDisplayed()
+	{
+		// WebElement roleDropdownElement = driver.findElement(By.role("roleDropdown"));  // Modify the locator as necessary
+
+		// Step 3: Initialize the Select object to interact with the dropdown
+		Select roleDropdown = new Select(roleField);
+
+		// Step 4: Get all options in the dropdown
+		List<WebElement> options = roleDropdown.getOptions();
+
+		// Step 5: Verify the expected options ("Admin", "Staff", "Student")
+		boolean adminFound=false;
+		boolean staffFound=false;
+		boolean studentFound = false;
+
+		for (WebElement option : options) {
+			String optionText = option.getText();
+			if (optionText.equals("Admin")) {
+				adminFound = true;
+			} else if (optionText.equals("Staff")) {
+				staffFound = true;
+			} else if (optionText.equals("Student")) {
+				studentFound = true;
+			}
+		}
+		if((adminFound && staffFound && studentFound)==true)
+			return true;
+		else
+			return false;
+	}
+
+	public boolean signInContentPosition() 
+	{
+		try {
+			Dimension inputFieldSize = signInContent.getSize();
+			Point inputFieldPosition = signInContent.getLocation();
+
+			// Step 4: Get the size of the viewport (the visible area of the browser window)
+			Dimension viewportSize = driver.manage().window().getSize();
+
+			// Step 5: Calculate the center of the viewport
+			int viewportCenterX = viewportSize.width / 2;
+			int viewportCenterY = viewportSize.height / 2;
+
+			// Step 6: Calculate the center of the input field
+			int inputFieldCenterX = inputFieldPosition.getX() + (inputFieldSize.width / 2);
+			int inputFieldCenterY = inputFieldPosition.getY() + (inputFieldSize.height / 2);
+
+			// Step 7: Check if the input field is close to the center of the viewport
+			// You can adjust the tolerance (in pixels) as per your need
+			int tolerance = 50; // Tolerance range in pixels (you can adjust this)
+
+			boolean isCenteredHorizontally = Math.abs(viewportCenterX - inputFieldCenterX) <= tolerance;
+			boolean isCenteredVertically = Math.abs(viewportCenterY - inputFieldCenterY) <= tolerance;
+
+			// Step 8: Validate the input field is close to the center
+			if (isCenteredHorizontally && isCenteredVertically) {
+				System.out.println("The input field is approximately centered on the webpage.");
+				return true;
+			} else {
+				System.out.println("The input field is NOT centered on the webpage.");
+				//return false; 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	public boolean loginBtnDispalyed()
+	{
+		return loginButton.isDisplayed();
+	}
+
+	public boolean usertextColour()
+	{
+
+		String rgbFormat = usernameField.getCssValue("color");
+		System.out.println(rgbFormat);
+		 return (rgbFormat.equals("rgba(0, 0, 0, 0.87)")) ? true : false ;
+		
+	}
+	public boolean pwdtextColour()
+	{
+
+		String rgbFormat = usernameField.getCssValue("color");
+		System.out.println(rgbFormat);
+		
+		 return (rgbFormat.equals("rgba(0, 0, 0, 0.87)")) ? true : false ;
+		
+	}
+
+public String appNameOnLogo() throws IOException, TesseractException {
 	
+	String imageURL = appImage.getAttribute("src");
+	URL url = new URL(imageURL);
+	BufferedImage image1 = ImageIO.read(url);
+	 Tesseract tesseract = new Tesseract();
+	 tesseract.setDatapath("C:\\Program Files\\Tesseract-OCR\\tessdata");
+	 tesseract.setLanguage("eng");
+	  String extractedText = tesseract.doOCR(image1);
+
+      System.out.println("Extracted Text: " + extractedText);
+      return extractedText;
+}
+
+public boolean spellCheckSignInContents()
+{
+	return checkSpelling(FormContent);
+}
+
+public boolean checkSpelling(WebElement elt)
+{
+	try {
+        //WebElement elt
+        String pageText = elt.getText();
+        System.out.println(pageText);
+        @SuppressWarnings("deprecation")
+		JLanguageTool langTool = new JLanguageTool(new English());
+
+        // Step 4: Check for spelling and grammar errors
+        List<RuleMatch> matches = langTool.check(pageText);
+
+        // Step 5: Output errors found
+        if (matches.isEmpty()) {
+            System.out.println("No spelling errors found!");
+            return true;
+        } else {
+            for (RuleMatch match : matches) {
+                System.out.println("Potential error at characters " + match.getFromPos() + "-" + match.getToPos() + ": " + match.getMessage());
+                System.out.println("Suggested correction: " + match.getSuggestedReplacements());
+            }
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } 
+	return false;
+}
+
 }
