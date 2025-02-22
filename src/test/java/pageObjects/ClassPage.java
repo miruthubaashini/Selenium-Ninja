@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -363,7 +364,8 @@ public class ClassPage extends BasePage {
 		System.out.println("======================== > " + classDate);
 		if (classDate != null && !classDate.isEmpty()) {
 			// Open date picker
-			calenderIcon.click();
+			js.executeScript("arguments[0].click();", calenderIcon);
+			//calenderIcon.click();
 			datePicker(classDate);
 
 			// to close the date picker popup
@@ -398,6 +400,63 @@ public class ClassPage extends BasePage {
 		classRecordingsInput.sendKeys(classRecordingPath);
 	}
 
+	//to update class details in Edit form
+	public void updateClassDetailsForm(String classDescription, String classDate,
+			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
+		
+		// Enter class description
+		if (classDescription != null) {
+			classDescriptionInput.clear();
+			classDescriptionInput.sendKeys(classDescription);
+		}
+
+		// Select class dates
+		System.out.println("======================== > " + classDate);
+		if (classDate != null && !classDate.isEmpty()) {
+			// Open date picker
+			js.executeScript("arguments[0].click();", calenderIcon);
+			datePicker(classDate);
+
+			// to close the date picker popup
+			js.executeScript("arguments[0].click();", staffNameDropdownIcon);
+			}
+
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+
+		// Select staff name from dropdown
+		try {
+		if (staffName != null) {
+			js.executeScript("arguments[0].click();", staffNameDropdownIcon);
+			//staffNameDropdownIcon.click();
+			for (WebElement staffNameItem : staffNameDropdownItems) {
+				if (staffNameItem.getText().equals(staffName)) {
+					staffNameItem.click();
+					break;
+				}
+			}
+		}} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+
+		// Select status radio button
+		if (status != null) {
+			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
+					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
+		}
+		// Enter class comments
+		//classCommentsInput.clear();
+		classCommentsInput.sendKeys(classComments);
+
+		// Enter class notes
+		//classNotesInput.clear();
+		classNotesInput.sendKeys(classNotes);
+
+		// Enter class recordings
+		//classRecordingsInput.clear();
+		classRecordingsInput.sendKeys(classRecordingPath);
+	}
+	
 	// To check if input field text box is present
 	public boolean isInputFieldPresent(String inputField) {
 		switch (inputField.trim()) {
@@ -464,11 +523,13 @@ public class ClassPage extends BasePage {
 	}
 
 	public void clickSaveButton() {
-		saveButton.click();
+		js.executeScript("arguments[0].click();", saveButton);
+		//saveButton.click();
 	}
 
 	public void clickCancelButton() {
-		cancelButton.click();
+		js.executeScript("arguments[0].click();", cancelButton);
+		//cancelButton.click();
 	}
 
 	public void clickCloseIcon() {
@@ -614,5 +675,6 @@ public class ClassPage extends BasePage {
 			}
 		}
 	}
+
 
 }

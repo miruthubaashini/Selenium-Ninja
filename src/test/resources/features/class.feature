@@ -167,11 +167,10 @@ Feature: Class feature
   	Given Admin is on Manage Class page
     When Admin clicks on the edit icon on the Manage Class page
     Then Admin sees that Class Topic field is disabled  
-    
-   
+  
   Scenario Outline: Validate if the Class Details fields are updated with valid data 
   	Given Admin is on the Edit Class Popup window
-    When Admin updates the fields with valid data 
+    When Admin updates the fields with valid data from "<sheetName>" and <rowNum>
     And  admin clicks on Save button
     Then Admin gets message "Class Updated" and see the updated values in data table  
     
@@ -181,7 +180,7 @@ Feature: Class feature
       
   Scenario Outline: Validate if the Class Details fields are updated with invalid data 
   	Given Admin is on the Edit Class Popup window
-    When Admin updates the fields with invalid data 
+    When Admin updates the fields with invalid data from "<sheetName>" and <rowNum>
     And  admin clicks on Save button
     Then Admin sees error messages below each fields
     
@@ -191,7 +190,7 @@ Feature: Class feature
     
   Scenario Outline: Validate if the mandatory fields are updated with valid data 
   	Given Admin is on the Edit Class Popup window
-    When Admin updates the mandatory fields with valid values  
+    When Admin updates the mandatory fields with valid values from "<sheetName>" and <rowNum>
     And  admin clicks on Save button
     Then Admin gets message "Class Updated" and see the updated values in data table   
  
@@ -201,7 +200,7 @@ Feature: Class feature
           
   Scenario Outline: Validate if the optional fields are updated with valid data 
   	Given Admin is on the Edit Class Popup window
-    When Admin updates the optional fields with valid values  
+    When Admin updates the optional fields with valid values from "<sheetName>" and <rowNum> 
     And  admin clicks on Save button
     Then Admin gets message "Class Updated" and see the updated values in data table  
  

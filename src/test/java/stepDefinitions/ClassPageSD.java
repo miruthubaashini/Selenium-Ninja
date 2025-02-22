@@ -309,42 +309,83 @@ public class ClassPageSD {
 
 	@Given("Admin is on the Edit Class Popup window")
 	public void admin_is_on_the_edit_class_popup_window() {
-
+		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickEditIcon();
 	}
 
-	@When("Admin updates the fields with valid data")
-	public void admin_updates_the_fields_with_valid_data() {
+	@When("Admin updates the fields with valid data from {string} and {int}")
+	public void admin_updates_the_fields_with_valid_data(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
 
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname,
+				classstatus, classcomments, classnotes, recordingpath);
 	}
 
 	@Then("Admin gets message {string} and see the updated values in data table")
-	public void admin_gets_message_and_see_the_updated_values_in_data_table(String string) {
-
+	public void admin_gets_message_and_see_the_updated_values_in_data_table(String expectedToastMessage) {
+		Assert.assertEquals(testContext.getClassPage().getSuccessToastMessage(), expectedToastMessage);
 	}
 
-	@When("Admin updates the fields with invalid data")
-	public void admin_updates_the_fields_with_invalid_data() {
+	@When("Admin updates the fields with invalid data from {string} and {int}")
+	public void admin_updates_the_fields_with_invalid_data(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
 
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname,
+				classstatus, classcomments, classnotes, recordingpath);
 	}
 
-	@When("Admin updates the mandatory fields with valid values")
-	public void admin_updates_the_mandatory_fields_with_valid_values() {
+	@When("Admin updates the mandatory fields with valid values from {string} and {int}")
+	public void admin_updates_the_mandatory_fields_with_valid_values(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
 
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname,
+				classstatus, classcomments, classnotes, recordingpath);
 	}
 
-	@When("Admin updates the optional fields with valid values")
-	public void admin_updates_the_optional_fields_with_valid_values() {
+	@When("Admin updates the optional fields with valid values from {string} and {int}")
+	public void admin_updates_the_optional_fields_with_valid_values(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
 
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname,
+				classstatus, classcomments, classnotes, recordingpath);
 	}
 
 	@When("Admin clicks Cancel button on edit popup")
 	public void admin_clicks_cancel_button_on_edit_popup() {
-
+		testContext.getClassPage().clickCancelButton();
 	}
 
 	@Then("Admin can see the class details popup disappears and can see nothing changed for particular Class")
 	public void admin_can_see_the_class_details_popup_disappears_and_can_see_nothing_changed_for_particular_class() {
-
+		Assert.assertTrue(testContext.getClassPage().isClassDetailsDialogClosed());
 	}
 
 	// ---------------Sort class test cases-------------
