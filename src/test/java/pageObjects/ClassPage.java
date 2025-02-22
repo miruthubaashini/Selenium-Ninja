@@ -1,6 +1,7 @@
 package pageObjects;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +44,7 @@ public class ClassPage extends BasePage {
 	private WebElement paginatorFirstButton;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-prev')]/span")
 	private WebElement paginatorPreviousButton;
-	@FindBy(xpath = "//button[contains(@class,'p-paginator-next')]/span")
+	@FindBy(xpath = "//button[contains(@class,'p-paginator-next')]")
 	private WebElement paginatorNextButton;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]/span")
 	private WebElement paginatorLastButton;
@@ -83,8 +84,12 @@ public class ClassPage extends BasePage {
 	private WebElement classNotesInput;
 	@FindBy(id = "classRecordingPath")
 	private WebElement classRecordingsInput;
+	
+	//Toast message related elements
 	@FindBy(xpath = "//p-toastitem//div[contains(@class,'p-toast-detail')]")
 	private WebElement successToastMessage;
+	@FindBy(xpath = "//p-toastitem//div[contains(@class,'p-toast-summary')]")
+	private WebElement successToastSummary;
 
 	// date picker
 	@FindBy(xpath = "//button[contains(@class,'p-datepicker-trigger')]")
@@ -130,25 +135,115 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//tr[2]//button[@icon='pi pi-pencil']")
 	private WebElement editIcon;	
 	
-	//Edit related methods
+	//Delete class related elements
+	@FindBy(xpath = "//tr[2]//button[@icon='pi pi-trash']")
+	private WebElement deleteIcon;	
+	@FindBy(xpath = "//div[contains(@class,'p-confirm-dialog')]")
+	private WebElement deleteConfirmDialogBox;	
+	@FindBy(xpath = "//div[contains(@class,'p-confirm-dialog')]//span[contains(@class,'p-dialog-title')]")
+	private WebElement deleteConfirmDialogHeader;
+	@FindBy(xpath = "//button[contains(@class,'p-confirm-dialog-accept')]")
+	private WebElement deleteConfirmYesButton;	
+	@FindBy(xpath = "//button[contains(@class,'p-confirm-dialog-reject')]")
+	private WebElement deleteConfirmNoButton;
+	@FindBy(xpath = "//button[contains(@class,'p-dialog-header-close')]")
+	private WebElement deleteConfirmCloseIcon;
+	@FindBy(xpath = "//tbody/tr//div[@role='checkbox']")
+	private List<WebElement> checkboxList;
+	@FindBy(xpath = "//div[@class='box']//button[@icon='pi pi-trash']")
+	private WebElement headerDeleteIcon;	
 	
-	public void clickEditIcon() {
-		js.executeScript("arguments[0].click();", editIcon);
+	
+	//Delete class related methods
+	public void clickDeleteIconOnAnyRow() {
+		js.executeScript("arguments[0].click();", deleteIcon);
 	}
-	//====================
-	public boolean isBatchNameFieldDisabled() {		
-		if (batchNameDropdownIcon.findElement(By.xpath("..")).getDomAttribute("class").contains("p-disabled")) {
+	
+	public boolean isDeleteConfirmDialogBoxDisplayed() {
+		if (deleteConfirmDialogBox.isDisplayed()) {
+			return true;
+		} return false;
+	}
+	
+	public boolean isDeleteConfirmYesButtonDisplayed() {
+		if (deleteConfirmYesButton.isDisplayed()) {
+			return true;
+		} return false;
+	}	
+	
+	public boolean isDeleteConfirmNoButtonDisplayed() {
+		if (deleteConfirmNoButton.isDisplayed()) {
+			return true;
+		} return false;
+	}	
+	
+	public String getdeleteConfirmDialogHeader() {
+		return deleteConfirmDialogHeader.getText();
+	}
+	
+	public void clickDeleteConfirmYesButton() {
+		js.executeScript("arguments[0].click();", deleteConfirmYesButton);
+	}
+	
+	public void clickDeleteConfirmNoButton() {
+		js.executeScript("arguments[0].click();", deleteConfirmNoButton);
+	}
+
+	public void clickDeleteConfirmCloseIcon() {	
+		js.executeScript("arguments[0].click();", deleteConfirmCloseIcon);
+	}
+	
+	public String getClassTopicOfToBeDeletedClass() {
+		String classTopic = deleteIcon.findElement(By.xpath("ancestor::td/preceding-sibling::td[5]")).getText();
+		return classTopic;
+	}
+	
+	public boolean isClassDeleted(String classTopicToBeDeleted) {
+		List<String> allClassTopics = getAllClassTopicsListed();
+		boolean classDeleted = allClassTopics.stream().noneMatch(topic -> topic.equals(classTopicToBeDeleted));
+
+		return classDeleted;
+	}
+	
+	public List<String> getClassTopicAndClickCheckbox(int noOfRows) {
+		//checkboxList.stream().limit(noOfRows).forEach(checkbox -> js.executeScript("arguments[0].click()", checkbox));
+		List<String> classTopicsToBeDeleted = new ArrayList<String>();
+		for (int i=0; i<noOfRows; i++) {
+			String classTopic = checkboxList.get(i).findElement(By.xpath("ancestor::td/following-sibling::td[2]")).getText();
+			classTopicsToBeDeleted.add(classTopic);
+			js.executeScript("arguments[0].click()", checkboxList.get(i));
+			//checkboxList.get(i).click();
+		}
+		return classTopicsToBeDeleted;
+	}
+	
+	public void clickCheckBox(int noOfRows) {
+		
+	}
+	
+	public boolean isMultipleClassesDeleted(List<String> classTopicsToBeDeleted) {
+		List<String> allClassTopics = getAllClassTopicsListed();
+		boolean classDeleted = classTopicsToBeDeleted.stream().noneMatch(topic -> allClassTopics.contains(topic));	
+		System.out.println("================classDeleted "+classDeleted);
+		System.out.println("================classTopicsToBeDeleted "+classTopicsToBeDeleted);
+
+		return classDeleted;
+	}
+		
+	public boolean isHeaderDeleteIconEnabled() {
+		if (headerDeleteIcon.isEnabled()) {
 			return true;
 		}
 		return false;
- 	}
+	}
 	
-	public boolean isClassTopicFieldDisabled() {		
-		if (classTopicInput.isEnabled()) {
-			return false;
-		}
-		return true;
- 	}
+	public void clickHeaderDeleteIcon() {
+		js.executeScript("arguments[0].click()", headerDeleteIcon);
+	}
+	
+	
+	
+	
 	
 	//
 	public boolean getClassHeader(String header) {
@@ -400,62 +495,6 @@ public class ClassPage extends BasePage {
 		classRecordingsInput.sendKeys(classRecordingPath);
 	}
 
-	//to update class details in Edit form
-	public void updateClassDetailsForm(String classDescription, String classDate,
-			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
-		
-		// Enter class description
-		if (classDescription != null) {
-			classDescriptionInput.clear();
-			classDescriptionInput.sendKeys(classDescription);
-		}
-
-		// Select class dates
-		System.out.println("======================== > " + classDate);
-		if (classDate != null && !classDate.isEmpty()) {
-			// Open date picker
-			js.executeScript("arguments[0].click();", calenderIcon);
-			datePicker(classDate);
-
-			// to close the date picker popup
-			js.executeScript("arguments[0].click();", staffNameDropdownIcon);
-			}
-
-		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-
-		// Select staff name from dropdown
-		try {
-		if (staffName != null) {
-			js.executeScript("arguments[0].click();", staffNameDropdownIcon);
-			//staffNameDropdownIcon.click();
-			for (WebElement staffNameItem : staffNameDropdownItems) {
-				if (staffNameItem.getText().equals(staffName)) {
-					staffNameItem.click();
-					break;
-				}
-			}
-		}} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-
-		// Select status radio button
-		if (status != null) {
-			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
-					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
-		}
-		// Enter class comments
-		//classCommentsInput.clear();
-		classCommentsInput.sendKeys(classComments);
-
-		// Enter class notes
-		//classNotesInput.clear();
-		classNotesInput.sendKeys(classNotes);
-
-		// Enter class recordings
-		//classRecordingsInput.clear();
-		classRecordingsInput.sendKeys(classRecordingPath);
-	}
 	
 	// To check if input field text box is present
 	public boolean isInputFieldPresent(String inputField) {
@@ -536,8 +575,14 @@ public class ClassPage extends BasePage {
 		closeIcon.click();
 	}
 
+	//Toast messages related methods
 	public String getSuccessToastMessage() {
 		return successToastMessage.getText();
+	}
+	
+	public String getSuccessToastSummary() {
+		System.out.println("==========toast summary "+ successToastSummary.getText());
+		return successToastSummary.getText();
 	}
 
 	// To select Class Dates from date picker
@@ -604,6 +649,99 @@ public class ClassPage extends BasePage {
 		return true;
 	}
 
+	//Edit related methods
+	
+	public void clickEditIcon() {
+		js.executeScript("arguments[0].click();", editIcon);
+	}
+	
+	public boolean isBatchNameFieldDisabled() {		
+		if (batchNameDropdownIcon.findElement(By.xpath("..")).getDomAttribute("class").contains("p-disabled")) {
+			return true;
+		}
+		return false;
+ 	}
+	
+	public boolean isClassTopicFieldDisabled() {		
+		if (classTopicInput.isEnabled()) {
+			return false;
+		}
+		return true;
+ 	}
+	
+	//to update class details in Edit form
+	public void updateClassDetailsForm(String classDescription, String classDate,
+			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
+		
+		// Enter class description
+		if (classDescription != null) {
+			classDescriptionInput.clear();
+			classDescriptionInput.sendKeys(classDescription);
+		}
+
+		// Select class dates
+		System.out.println("======================== > " + classDate);
+		if (classDate != null && !classDate.isEmpty()) {
+			// Open date picker
+			js.executeScript("arguments[0].click();", calenderIcon);
+			datePicker(classDate);
+			}
+		
+		// Select staff name from dropdown
+		try {
+		if (staffName != null) {
+			js.executeScript("arguments[0].click();", staffNameDropdownIcon);
+			//staffNameDropdownIcon.click();
+			for (WebElement staffNameItem : staffNameDropdownItems) {
+				if (staffNameItem.getText().equals(staffName)) {
+					staffNameItem.click();
+					break;
+				}
+			}
+		}} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+		
+		// Select status radio button
+		if (status != null) {
+			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
+					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
+		}
+		// Enter class comments
+		//classCommentsInput.clear();
+		classCommentsInput.sendKeys(classComments);
+
+		// Enter class notes
+		//classNotesInput.clear();
+		classNotesInput.sendKeys(classNotes);
+
+		// Enter class recordings
+		//classRecordingsInput.clear();
+		classRecordingsInput.sendKeys(classRecordingPath);
+	}
+
+	//To get the list of class topics present in the table
+	public List<String> getAllClassTopicsListed() {
+		List<String> allClassTopics = new ArrayList<String>();
+		 while (true) {
+		        wait.until(ExpectedConditions.visibilityOfAllElements(classTopicList));
+		        List<String> classTopicsList = classTopicList.stream().map(c -> c.getText()).collect(Collectors.toList());
+		        allClassTopics.addAll(classTopicsList);
+		        js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+
+		        if (!paginatorNextButton.isEnabled()) {
+			        System.out.println("4");
+
+		            break; 
+		        }
+
+		        js.executeScript("arguments[0].click();", paginatorNextButton);
+		    }
+		    return allClassTopics;
+	}
+	
 	// Date picker logic to select date from calender
 	public void datePicker(String classDate) {
 		System.out.println("====================================== " + classDate);
