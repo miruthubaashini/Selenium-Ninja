@@ -2,78 +2,78 @@
 Feature: Batch feature
 
   Background: 
-    Given Admin successfully Logged on to the LMS Portal
+    Given Admin user is logged in with valid credentials
 
   @batch_page_navigation
   Scenario: Verify Admin Navigates to Batch page successfully
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should be in the Manage Batch Page
 
   @batch_page_validation_1
   Scenario: Validate "Title" in Batch Page
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the "LMS - Learning Management System" Title in batch page
 
   @batch_page_validation_2
   Scenario: Validate "heading" in the Batch Page
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the "Manage Batch" Heading
 
   @batch_page_validation_3
   Scenario: Validate disabled "Delete Icon" under the header in the Batch Page
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the disabled Delete Icon under the header in batch page
 
   @batch_page_validation_4
   Scenario: Validate pagination in the Batch Page
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the enabled pagination controls under the data table in batch page
 
   @batch_page_validation_5
   Scenario: Validate edit icon in each data rows
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the edit icon in each row in batch page
 
   @batch_page_validation_6
   Scenario: Validate delete icon in each data rows
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the delete icon in each row in batch page
 
   @batch_page_validation_7
   Scenario: Validate checkbox in each data rows
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the checkbox in each row in batch page
 
   @batch_page_validation_8
   Scenario: Validate Datatable headers
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the datatable headers Batch name, Batch Description,Batch Status, No Of classes, Program Name, Edit/Delete
 
   @batch_page_validation_9
   Scenario: Validate "Checkbox" in the Datatable header row
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the checkbox  in the datatable header row in batch page
 
   @batch_page_validation_10
   Scenario: Validate "sort icon" next to all the datatable header
     Given Admin is on the Home page
-    When Admin Clicks on the Batch menu from the header
+    When Admin clicks Batch on the navigation bar
     Then Admin should see the sort icon next to all Datatable headers in batch page
 
   @batch_add_new_batch_1
   Scenario: Verify sub menu displayed in batch menu bar
-    Given Admin is on batch page
-    When Admin clicks "Batch" on the navigation bar
+    Given Admin is on the Home page
+    When Admin clicks Batch on the navigation bar
     Then Admin should see sub menu in menu bar as "Add New Batch"
 
   @batch_add_new_batch_2
@@ -86,12 +86,12 @@ Feature: Batch feature
   Scenario: Validate all the fields exist in pop up
     Given Admin is on the Batch Details Pop Up Window
     When Admin checks all the fields are enabled in batch pop up window
-    Then The pop up should include the fields Batch Name,Number of classes and Description as text box, Program Name as drop downStatus as radio button
+    Then The pop up should include the fields Batch Name, Number of classes and Description as text box, Program Name as drop downStatus as radio button
 
   @batch_add_new_batch_details_popup_2
   Scenario: Validate batchname prefix selected program name
     Given Admin is on the Batch Details Pop Up Window
-    When Admin selects program name present in the dropdown	of batch pop up window
+    When Admin selects program name present in the dropdown of batch pop up window
     Then Admin should see selected program name in the batch name prefix box
 
   @batch_add_new_batch_details_popup_3
@@ -115,7 +115,7 @@ Feature: Batch feature
   @batch_add_new_batch_details_popup_6
   Scenario: Validate input data missing for mandatory fields
     Given Admin is on the Batch Details Pop Up Window
-    When Admin leaves blank one of the mandatory fields	on batch page
+    When Admin leaves blank one of the mandatory fields on batch page
     Then Admin should get a error message on the respective mandatory field on batch page
 
   @batch_add_new_batch_details_popup_7
@@ -173,7 +173,7 @@ Feature: Batch feature
     When Admin enters the valid data to all the mandatory fields and click cancel button on batch page
     Then Admin can see the batch details popup closes without editing the batch
 
-  @batch_delete @batch_delete_1
+  @batch_delete_1
   Scenario: validate delete Icon on any row
     Given Admin is on the Batch page
     When Admin clicks the delete Icon on any row on batch page
@@ -242,5 +242,5 @@ Feature: Batch feature
   @batch_Logout
   Scenario: Validate logout option in the header is visible and enabled from the batch page
     Given Admin is on the Batch page
-    When Admin clicks on the logout button	on batch page
+    When Admin clicks on the logout button on batch page
     Then Admin should see the Login screen Page

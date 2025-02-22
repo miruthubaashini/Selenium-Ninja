@@ -6,45 +6,31 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class BatchPage extends BasePage {
 
 	public BatchPage(WebDriver driver) {
 		super(driver);
-		// PageFactory.initElements(driver, this);
 	}
 
-	@FindBy(xpath = "//app-header/mat-toolbar/div/button[3]")
-	WebElement Batch;
-
-	@FindBy(xpath = "//*[@id=\"dashboard\"]")
-	WebElement Home;
-
-	// @FindBy(xpath="//*[@id=\"program\"]") WebElement Program;
-	// @FindBy(xpath="//mat-toolbar/div/button[4]")
-	// WebElement Class;
-
-	@FindBy(xpath = "//*[@id=\"logout\"]]")
-	WebElement Logout;
+	@FindBy(xpath = "//*[@id=\"logout\"]") 
+	WebElement logoutButton;
 
 	@FindBy(xpath = "//span[text()='Class']")
 	WebElement classLink;
 
-	@FindBy(xpath = "//*[@id=\"mat-menu-panel-1\"]/div/button")
-	WebElement AddNewBatch;
+	@FindBy(xpath = "//button[contains(@class,'mat-menu-item')]")
+	WebElement subMenuLink;
 
 	@FindBy(xpath = "//mat-card-title/div[2]/div[1]/button")
-	WebElement Delete;
+	WebElement deleteButton;
 
 	@FindBy(className = "p-input-icon-left") // *[@id="filterGlobal"]
 	WebElement searchBox;
-
-	@FindBy(xpath = "//mat-card-title/div[1]/text()")
-	WebElement batchHeader;
 
 	@FindBy(xpath = "//*[@id=\"dashboard\"]")
 	WebElement homeMenuLink;
@@ -60,52 +46,96 @@ public class BatchPage extends BasePage {
 
 	@FindBy(xpath = "//app-batch/div/mat-card/mat-card-title/div[1]")
 	WebElement pageHeading;
-
-	@FindBy(xpath = "//tr/th")
-	private List<WebElement> datatableHeaders;
 	
 	@FindBy(xpath = "//mat-card/mat-card-title/div[2]/div[1]/button[contains(@icon, 'pi pi-trash')]")
 	WebElement disabledDeleteIcon;
 	
+	@FindBy(xpath = "//p-dialog[1]/div/div")
+	WebElement batchDetailsPopupWindow;
 	
+	@FindBy(xpath = "//*[@id=\"mat-menu-panel-1\"]/div/button")
+	WebElement addNewBatch;
+
+	// Add batch popup related elements
+	@FindBy(xpath = "//*[@id=\"programName\"]")
+	WebElement addBatchProgramName;
+
+	@FindBy(xpath = "//input[@id=\"batchProg\"]")
+	WebElement addBatchNamePrefix;
 	
+	@FindBy(xpath = "//input[@id=\"batchName\"]")
+	WebElement addBatchNameSuffix;
+	
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[2]/div[2]/small")
+	WebElement addBatchNameSuffixError;
+	
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[2]/div[2]/small")
+	WebElement addBatchDescriptionError;
+
+	@FindBy(xpath = "//input[@id=\"batchDescription\"]")
+	WebElement addBatchDescription;
+	
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[2]/div[4]/div[2]/p-radiobutton")
+	WebElement addBatchStatusActive;
+
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[2]/div[4]/div[3]/p-radiobutton")
+	WebElement addBatchStatusInactive;
+
+	@FindBy(xpath = "//*[@id=\"batchNoOfClasses\"]")
+	WebElement addBatchNumberOfClasses;
+
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[3]/button[1]")
+	WebElement addBatchCancelButton;
+
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[3]/button[2]")
+	WebElement addBatchSaveButton;
+	
+	@FindBy(xpath = "//*[@id=\"programName\"]/div/div[2]/span")
+	WebElement programNameDropDown;
+	
+	@FindBy(xpath = "//*[@id=\"programName\"]/div/div[3]/div/ul/p-dropdownitem[1]/li/span")
+	WebElement programNameDropDownFirstItem;
+	
+	@FindBy(xpath = "//p-toastitem/div/div/div/div[2]")
+	WebElement addBatchSaveMessage;
+	
+	@FindBy(xpath = "//app-batch/p-dialog[1]/div/div/div[1]/div/button/span")
+	WebElement addBatchCloseIcon;
+
 	// Pagination and footer related objects
 
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-first')]")
 	private WebElement paginatorFirstButton;
+	
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-prev')]")
 	private WebElement paginatorPreviousButton;
+	
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-next')]")
 	private WebElement paginatorNextButton;
-	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]")
 	
+	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]")
 	private WebElement paginatorLastButton;
-
-	public boolean getBatchHeader(String header) {
-		if (batchHeader.getText().equals(header)) {
-			return true;
-		}
-		return false;
-	}
 
 	public WebElement classSearchBox() {
 		return searchBox;
 	}
 
-	// Method to check if the Delete button ised
 	public boolean isDeleteButtonVisible() {
-		return Delete.isDisplayed();
+		return deleteButton.isDisplayed();
+	}
+	public boolean isBatchDetailsPopupWindowVisible() {
+		return batchDetailsPopupWindow.isDisplayed();
 	}
 
-	// Method to click on the Delete button
 	public void clickDeleteButton() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.elementToBeClickable(Delete)); 
-		Delete.click();
+		waitUntilElementIsClickableAndClick(deleteButton);
+	}
+	
+	public void clickLogoutButton() {
+		waitUntilElementIsClickableAndClick(logoutButton);
 	}
 
 	// Pagination
-
 	public boolean isPaginationFirstButtonDisplayed() {
 		return paginatorFirstButton.isDisplayed();
 	}
@@ -123,22 +153,31 @@ public class BatchPage extends BasePage {
 	}
 
 	public void clickHomeMenuLink() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.elementToBeClickable(homeMenuLink)); 
-		homeMenuLink.click();
+		waitUntilElementIsClickableAndClick(homeMenuLink);
 	}
 
 	public void clickBatchMenuLink() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.elementToBeClickable(batchMenuLink)); 
-		batchMenuLink.click();
+		waitUntilElementIsClickableAndClick(batchMenuLink);
+
+		waitForMillis(1000);
+	}
+	
+	public void clickAddNewBatch() {
+		waitUntilElementIsClickableAndClick(addNewBatch);
+	}
+	
+	public String getSubMenuText() {
+		waitUntilElementIsClickable(subMenuLink);
+		return subMenuLink.getText();
 	}
 
 	public String getPageTitle() {
+		waitUntilElementIsClickable(pageTitle);
 		return pageTitle.getText();
 	}
 
 	public String getPageHeading() {
+		waitUntilElementIsClickable(pageHeading);
 		return pageHeading.getText();
 	}
 
@@ -192,7 +231,131 @@ public class BatchPage extends BasePage {
 	public boolean isTableHeaderSortIconDisplayed(int column) {
 		return driver.findElement(By.xpath("//p-table/div/div[1]/table/thead/tr/th[" + column + "]/p-sorticon")).isDisplayed();
 	}
+
+	public boolean isAddBatchProgramNameDisplayed() {
+		return addBatchProgramName.isDisplayed();
+	}
+
+	public boolean isAddBatchNamePrefixDisplayed() {
+		return addBatchNamePrefix.isDisplayed();
+	}
+
+	public boolean isAddBatchNameSuffixDisplayed() {
+		return addBatchNameSuffix.isDisplayed();
+	}
+
+	public boolean isAddBatchDescriptionDisplayed() {
+		return addBatchDescription.isDisplayed();
+	}
+
+	public boolean isAddBatchStatusActiveDisplayed() {
+		return addBatchStatusActive.isDisplayed();
+	}
+
+	public boolean isAddBatchStatusInactiveDisplayed() {
+		return addBatchStatusInactive.isDisplayed();
+	}
+
+	public boolean isAddBatchNumberOfClassesDisplayed() {
+		return addBatchNumberOfClasses.isDisplayed();
+	}
+
+	public boolean isAddBatchCancelButtonDisplayed() {
+		return addBatchCancelButton.isDisplayed();
+	}
+
+	public boolean isAddBatchSaveButtonDisplayed() {
+		return addBatchSaveButton.isDisplayed();
+	}
+
+	public void clickProgramNameDropDownFirstItem() {
+		waitUntilElementIsClickableAndClick(programNameDropDown);
+		waitUntilElementIsClickableAndClick(programNameDropDownFirstItem);
+	}
 	
+	public void selectedProgramNameIsDisplayedInPrefix() {
+		String actualProgramName = programNameDropDown.getText();	
+		String expectedProgramName = addBatchNamePrefix.getText();
+		
+		Assert.assertEquals(actualProgramName, expectedProgramName);
+	}
 	
+	public void enterTextInBatchNameSuffix(String text) {
+		waitUntilElementIsClickable(addBatchNameSuffix);
+		addBatchNameSuffix.sendKeys(text);
+	}
 	
+	public String getBatchNameSuffixError() {
+		waitUntilElementIsClickable(addBatchNameSuffixError);
+		return addBatchNameSuffixError.getText();
+	}
+	
+	public String getBatchDescriptionError() {
+		waitUntilElementIsClickable(addBatchDescriptionError);
+		return addBatchDescriptionError.getText();
+	}
+	
+	public void enterTextInBatchNamePrefix(String text) {
+		waitUntilElementIsClickable(addBatchNamePrefix);
+		addBatchNamePrefix.sendKeys(text);
+	}
+	
+	public String getTextInBatchNamePrefix() {
+		waitUntilElementIsClickableAndClick(addBatchNamePrefix);
+		return addBatchNamePrefix.getText();
+	}
+	
+	public void enterTextInBatchDescription(String text) {
+		waitUntilElementIsClickable(addBatchDescription);
+		addBatchDescription.sendKeys(text);
+	}
+	
+	public void setBatchActiveStatus(boolean active) {
+		if(active) {
+			waitUntilElementIsClickableAndClick(addBatchStatusActive);
+		} else {
+			waitUntilElementIsClickableAndClick(addBatchStatusInactive);
+		}
+	}
+	
+	public void enterTextInBatchNumberOfClasses(String text) {
+		waitUntilElementIsClickable(addBatchNumberOfClasses);
+		addBatchNumberOfClasses.sendKeys(text);
+	}
+
+	public void clickAddBatchSaveButton() {
+		waitUntilElementIsClickableAndClick(addBatchSaveButton);
+	}
+
+	public void clickAddBatchCancelButton() {
+		waitUntilElementIsClickableAndClick(addBatchCancelButton);
+	}
+
+	public String getAddBatchSaveMessage() {
+		waitUntilElementIsClickable(addBatchSaveMessage);
+		return addBatchSaveMessage.getText();
+	}
+
+	public void clickAddBatchCloseIcon() {
+		waitUntilElementIsClickableAndClick(addBatchCloseIcon);
+	}
+
+	private void waitUntilElementIsClickable(WebElement element) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.elementToBeClickable(element));
+	}
+	
+	private void waitUntilElementIsClickableAndClick(WebElement element) {
+		waitForMillis(1000);
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
+	}
+	
+	private void waitForMillis(long millis) {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+	}
 }
