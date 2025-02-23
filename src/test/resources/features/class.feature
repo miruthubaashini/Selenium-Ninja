@@ -338,5 +338,25 @@ Feature: Class feature
       | ClassData |     22 |
       | ClassData |     23 |
 
-     
+   # ===============================Pagination in Manage Class Page=============================== 
+   
+   Scenario: Validate Next page link(>) on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks the Next page link on the class table 
+    Then Admin sees the next page record on the class table  
+ 		@wip
+    Scenario: Validate  Last page link(>>) on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks the Last page link on the class table 
+    Then Admin sees the last page record on the class table with Next page link disabled
+   @wip 
+   Scenario: Validate Previous page link(<) on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks the Previous page link on the class table 
+    Then Admin sees the previous page record on the class table  
+    @wip
+   Scenario: Validate First page link(<<) on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks the First page link on the class table 
+    Then Admin sees the very first page record on the table with Previous page link are disabled       
       
