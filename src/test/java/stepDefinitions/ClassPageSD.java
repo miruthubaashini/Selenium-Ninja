@@ -491,7 +491,7 @@ public class ClassPageSD {
 		softAssert.assertFalse(testContext.getClassPage().isMultipleClassesDeleted(classTopicsToBeDeleted));
 		System.out.println("===============isMultipleClassesDeleted "
 				+ testContext.getClassPage().isMultipleClassesDeleted(classTopicsToBeDeleted));
-
+		softAssert.assertAll();
 	}
 
 	@When("Admin clicks multiple {int} checkboxes in the data table on the Manage Class page")
@@ -531,5 +531,66 @@ public class ClassPageSD {
 
 		testContext.getClassPage().enterSearchText(searchText);
 	}
+	
+//  ---------------Pagination in Class--------------
+	
+	@When("Admin clicks the Next page link on the class table")
+	public void admin_clicks_the_next_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorNextButton();	    
+	}
+
+	@Then("Admin sees the next page record on the class table")
+	public void admin_sees_the_next_page_record_on_the_class_table() {
+		Assert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());	    
+	}
+
+	@When("Admin clicks the Last page link on the class table")
+	public void admin_clicks_the_last_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorLastButton();	    
+	}
+
+	@Then("Admin sees the last page record on the class table with Next page link disabled")
+	public void admin_sees_the_last_page_record_on_the_class_table_with_next_page_link_disabled() {
+		softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonDisabled());
+		softAssert.assertAll();
+	}
+
+	@When("Admin clicks the Previous page link on the class table")
+	public void admin_clicks_the_previous_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorPreviousButton();	    
+	}
+
+	@Then("Admin sees the previous page record on the class table")
+	public void admin_sees_the_previous_page_record_on_the_class_table() {
+		Assert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());	 	    
+	}
+	
+	@When("Admin clicks the First page link on the class table")
+	public void admin_clicks_the_first_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorFirstButton();
+	}  
+	
+	@Then("Admin sees the very first page record on the table with Previous page link are disabled")
+	public void admin_sees_the_very_first_page_record_on_the_table_with_previous_page_link_are_disabled() {
+		softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationPreviousButtonDisabled());
+		softAssert.assertAll();
+	    
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

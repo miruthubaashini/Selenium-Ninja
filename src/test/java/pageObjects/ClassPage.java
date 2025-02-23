@@ -20,10 +20,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class ClassPage extends BasePage {
 	JavascriptExecutor js = (JavascriptExecutor) driver;
 	// WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	List<String> currentPageClassTopicList;
 
 	public ClassPage(WebDriver driver) {
 		super(driver);
 	}
+	
+
 
 	@FindBy(xpath = "//span[text()='Class']")
 	private WebElement classLink;
@@ -43,13 +46,13 @@ public class ClassPage extends BasePage {
 	// Pagination and footer related elements
 	@FindBy(xpath = "//p-paginator/div/span[contains(@class,'p-paginator-current')]")
 	private WebElement datatablePaginationText;
-	@FindBy(xpath = "//button[contains(@class,'p-paginator-first')]/span")
+	@FindBy(xpath = "//button[contains(@class,'p-paginator-first')]")
 	private WebElement paginatorFirstButton;
-	@FindBy(xpath = "//button[contains(@class,'p-paginator-prev')]/span")
+	@FindBy(xpath = "//button[contains(@class,'p-paginator-prev')]")
 	private WebElement paginatorPreviousButton;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-next')]")
 	private WebElement paginatorNextButton;
-	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]/span")
+	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]")
 	private WebElement paginatorLastButton;
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-page')]")
 	private List<WebElement> paginatorPages;
@@ -156,6 +159,9 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//div[@class='box']//button[@icon='pi pi-trash']")
 	private WebElement headerDeleteIcon;
 
+	
+	
+	
 	//
 	public boolean getClassHeader(String header) {
 		if (classHeader.getText().equals(header)) {
@@ -310,6 +316,19 @@ public class ClassPage extends BasePage {
 	public boolean isPaginationLastButtonVisible() {
 		return paginatorLastButton.isDisplayed();
 	}
+	
+	public boolean isPaginationLastButtonDisabled() {
+		return !paginatorLastButton.isEnabled();
+	}
+	public boolean isPaginationNextButtonDisabled() {
+		return !paginatorNextButton.isEnabled();
+	}
+	public boolean isPaginationPreviousButtonDisabled() {
+		return !paginatorPreviousButton.isEnabled();
+	}
+	public boolean isPaginationFirstButtonDisabled() {
+		return !paginatorFirstButton.isEnabled();
+	}
 
 	public boolean isPaginationPagesButtonAvailable() {
 		if (paginatorPages.size() >= 1) {
@@ -326,6 +345,70 @@ public class ClassPage extends BasePage {
 
 		return matcher.matches();
 	}
+	
+	//Pagination related methods
+		public void clickPaginatorNextButton() {
+			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+			currentPageClassTopicList = getClassTopics();
+			if (paginatorNextButton.isEnabled()) {
+				js.executeScript("arguments[0].click()", paginatorNextButton);
+			}	else {
+				System.out.println("Multiple pages are not available and so Next button is not enabled");
+			}	
+		}
+		
+		public List<String> getClassTopics() {
+			return classTopicList.stream().map(e->e.getText()).collect(Collectors.toList());
+		}
+		
+		
+		public boolean isNewPageRecordsDisplayed() {
+			List<String> newPageClassTopicsList = getClassTopics();
+			if (!newPageClassTopicsList.equals(currentPageClassTopicList)) {
+				return true;
+			}
+			return false;
+		}
+		
+		public void clickPaginatorLastButton() {
+			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+			currentPageClassTopicList = getClassTopics();
+			if (paginatorLastButton.isEnabled()) {
+				js.executeScript("arguments[0].click()", paginatorLastButton);
+			}	else {
+				System.out.println("Multiple pages are not available and so Last button is not enabled");
+			}	
+		}
+		
+		public void clickPaginatorPreviousButton() {
+			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+			if (paginatorPreviousButton.isEnabled()) {
+				js.executeScript("arguments[0].click()", paginatorPreviousButton);
+			}	else {
+				if (paginatorLastButton.isEnabled()) {
+					js.executeScript("arguments[0].click()", paginatorLastButton);
+					js.executeScript("arguments[0].click()", paginatorPreviousButton);
+				} else {
+					System.out.println("Multiple pages are not available and so Previous button is not enabled");
+				}
+			}	
+		}
+		
+		public void clickPaginatorFirstButton() {
+			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+			if (paginatorFirstButton.isEnabled()) {
+				js.executeScript("arguments[0].click()", paginatorFirstButton);
+			}	else {
+				if (paginatorLastButton.isEnabled()) {
+					js.executeScript("arguments[0].click()", paginatorLastButton);
+					js.executeScript("arguments[0].click()", paginatorFirstButton);
+				} else {
+					System.out.println("Multiple pages are not available and so First button is not enabled");
+				}
+			}	
+			
+		} 
+		
 	// ------------------------------------------------------------
 
 	// Class Details form related methods
