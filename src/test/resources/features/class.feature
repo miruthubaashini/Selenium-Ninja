@@ -303,12 +303,40 @@ Feature: Class feature
     And Admin clicks on the No button on the dialog box
     Then Admin lands on Manage Class page and can see the selected class is not deleted from the data table
 
+ # ===============================Search Box in Manage Class Page=============================== 
+	
+  Scenario Outline: Validate search class by Batch Name
+  	Given Admin is on Manage Class page
+    When Admin enters a Batch Name in Search textbox from "<sheetName>" and <rowNum>
+    Then Admin sees Class details are searched by "Batch Name"
+    
+    Examples:
+      | sheetName | rowNum | 
+      | ClassData |     15 |
+      | ClassData |     16 |
+      | ClassData |     17 |
+    
+  Scenario Outline: Validate search class by Class Topic
+  	Given Admin is on Manage Class page
+    When Admin enters a Class Topic in Search textbox from "<sheetName>" and <rowNum>
+    Then Admin sees Class details are searched by "Class Topic"
+    
+        Examples:
+      | sheetName | rowNum | 
+      | ClassData |     18 |
+      | ClassData |     19 |
+      | ClassData |     20 |
+   
+  Scenario Outline: Validate search class by Staff Name
+  	Given Admin is on Manage Class page
+    When Admin enters a Staff Name in Search textbox from "<sheetName>" and <rowNum>
+    Then Admin sees Class details are searched by "Staff Name"
 
-
-
-
-
-
+        Examples:
+      | sheetName | rowNum | 
+      | ClassData |     21 |
+      | ClassData |     22 |
+      | ClassData |     23 |
 
      
       

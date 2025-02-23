@@ -2,6 +2,7 @@ package pageObjects;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,8 +19,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ClassPage extends BasePage {
 	JavascriptExecutor js = (JavascriptExecutor) driver;
-	//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-	
+	// WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
 	public ClassPage(WebDriver driver) {
 		super(driver);
 	}
@@ -28,7 +29,7 @@ public class ClassPage extends BasePage {
 	private WebElement classLink;
 	@FindBy(xpath = "//mat-card-title/div[1]")
 	private WebElement classHeader;
-	@FindBy(className = "p-input-icon-left")
+	@FindBy(id = "filterGlobal")
 	private WebElement searchBox;
 	@FindBy(xpath = "//tr/th")
 	private List<WebElement> datatableHeaders;
@@ -36,6 +37,8 @@ public class ClassPage extends BasePage {
 	private WebElement deleteButton;
 	@FindBy(css = "[role='menuitem']")
 	private WebElement addNewClassButton;
+	@FindBy(xpath = "//tbody/tr")
+	private List<WebElement> tableRowsList;
 
 	// Pagination and footer related elements
 	@FindBy(xpath = "//p-paginator/div/span[contains(@class,'p-paginator-current')]")
@@ -84,8 +87,8 @@ public class ClassPage extends BasePage {
 	private WebElement classNotesInput;
 	@FindBy(id = "classRecordingPath")
 	private WebElement classRecordingsInput;
-	
-	//Toast message related elements
+
+	// Toast message related elements
 	@FindBy(xpath = "//p-toastitem//div[contains(@class,'p-toast-detail')]")
 	private WebElement successToastMessage;
 	@FindBy(xpath = "//p-toastitem//div[contains(@class,'p-toast-summary')]")
@@ -116,8 +119,8 @@ public class ClassPage extends BasePage {
 	private WebElement staffNameFieldErrorMessage;
 	@FindBy(xpath = "//div[contains(@class,'radio')]/following-sibling::small")
 	private WebElement statusFieldErrorMessage;
-	
-	//Sort related elements
+
+	// Sort related elements
 	@FindBy(xpath = "//tbody//td[2]")
 	private List<WebElement> batchNameList;
 	@FindBy(xpath = "//tbody//td[3]")
@@ -131,19 +134,19 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//tbody//td[7]")
 	private List<WebElement> staffNameList;
 
-	//Edit related elements
+	// Edit related elements
 	@FindBy(xpath = "//tr[2]//button[@icon='pi pi-pencil']")
-	private WebElement editIcon;	
-	
-	//Delete class related elements
+	private WebElement editIcon;
+
+	// Delete class related elements
 	@FindBy(xpath = "//tr[2]//button[@icon='pi pi-trash']")
-	private WebElement deleteIcon;	
+	private WebElement deleteIcon;
 	@FindBy(xpath = "//div[contains(@class,'p-confirm-dialog')]")
-	private WebElement deleteConfirmDialogBox;	
+	private WebElement deleteConfirmDialogBox;
 	@FindBy(xpath = "//div[contains(@class,'p-confirm-dialog')]//span[contains(@class,'p-dialog-title')]")
 	private WebElement deleteConfirmDialogHeader;
 	@FindBy(xpath = "//button[contains(@class,'p-confirm-dialog-accept')]")
-	private WebElement deleteConfirmYesButton;	
+	private WebElement deleteConfirmYesButton;
 	@FindBy(xpath = "//button[contains(@class,'p-confirm-dialog-reject')]")
 	private WebElement deleteConfirmNoButton;
 	@FindBy(xpath = "//button[contains(@class,'p-dialog-header-close')]")
@@ -151,100 +154,8 @@ public class ClassPage extends BasePage {
 	@FindBy(xpath = "//tbody/tr//div[@role='checkbox']")
 	private List<WebElement> checkboxList;
 	@FindBy(xpath = "//div[@class='box']//button[@icon='pi pi-trash']")
-	private WebElement headerDeleteIcon;	
-	
-	
-	//Delete class related methods
-	public void clickDeleteIconOnAnyRow() {
-		js.executeScript("arguments[0].click();", deleteIcon);
-	}
-	
-	public boolean isDeleteConfirmDialogBoxDisplayed() {
-		if (deleteConfirmDialogBox.isDisplayed()) {
-			return true;
-		} return false;
-	}
-	
-	public boolean isDeleteConfirmYesButtonDisplayed() {
-		if (deleteConfirmYesButton.isDisplayed()) {
-			return true;
-		} return false;
-	}	
-	
-	public boolean isDeleteConfirmNoButtonDisplayed() {
-		if (deleteConfirmNoButton.isDisplayed()) {
-			return true;
-		} return false;
-	}	
-	
-	public String getdeleteConfirmDialogHeader() {
-		return deleteConfirmDialogHeader.getText();
-	}
-	
-	public void clickDeleteConfirmYesButton() {
-		js.executeScript("arguments[0].click();", deleteConfirmYesButton);
-	}
-	
-	public void clickDeleteConfirmNoButton() {
-		js.executeScript("arguments[0].click();", deleteConfirmNoButton);
-	}
+	private WebElement headerDeleteIcon;
 
-	public void clickDeleteConfirmCloseIcon() {	
-		js.executeScript("arguments[0].click();", deleteConfirmCloseIcon);
-	}
-	
-	public String getClassTopicOfToBeDeletedClass() {
-		String classTopic = deleteIcon.findElement(By.xpath("ancestor::td/preceding-sibling::td[5]")).getText();
-		return classTopic;
-	}
-	
-	public boolean isClassDeleted(String classTopicToBeDeleted) {
-		List<String> allClassTopics = getAllClassTopicsListed();
-		boolean classDeleted = allClassTopics.stream().noneMatch(topic -> topic.equals(classTopicToBeDeleted));
-
-		return classDeleted;
-	}
-	
-	public List<String> getClassTopicAndClickCheckbox(int noOfRows) {
-		//checkboxList.stream().limit(noOfRows).forEach(checkbox -> js.executeScript("arguments[0].click()", checkbox));
-		List<String> classTopicsToBeDeleted = new ArrayList<String>();
-		for (int i=0; i<noOfRows; i++) {
-			String classTopic = checkboxList.get(i).findElement(By.xpath("ancestor::td/following-sibling::td[2]")).getText();
-			classTopicsToBeDeleted.add(classTopic);
-			js.executeScript("arguments[0].click()", checkboxList.get(i));
-			//checkboxList.get(i).click();
-		}
-		return classTopicsToBeDeleted;
-	}
-	
-	public void clickCheckBox(int noOfRows) {
-		
-	}
-	
-	public boolean isMultipleClassesDeleted(List<String> classTopicsToBeDeleted) {
-		List<String> allClassTopics = getAllClassTopicsListed();
-		boolean classDeleted = classTopicsToBeDeleted.stream().noneMatch(topic -> allClassTopics.contains(topic));	
-		System.out.println("================classDeleted "+classDeleted);
-		System.out.println("================classTopicsToBeDeleted "+classTopicsToBeDeleted);
-
-		return classDeleted;
-	}
-		
-	public boolean isHeaderDeleteIconEnabled() {
-		if (headerDeleteIcon.isEnabled()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public void clickHeaderDeleteIcon() {
-		js.executeScript("arguments[0].click()", headerDeleteIcon);
-	}
-	
-	
-	
-	
-	
 	//
 	public boolean getClassHeader(String header) {
 		if (classHeader.getText().equals(header)) {
@@ -262,20 +173,20 @@ public class ClassPage extends BasePage {
 				.collect(Collectors.toList());
 	}
 
-	//Sorting
+	// Sorting
 	public WebElement checkSortIcon(String columnHeader) {
 		for (WebElement header : datatableHeaders) {
 			if (header.getText().equals(columnHeader)) {
-				return header.findElement(By.tagName("p-sorticon")); //header.findElement(By.tagName("p-sorticon"));
+				return header.findElement(By.tagName("p-sorticon")); // header.findElement(By.tagName("p-sorticon"));
 			}
 		}
 		return null;
 	}
-	
+
 	public void clickSortIcon(String columnHeader) {
-		System.out.println("==========ColumnHeader from feature: "+ columnHeader);
+		System.out.println("==========ColumnHeader from feature: " + columnHeader);
 		for (WebElement header : datatableHeaders) {
-			System.out.println("==========ColumnHeader from app: "+ header.getText().trim());
+			System.out.println("==========ColumnHeader from app: " + header.getText().trim());
 			if (header.getText().trim().equals(columnHeader)) {
 				WebElement sortIcon = header.findElement(By.xpath("p-sorticon/i"));
 				js.executeScript("arguments[0].click();", sortIcon);
@@ -283,66 +194,69 @@ public class ClassPage extends BasePage {
 			}
 		}
 	}
-	
+
 	public boolean checkSortedAscending(String columnHeader) {
 		switch (columnHeader.trim()) {
 		case "Batch Name": {
-			List<String> batchNames = batchNameList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> batchNames = batchNameList.stream().map(b -> b.getText().trim()).collect(Collectors.toList());
 			List<String> sortedBatchNames = batchNames.stream().sorted().collect(Collectors.toList());
-			
-			if(batchNames.equals(sortedBatchNames)) {
+
+			if (batchNames.equals(sortedBatchNames)) {
 				return true;
 			}
-			return false;	
-			}
+			return false;
+		}
 		case "Class Topic": {
-			List<String> classTopics = classTopicList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> classTopics = classTopicList.stream().map(b -> b.getText().trim())
+					.collect(Collectors.toList());
 			List<String> sortedClassTopics = classTopics.stream().sorted().collect(Collectors.toList());
 
-			if(classTopics.equals(sortedClassTopics)) {
+			if (classTopics.equals(sortedClassTopics)) {
 				return true;
 			}
-			return false;	
-			}
-			
-		case "Class Description":{
-			List<String> classDescriptions = classDescriptionList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			return false;
+		}
+
+		case "Class Description": {
+			List<String> classDescriptions = classDescriptionList.stream().map(b -> b.getText().trim())
+					.collect(Collectors.toList());
 			List<String> sortedClassDescriptions = classDescriptions.stream().sorted().collect(Collectors.toList());
 
-			if(classDescriptions.equals(sortedClassDescriptions)) {
+			if (classDescriptions.equals(sortedClassDescriptions)) {
 				return true;
 			}
-			return false;	
-			}
-		case "Class Date":{
-			List<String> classDates = classDateList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			return false;
+		}
+		case "Class Date": {
+			List<String> classDates = classDateList.stream().map(b -> b.getText().trim()).collect(Collectors.toList());
 			List<String> sortedClassDates = classDates.stream().sorted().collect(Collectors.toList());
 
-			if(classDates.equals(sortedClassDates)) {
+			if (classDates.equals(sortedClassDates)) {
 				return true;
 			}
-			return false;	
-			}
-		case "Staff Name":{
-			List<String> staffNames = staffNameList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			return false;
+		}
+		case "Staff Name": {
+			List<String> staffNames = staffNameList.stream().map(b -> b.getText().trim()).collect(Collectors.toList());
 			List<String> sortedStaffNames = staffNames.stream().sorted().collect(Collectors.toList());
 
-			if(staffNames.equals(sortedStaffNames)) {
+			if (staffNames.equals(sortedStaffNames)) {
 				return true;
 			}
-			return false;	
-			}
+			return false;
+		}
 		case "Status": {
-			List<String> statusL = statusList.stream().map(b->b.getText().trim()).collect(Collectors.toList());
+			List<String> statusL = statusList.stream().map(b -> b.getText().trim()).collect(Collectors.toList());
 			List<String> sortedStatus = statusL.stream().sorted().collect(Collectors.toList());
 
-			if(statusL.equals(sortedStatus)) {
+			if (statusL.equals(sortedStatus)) {
 				return true;
 			}
-			return false;	
-			}
-		default: return false;
-	}
+			return false;
+		}
+		default:
+			return false;
+		}
 	}
 
 	// Method to check if the Delete button is displayed
@@ -460,7 +374,7 @@ public class ClassPage extends BasePage {
 		if (classDate != null && !classDate.isEmpty()) {
 			// Open date picker
 			js.executeScript("arguments[0].click();", calenderIcon);
-			//calenderIcon.click();
+			// calenderIcon.click();
 			datePicker(classDate);
 
 			// to close the date picker popup
@@ -495,7 +409,6 @@ public class ClassPage extends BasePage {
 		classRecordingsInput.sendKeys(classRecordingPath);
 	}
 
-	
 	// To check if input field text box is present
 	public boolean isInputFieldPresent(String inputField) {
 		switch (inputField.trim()) {
@@ -563,25 +476,25 @@ public class ClassPage extends BasePage {
 
 	public void clickSaveButton() {
 		js.executeScript("arguments[0].click();", saveButton);
-		//saveButton.click();
+		// saveButton.click();
 	}
 
 	public void clickCancelButton() {
 		js.executeScript("arguments[0].click();", cancelButton);
-		//cancelButton.click();
+		// cancelButton.click();
 	}
 
 	public void clickCloseIcon() {
 		closeIcon.click();
 	}
 
-	//Toast messages related methods
+	// Toast messages related methods
 	public String getSuccessToastMessage() {
 		return successToastMessage.getText();
 	}
-	
+
 	public String getSuccessToastSummary() {
-		System.out.println("==========toast summary "+ successToastSummary.getText());
+		System.out.println("==========toast summary " + successToastSummary.getText());
 		return successToastSummary.getText();
 	}
 
@@ -649,30 +562,30 @@ public class ClassPage extends BasePage {
 		return true;
 	}
 
-	//Edit related methods
-	
+	// Edit related methods
+
 	public void clickEditIcon() {
 		js.executeScript("arguments[0].click();", editIcon);
 	}
-	
-	public boolean isBatchNameFieldDisabled() {		
+
+	public boolean isBatchNameFieldDisabled() {
 		if (batchNameDropdownIcon.findElement(By.xpath("..")).getDomAttribute("class").contains("p-disabled")) {
 			return true;
 		}
 		return false;
- 	}
-	
-	public boolean isClassTopicFieldDisabled() {		
+	}
+
+	public boolean isClassTopicFieldDisabled() {
 		if (classTopicInput.isEnabled()) {
 			return false;
 		}
 		return true;
- 	}
-	
-	//to update class details in Edit form
-	public void updateClassDetailsForm(String classDescription, String classDate,
-			String staffName, String status, String classComments, String classNotes, String classRecordingPath) {
-		
+	}
+
+	// to update class details in Edit form
+	public void updateClassDetailsForm(String classDescription, String classDate, String staffName, String status,
+			String classComments, String classNotes, String classRecordingPath) {
+
 		// Enter class description
 		if (classDescription != null) {
 			classDescriptionInput.clear();
@@ -685,63 +598,197 @@ public class ClassPage extends BasePage {
 			// Open date picker
 			js.executeScript("arguments[0].click();", calenderIcon);
 			datePicker(classDate);
-			}
-		
+		}
+
 		// Select staff name from dropdown
 		try {
-		if (staffName != null) {
-			js.executeScript("arguments[0].click();", staffNameDropdownIcon);
-			//staffNameDropdownIcon.click();
-			for (WebElement staffNameItem : staffNameDropdownItems) {
-				if (staffNameItem.getText().equals(staffName)) {
-					staffNameItem.click();
-					break;
+			if (staffName != null) {
+				js.executeScript("arguments[0].click();", staffNameDropdownIcon);
+				// staffNameDropdownIcon.click();
+				for (WebElement staffNameItem : staffNameDropdownItems) {
+					if (staffNameItem.getText().equals(staffName)) {
+						staffNameItem.click();
+						break;
+					}
 				}
 			}
-		}} catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
 		js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		
+
 		// Select status radio button
 		if (status != null) {
 			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
 					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
 		}
 		// Enter class comments
-		//classCommentsInput.clear();
+		// classCommentsInput.clear();
 		classCommentsInput.sendKeys(classComments);
 
 		// Enter class notes
-		//classNotesInput.clear();
+		// classNotesInput.clear();
 		classNotesInput.sendKeys(classNotes);
 
 		// Enter class recordings
-		//classRecordingsInput.clear();
+		// classRecordingsInput.clear();
 		classRecordingsInput.sendKeys(classRecordingPath);
 	}
 
-	//To get the list of class topics present in the table
+	// To get the list of class topics present in the table
 	public List<String> getAllClassTopicsListed() {
 		List<String> allClassTopics = new ArrayList<String>();
-		 while (true) {
-		        wait.until(ExpectedConditions.visibilityOfAllElements(classTopicList));
-		        List<String> classTopicsList = classTopicList.stream().map(c -> c.getText()).collect(Collectors.toList());
-		        allClassTopics.addAll(classTopicsList);
-		        js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+		while (true) {
+			wait.until(ExpectedConditions.visibilityOfAllElements(classTopicList));
+			List<String> classTopicsList = classTopicList.stream().map(c -> c.getText()).collect(Collectors.toList());
+			allClassTopics.addAll(classTopicsList);
+			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 
-		        if (!paginatorNextButton.isEnabled()) {
-			        System.out.println("4");
+			if (!paginatorNextButton.isEnabled()) {
+				System.out.println("4");
 
-		            break; 
-		        }
+				break;
+			}
 
-		        js.executeScript("arguments[0].click();", paginatorNextButton);
-		    }
-		    return allClassTopics;
+			js.executeScript("arguments[0].click();", paginatorNextButton);
+		}
+		return allClassTopics;
 	}
-	
+
+	// Delete class related methods
+	public void clickDeleteIconOnAnyRow() {
+		js.executeScript("arguments[0].click();", deleteIcon);
+	}
+
+	public boolean isDeleteConfirmDialogBoxDisplayed() {
+		if (deleteConfirmDialogBox.isDisplayed()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isDeleteConfirmYesButtonDisplayed() {
+		if (deleteConfirmYesButton.isDisplayed()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isDeleteConfirmNoButtonDisplayed() {
+		if (deleteConfirmNoButton.isDisplayed()) {
+			return true;
+		}
+		return false;
+	}
+
+	public String getdeleteConfirmDialogHeader() {
+		return deleteConfirmDialogHeader.getText();
+	}
+
+	public void clickDeleteConfirmYesButton() {
+		js.executeScript("arguments[0].click();", deleteConfirmYesButton);
+	}
+
+	public void clickDeleteConfirmNoButton() {
+		js.executeScript("arguments[0].click();", deleteConfirmNoButton);
+	}
+
+	public void clickDeleteConfirmCloseIcon() {
+		js.executeScript("arguments[0].click();", deleteConfirmCloseIcon);
+	}
+
+	public String getClassTopicOfToBeDeletedClass() {
+		String classTopic = deleteIcon.findElement(By.xpath("ancestor::td/preceding-sibling::td[5]")).getText();
+		return classTopic;
+	}
+
+	public boolean isClassDeleted(String classTopicToBeDeleted) {
+		List<String> allClassTopics = getAllClassTopicsListed();
+		boolean classDeleted = allClassTopics.stream().noneMatch(topic -> topic.equals(classTopicToBeDeleted));
+
+		return classDeleted;
+	}
+
+	public List<String> getClassTopicAndClickCheckbox(int noOfRows) {
+		// checkboxList.stream().limit(noOfRows).forEach(checkbox ->
+		// js.executeScript("arguments[0].click()", checkbox));
+		List<String> classTopicsToBeDeleted = new ArrayList<String>();
+		for (int i = 0; i < noOfRows; i++) {
+			String classTopic = checkboxList.get(i).findElement(By.xpath("ancestor::td/following-sibling::td[2]"))
+					.getText();
+			classTopicsToBeDeleted.add(classTopic);
+			js.executeScript("arguments[0].click()", checkboxList.get(i));
+			// checkboxList.get(i).click();
+		}
+		return classTopicsToBeDeleted;
+	}
+
+	public void clickCheckBox(int noOfRows) {
+
+	}
+
+	public boolean isMultipleClassesDeleted(List<String> classTopicsToBeDeleted) {
+		List<String> allClassTopics = getAllClassTopicsListed();
+		boolean classDeleted = classTopicsToBeDeleted.stream().noneMatch(topic -> allClassTopics.contains(topic));
+		System.out.println("================classDeleted " + classDeleted);
+		System.out.println("================classTopicsToBeDeleted " + classTopicsToBeDeleted);
+
+		return classDeleted;
+	}
+
+	public boolean isHeaderDeleteIconEnabled() {
+		if (headerDeleteIcon.isEnabled()) {
+			return true;
+		}
+		return false;
+	}
+
+	public void clickHeaderDeleteIcon() {
+		js.executeScript("arguments[0].click()", headerDeleteIcon);
+	}
+
+	// Search related methods
+	public void enterSearchText(String input) {
+		int initialRowCount = tableRowsList.size(); // Initial row count
+		searchBox.sendKeys(input);
+
+		// Wait for the number of rows to change after the input
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until((WebDriver driver) -> {
+			int updatedRowCount = tableRowsList.size();
+			return initialRowCount != updatedRowCount;
+		});
+	}
+
+	public boolean areClassDetailsFilteredByValidSearchText(String input) {
+
+		System.out.println("=======showing " + datatablePaginationText.getText());
+
+		if (!datatablePaginationText.getText().equals("Showing 0 to 0 of 0 entries")) {
+
+			for (WebElement eachRow : tableRowsList) {
+				String batchName = eachRow.findElement(By.xpath("td[2]")).getText();
+				String classTopic = eachRow.findElement(By.xpath("td[3]")).getText();
+				String staffName = eachRow.findElement(By.xpath("td[7]")).getText();
+
+				System.out.println("===========batchName " + batchName.toLowerCase());
+				System.out.println("===========classTopic " + classTopic.toLowerCase());
+				System.out.println("===========staffName " + staffName.toLowerCase());
+
+				if (!(batchName.toLowerCase().contains(input) || classTopic.toLowerCase().contains(input)
+						|| staffName.toLowerCase().contains(input))) {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		// If all rows matched, return true
+		return true;
+	}
+
 	// Date picker logic to select date from calender
 	public void datePicker(String classDate) {
 		System.out.println("====================================== " + classDate);
@@ -813,6 +860,5 @@ public class ClassPage extends BasePage {
 			}
 		}
 	}
-
 
 }
