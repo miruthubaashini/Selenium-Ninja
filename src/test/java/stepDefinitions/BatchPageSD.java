@@ -463,14 +463,14 @@ public class BatchPageSD {
 
 	@When("Admin enters the batch name in the search text box")
 	public void admin_enters_the_batch_name_in_the_search_text_box() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().enterTextInSearchBox("test");
+		
 	}
 
 	@Then("Admin should see the filtered batches in the data table")
 	public void admin_should_see_the_filtered_batches_in_the_data_table() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().getFirstRowBatchName().contains("test");
+		
 	}
 
 	@When("Admin clicks on the logout button on batch page")
@@ -480,13 +480,13 @@ public class BatchPageSD {
 
 	@Then("Admin should see the Login screen Page")
 	public void admin_should_see_the_login_screen_page() throws InterruptedException {
+		waitForMillis(500);
 		Properties prop = testContext.getConfigReader().initProperties();
-		String expectedUrl = prop.getProperty("LoginUrl");
-		 
+		
+		String expectedUrl = prop.getProperty("loginUrl");
 		String actualUrl = testContext.getHelper().getPageUrl();
          
 		Assert.assertEquals(actualUrl, expectedUrl);
-
 	}
 	
 	private void waitForMillis(long millis) {
