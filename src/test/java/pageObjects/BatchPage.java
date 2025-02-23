@@ -18,6 +18,7 @@ public class BatchPage extends BasePage {
 		super(driver);
 	}
 
+	
 	@FindBy(xpath = "//*[@id=\"logout\"]") 
 	WebElement logoutButton;
 
@@ -106,6 +107,9 @@ public class BatchPage extends BasePage {
 	@FindBy(xpath = "//table/tbody/tr[1]/td[7]/div/span[1]")
 	WebElement firstRowEditIcon;
 	
+	@FindBy(xpath = "//table/tbody/tr[1]/td[2]")
+	WebElement firstRowBatchName;
+	
 	@FindBy(xpath = "//table/tbody/tr[1]/td[7]/div/span[2]")
 	WebElement firstRowDeleteIcon;
 	
@@ -151,10 +155,6 @@ public class BatchPage extends BasePage {
 	@FindBy(xpath = "//p-table/div/p-paginator/div/span[2]/button[2]")
 	private WebElement paginationSecondPageIcon;
 
-	public WebElement classSearchBox() {
-		return searchBox;
-	}
-
 	public boolean isDeleteButtonVisible() {
 		return deleteButton.isDisplayed();
 	}
@@ -168,8 +168,21 @@ public class BatchPage extends BasePage {
 	}
 	
 	public void clickLogoutButton() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(logoutButton).moveByOffset(10, 10).click().perform();
 		waitUntilElementIsClickableAndClick(logoutButton);
 	}
+	
+	public void enterTextInSearchBox(String text) {
+		waitUntilElementIsClickable(logoutButton);
+		logoutButton.sendKeys(text);
+	}
+	
+	public String getFirstRowBatchName() {
+		waitUntilElementIsClickable(firstRowBatchName);
+		return firstRowBatchName.getText();
+	}
+	
 
 	// Pagination
 	public boolean isPaginationFirstIconDisplayed() {
@@ -518,7 +531,6 @@ public class BatchPage extends BasePage {
 	}
 	
 	private void waitUntilElementIsClickableAndClick(WebElement element) {
-		waitForMillis(500);
 		
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
