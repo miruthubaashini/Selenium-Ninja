@@ -4,7 +4,7 @@ Feature: Batch feature
   Background: 
     Given Admin user is logged in with valid credentials
 
-  @batch_page_navigation
+  @batch_page_navigation_1
   Scenario: Verify Admin Navigates to Batch page successfully
     Given Admin is on the Home page
     When Admin clicks Batch on the navigation bar
@@ -144,9 +144,8 @@ Feature: Batch feature
 
   @batch_edit_icon_validation_2
   Scenario: Validate Edit icon feature in any row
-    Given	 Admin is on the Batch page
-    When	 Admin clicks the edit icon	on batch page
-
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon on batch page
     Then Admin should see Program name value field is disabled for editing on batch page
 
   @batch_edit_icon_validation_3
@@ -157,89 +156,99 @@ Feature: Batch feature
 
   @batch_edit_icon_validation_4
   Scenario: Validate editing description and No. of classes fields with invalid data in the pop up
-    Given Admin is on the Batch Details Page
-    When Admin Updates any fields with invalid data and click save button on batch page
-    Then Admin should get a error message under the respective field on batch page
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon on batch page
+    And Admin Updates any fields with invalid data and click save button on batch page
+    Then Admin should see batch name value field is disabled for editing
 
   @batch_edit_icon_validation_5
   Scenario: Validate save button in Batch details pop up
-    Given Admin is on the Batch Details Page
-    When Admin enters the valid data to all the mandatory fields and click save button on batch page
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon on batch page
+    And Admin enters the valid edit data to all the mandatory fields and click save button on batch page
     Then Admin should get a successful message for editing the batch
 
   @batch_edit_icon_validation_6
   Scenario: Validate cancel button in Batch details pop up
-    Given Admin is on the Batch Details Page
-    When Admin enters the valid data to all the mandatory fields and click cancel button on batch page
+    Given Admin is on the Batch page
+    When Admin clicks the edit icon on batch page
+    And Admin enters the valid edit data to all the mandatory fields and click cancel button on batch page
     Then Admin can see the batch details popup closes without editing the batch
 
   @batch_delete_1
-  Scenario: validate delete Icon on any row
+  Scenario: Validate delete Icon on any row
     Given Admin is on the Batch page
     When Admin clicks the delete Icon on any row on batch page
     Then Admin should see the confirm alert box with yes and no button on batch page
 
   @batch_delete_2
   Scenario: Validate yes button on the confirm alert box
-    Given Admin is on the batch confirm popup page
-    When Admin clicks on the delete icon and click yes button on batch page
+    Given Admin is on the Batch page
+    When Admin clicks the delete Icon on any row on batch page
+		And Admin clicks yes button on the confirm alert box
     Then Admin should see the successful message and the batch should be deleted
 
   @batch_delete_3
-  Scenario: validate no button on the confirm alert box
-    Given Admin is on the batch confirm popup page
-    When Admin clicks on the delete icon and click no button on batch page
+  Scenario: Validate no button on the confirm alert box
+    Given Admin is on the Batch page
+    When Admin clicks the delete Icon on any row on batch page
+    And Admin clicks no button on the confirm alert box
     Then Admin should see the alert box closed and the batch is not deleted
 
   @batch_delete_4
-  Scenario: validate close Icon on the alert box
-    Given Admin is on the batch confirm popup page
-    When Admin clicks on the close icon on batch page
+  Scenario: Validate close Icon on the alert box
+    Given Admin is on the Batch page
+    When Admin clicks the delete Icon on any row on batch page
+    And Admin clicks on the close icon on confirm alert box
     Then Admin should see the alert box closed on batch page
 
   @batch_delete_5
   Scenario: Validate single row delete with checkbox
     Given Admin is on the Batch page
-    When Admin clicks on the delete icon under the Manage batch header
+    When Admin selects one row on batch page
+    And Admin clicks on the delete icon under the Manage batch header
+		And Admin clicks yes button on the confirm alert box
     Then The respective row in the table should be deleted on batch page
 
   @batch_delete_6
   Scenario: Validate multiple row delete with checkbox
     Given Admin is on the Batch page
-    When Admin clicks on the delete icon under the Manage batch header
-    Then The respective row in the table should be deleted on batch page
+    When Admin selects two rows on batch page
+    And Admin clicks on the delete icon under the Manage batch header
+		And Admin clicks yes button on the confirm alert box
+    Then The respective rows in the table should be deleted on batch page
 
   @batch_pagination_1
-  Scenario: Validate next page link
+  Scenario: Validate the next page link
     Given Admin is on the Batch page
     When Admin clicks next page link on the data table on batch page
     Then Admin should see the Next enabled link on batch page
 
   @batch_pagination_2
-  Scenario: validate last page link
+  Scenario: Validate the last page link
     Given Admin is on the Batch page
     When Admin clicks last page link on the data table	on batch page
     Then Admin should see the last page link with next page link disabled on the table on batch page
 
   @batch_pagination_3
-  Scenario: validate the previous page link
+  Scenario: Validate the previous page link
     Given Admin is on the Batch page
-    When Admin clicks previous page link on the data table	on batch page
+    When Admin clicks previous page link on the data table on batch page
     Then Admin should see the previous page on the table on batch page
 
   @batch_pagination_4
-  Scenario: validate the first page link
+  Scenario: Validate the first page link
     Given Admin is on the Batch page
     When Admin clicks first page link on the data table on batch page
     Then Admin should see the very first page on the data table on batch page
 
-  @batch_Search
-  Scenario: validate search box functionality
+  @batch_search_1
+  Scenario: Validate the search box functionality
     Given Admin is on the Batch page
     When Admin enters the batch name in the search text box
     Then Admin should see the filtered batches in the data table
 
-  @batch_Logout
+  @batch_logout_1
   Scenario: Validate logout option in the header is visible and enabled from the batch page
     Given Admin is on the Batch page
     When Admin clicks on the logout button on batch page
