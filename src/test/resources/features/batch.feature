@@ -227,19 +227,21 @@ Feature: Batch feature
   @batch_pagination_2
   Scenario: Validate the last page link
     Given Admin is on the Batch page
-    When Admin clicks last page link on the data table	on batch page
+    When Admin clicks last page link on the data table on batch page
     Then Admin should see the last page link with next page link disabled on the table on batch page
 
   @batch_pagination_3
   Scenario: Validate the previous page link
     Given Admin is on the Batch page
-    When Admin clicks previous page link on the data table on batch page
+    When Admin clicks second page link on the data table on batch page
+    And Admin clicks previous page link on the data table on batch page
     Then Admin should see the previous page on the table on batch page
 
   @batch_pagination_4
   Scenario: Validate the first page link
     Given Admin is on the Batch page
-    When Admin clicks first page link on the data table on batch page
+    When Admin clicks second page link on the data table on batch page
+    And Admin clicks first page link on the data table on batch page
     Then Admin should see the very first page on the data table on batch page
 
   @batch_search_1
