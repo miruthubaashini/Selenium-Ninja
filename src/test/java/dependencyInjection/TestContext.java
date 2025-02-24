@@ -1,12 +1,15 @@
 package dependencyInjection;
 
 import org.apache.logging.log4j.LogManager;
+
 import org.apache.logging.log4j.Logger;
 
 import pageObjects.BasePage;
 import pageObjects.BatchPage;
 import pageObjects.LoginPage;
+import pageObjects.LogoutPage;
 import pageObjects.ClassPage;
+import pageObjects.HomePage;
 import utilities.ConfigReader;
 import utilities.ExcelReader;
 import utilities.Helper;
@@ -22,8 +25,9 @@ public class TestContext {
 	private BasePage basePage;
 	private LoginPage loginPage;
 	private ClassPage classPage;
+	private HomePage homePage;
+	private LogoutPage logoutPage;
 	private BatchPage batchPage;
-
 	public DriverManager getDriverManager() {
 		return driverManager == null ? driverManager = new DriverManager() : driverManager;
 	}
@@ -60,4 +64,13 @@ public class TestContext {
 	public BatchPage getBatchPage() {
 		return batchPage == null ? batchPage = new BatchPage(driverManager.getDriver()) : batchPage;
 	}
+
+	public HomePage getHomePage() {
+		return homePage==null ? homePage=new HomePage(DriverManager.getDriver()) : homePage;
+	}
+
+	public LogoutPage getLogoutPage() {
+		return logoutPage==null ? logoutPage=new LogoutPage(DriverManager.getDriver()) : logoutPage;
+	}
+
 }
