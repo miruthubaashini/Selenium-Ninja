@@ -18,6 +18,7 @@ public class BatchPage extends BasePage {
 		super(driver);
 	}
 
+	
 	@FindBy(xpath = "//*[@id=\"logout\"]") 
 	WebElement logoutButton;
 
@@ -106,6 +107,9 @@ public class BatchPage extends BasePage {
 	@FindBy(xpath = "//table/tbody/tr[1]/td[7]/div/span[1]")
 	WebElement firstRowEditIcon;
 	
+	@FindBy(xpath = "//table/tbody/tr[1]/td[2]")
+	WebElement firstRowBatchName;
+	
 	@FindBy(xpath = "//table/tbody/tr[1]/td[7]/div/span[2]")
 	WebElement firstRowDeleteIcon;
 	
@@ -134,23 +138,22 @@ public class BatchPage extends BasePage {
 	// Pagination and footer related objects
 
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-first')]")
-	private WebElement paginatorFirstButton;
+	private WebElement paginationFirstIcon;
 	
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-prev')]")
-	private WebElement paginatorPreviousButton;
+	private WebElement paginationPreviousIcon;
 	
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-next')]")
-	private WebElement paginatorNextButton;
-	
-	@FindBy(xpath ="//p-paginator/div/span[2]/button[2]")
-	private WebElement nextEnabledButton;
+	private WebElement paginationNextIcon;
 	
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-last')]")
-	private WebElement paginatorLastButton;
-
-	public WebElement classSearchBox() {
-		return searchBox;
-	}
+	private WebElement paginationLastIcon;
+	
+	@FindBy(xpath = "//p-table/div/p-paginator/div/span[2]/button[1]")
+	private WebElement paginationFirstPageIcon;
+	
+	@FindBy(xpath = "//p-table/div/p-paginator/div/span[2]/button[2]")
+	private WebElement paginationSecondPageIcon;
 
 	public boolean isDeleteButtonVisible() {
 		return deleteButton.isDisplayed();
@@ -164,37 +167,92 @@ public class BatchPage extends BasePage {
 		actions.moveToElement(deleteButton).moveByOffset(10, 10).click().perform();
 	}
 	
-	
-	public void clickNextPageLinkButton() {
-		Actions actions = new Actions(driver);
-		actions.moveToElement(paginatorNextButton).moveByOffset(10, 10).click().perform();
-	}
-	
-	public void clickLastPageLinkButton() {
-		Actions actions = new Actions(driver);
-		actions.moveToElement(paginatorLastButton).moveByOffset(10, 10).click().perform();
-	}
-	
 	public void clickLogoutButton() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(logoutButton).moveByOffset(10, 10).click().perform();
 		waitUntilElementIsClickableAndClick(logoutButton);
 	}
+	
+	public void enterTextInSearchBox(String text) {
+		waitUntilElementIsClickable(logoutButton);
+		logoutButton.sendKeys(text);
+	}
+	
+	public String getFirstRowBatchName() {
+		waitUntilElementIsClickable(firstRowBatchName);
+		return firstRowBatchName.getText();
+	}
+	
 
 	// Pagination
-	public boolean isPaginationFirstButtonDisplayed() {
-		return paginatorFirstButton.isDisplayed();
+	public boolean isPaginationFirstIconDisplayed() {
+		return paginationFirstIcon.isDisplayed();
 	}
 
-	public boolean isPaginationPreviousButtonDisplayed() {
-		return paginatorPreviousButton.isDisplayed();
+	public boolean isPaginationPreviousIconDisplayed() {
+		return paginationPreviousIcon.isDisplayed();
 	}
 
-	public boolean isPaginationNextButtonDisplayed() {
-		return paginatorNextButton.isDisplayed();
+	public boolean isPaginationNextIconDisplayed() {
+		return paginationNextIcon.isDisplayed();
 	}
 
-	public boolean isPaginationLastButtonDisplayed() {
-		return paginatorLastButton.isDisplayed();
+	public boolean isPaginationLastIconDisplayed() {
+		return paginationLastIcon.isDisplayed();
 	}
+
+	public void clickPaginationFirstIcon() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(paginationFirstIcon).moveByOffset(5, 5).click().perform();
+		waitUntilElementIsClickableAndClick(paginationFirstIcon);
+	}
+
+	public void clickPaginationPreviousIcon() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(paginationPreviousIcon).moveByOffset(5, 5).click().perform();
+		// waitUntilElementIsClickableAndClick(paginationPreviousIcon);
+	}
+
+	public void clickPaginationNextIcon() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(paginationNextIcon).moveByOffset(5, 5).click().perform();
+		waitUntilElementIsClickableAndClick(paginationNextIcon);
+	}
+
+	public void clickPaginationLastIcon() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(paginationLastIcon).moveByOffset(5, 5).click().perform();
+		waitUntilElementIsClickableAndClick(paginationLastIcon);
+	}
+
+	public void clickPaginationSecondPageIcon() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(paginationSecondPageIcon).moveByOffset(5, 5).click().perform();
+		waitUntilElementIsClickableAndClick(paginationSecondPageIcon);
+	}
+
+	public void clickPaginationFirstPageIcon() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(paginationFirstPageIcon).moveByOffset(5, 5).click().perform();
+		waitUntilElementIsClickableAndClick(paginationFirstPageIcon);
+	}
+
+	public boolean isPaginationFirstPageIconHighlighted() {
+		waitUntilElementIsClickable(paginationFirstPageIcon);
+		return paginationFirstPageIcon.getDomAttribute("class").contains("p-highlight");
+	}
+
+	public boolean isPaginationSecondPageIconHighlighted() {
+		waitUntilElementIsClickable(paginationSecondPageIcon);
+		return paginationSecondPageIcon.getDomAttribute("class").contains("p-highlight");
+	}
+
+	public boolean isPaginationLastPageIconDisabled() {
+		return paginationLastIcon.getDomAttribute("class").contains("p-disabled");
+	}
+	
+	
+	
 
 	public void clickHomeMenuLink() {
 		waitUntilElementIsClickableAndClick(homeMenuLink);
@@ -202,8 +260,7 @@ public class BatchPage extends BasePage {
 
 	public void clickBatchMenuLink() {
 		waitUntilElementIsClickableAndClick(batchMenuLink);
-
-		waitForMillis(1000);
+		waitForMillis(500);
 	}
 	
 	public void clickAddNewBatch() {
@@ -442,7 +499,6 @@ public class BatchPage extends BasePage {
 		waitUntilElementIsClickableAndClick(deleteBatchConfirmCloseIcon);
 	}
 	
-
 	public boolean isEditBatchProgramNameDisabledForEditing() {
 		String before = addBatchProgramName.getText();
 		
@@ -468,11 +524,6 @@ public class BatchPage extends BasePage {
 		String after = addBatchNamePrefix.getText();
 		return before.equals(after);
 	}
-	
-	public boolean isNextEnabledButtonEnabled() {
-		return paginatorNextButton.isEnabled();
-	}
-	
 
 	private void waitUntilElementIsClickable(WebElement element) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -480,7 +531,6 @@ public class BatchPage extends BasePage {
 	}
 	
 	private void waitUntilElementIsClickableAndClick(WebElement element) {
-		waitForMillis(1000);
 		
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
@@ -488,7 +538,7 @@ public class BatchPage extends BasePage {
 	
 	private void waitForMillis(long millis) {
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(millis);
 		} catch (InterruptedException e) {
 		}
 	}

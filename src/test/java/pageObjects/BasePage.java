@@ -36,7 +36,8 @@ public class BasePage {
 			return true;
 		} 
 		return false;
-	}	
 
-
-}
+	}
+	
+	
+	}

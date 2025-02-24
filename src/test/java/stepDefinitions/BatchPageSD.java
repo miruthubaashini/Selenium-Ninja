@@ -70,10 +70,10 @@ public class BatchPageSD {
 
 	@Then("Admin should see the enabled pagination controls under the data table in batch page")
 	public void admin_should_see_the_enabled_pagination_controls_under_the_data_table_in_batch_page() {
-		Assert.assertTrue(testContext.getBatchPage().isPaginationFirstButtonDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isPaginationPreviousButtonDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isPaginationNextButtonDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isPaginationLastButtonDisplayed());
+		Assert.assertTrue(testContext.getBatchPage().isPaginationFirstIconDisplayed());
+		Assert.assertTrue(testContext.getBatchPage().isPaginationPreviousIconDisplayed());
+		Assert.assertTrue(testContext.getBatchPage().isPaginationNextIconDisplayed());
+		Assert.assertTrue(testContext.getBatchPage().isPaginationLastIconDisplayed());
 	}
 
 	@Then("Admin should see the edit icon in each row in batch page")
@@ -152,7 +152,7 @@ public class BatchPageSD {
 
 	@When("Admin checks all the fields are enabled in batch pop up window")
 	public void admin_checks_all_the_fields_are_enabled_in_batch_pop_up_window() {
-		waitForMillis(1000);
+		waitForMillis(500);
 	}
 
 	@Then("The pop up should include the fields Batch Name, Number of classes and Description as text box, Program Name as drop downStatus as radio button")
@@ -247,10 +247,22 @@ public class BatchPageSD {
 		testContext.getBatchPage().enterTextInBatchNumberOfClasses("" + numberOfClasses);
 		testContext.getBatchPage().clickAddBatchSaveButton();
 	}
+	
+	@When("Admin enters the valid data to all the mandatory fields and click cancel button on batch page")
+	public void admin_enters_the_valid_data_to_all_the_mandatory_fields_and_click_cancel_button_on_batch_page() {
+		testContext.getBatchPage().clickProgramNameDropDownFirstItem();
+		int suffix = new Random().nextInt(99999);
+		testContext.getBatchPage().enterTextInBatchNameSuffix("" + suffix);
+		testContext.getBatchPage().enterTextInBatchDescription("Test batch all fields");
+		testContext.getBatchPage().setBatchActiveStatus(true);
+		int numberOfClasses = new Random().nextInt(99);
+		testContext.getBatchPage().enterTextInBatchNumberOfClasses("" + numberOfClasses);
+		testContext.getBatchPage().clickAddBatchCancelButton();
+	}
 
 	@Then("Admin can see the batch details popup closes without creating any batch")
 	public void admin_can_see_the_batch_details_popup_closes_without_creating_any_batch() {
-		waitForMillis(1000);
+		waitForMillis(500);
 		try {
 			Assert.assertFalse(testContext.getBatchPage().isAddBatchPopupWindowVisible());
 		} catch (NoSuchElementException e) {
@@ -264,7 +276,7 @@ public class BatchPageSD {
 
 	@Then("The batch details pop up closes")
 	public void the_batch_details_pop_up_closes() {
-		waitForMillis(1000);
+		waitForMillis(500);
 		try {
 			Assert.assertFalse(testContext.getBatchPage().isAddBatchPopupWindowVisible());
 		} catch (NoSuchElementException e) {
@@ -319,7 +331,7 @@ public class BatchPageSD {
 
 	@Then("Admin can see the batch details popup closes without editing the batch")
 	public void admin_can_see_the_batch_details_popup_closes_without_editing_the_batch() {
-		waitForMillis(1000);
+		waitForMillis(500);
 		try {
 			Assert.assertFalse(testContext.getBatchPage().isAddBatchPopupWindowVisible());
 		} catch (NoSuchElementException e) {
@@ -355,7 +367,7 @@ public class BatchPageSD {
 
 	@Then("Admin should see the alert box closed and the batch is not deleted")
 	public void admin_should_see_the_alert_box_closed_and_the_batch_is_not_deleted() {
-		waitForMillis(1000);
+		waitForMillis(500);
 		try {
 			Assert.assertFalse(testContext.getBatchPage().isDeleteBatchPopupWindowVisible());
 		} catch (NoSuchElementException e) {
@@ -369,7 +381,7 @@ public class BatchPageSD {
 
 	@Then("Admin should see the alert box closed on batch page")
 	public void admin_should_see_the_alert_box_closed_on_batch_page() {
-		waitForMillis(1000);
+		waitForMillis(500);
 		try {
 			Assert.assertFalse(testContext.getBatchPage().isDeleteBatchPopupWindowVisible());
 		} catch (NoSuchElementException e) {
@@ -406,97 +418,80 @@ public class BatchPageSD {
 
 	@When("Admin clicks next page link on the data table on batch page")
 	public void admin_clicks_next_page_link_on_the_data_table_on_batch_page() {
-	
-		testContext.getBatchPage().clickNextPageLinkButton();
-		waitForMillis(1000);
-		try {
-			Assert.assertFalse(testContext.getBatchPage().isAddBatchPopupWindowVisible());
-		} catch (NoSuchElementException e) {
-		}
-
+		testContext.getBatchPage().clickPaginationNextIcon();
 	}
 
 	@Then("Admin should see the Next enabled link on batch page")
 	public void admin_should_see_the_next_enabled_link_on_batch_page() {
-		Assert.assertTrue(testContext.getBatchPage().isNextEnabledButtonEnabled());
-
+		Assert.assertTrue(testContext.getBatchPage().isPaginationSecondPageIconHighlighted());
 	}
 
-	@When("Admin clicks last page link on the data table	on batch page")
+	@When("Admin clicks last page link on the data table on batch page")
 	public void admin_clicks_last_page_link_on_the_data_table_on_batch_page() {
-		testContext.getBatchPage().clickLastPageLinkButton();
-		waitForMillis(1000);
-		try {
-			Assert.assertFalse(testContext.getBatchPage().isAddBatchPopupWindowVisible());
-		} catch (NoSuchElementException e) {
-		}
+		testContext.getBatchPage().clickPaginationLastIcon();
 	}
 
 	@Then("Admin should see the last page link with next page link disabled on the table on batch page")
 	public void admin_should_see_the_last_page_link_with_next_page_link_disabled_on_the_table_on_batch_page() {
-		Assert.assertTrue(testContext.getBatchPage().isNextEnabledButtonEnabled());
+		Assert.assertTrue(testContext.getBatchPage().isPaginationLastPageIconDisabled());
 	}
 
 	@When("Admin clicks previous page link on the data table on batch page")
 	public void admin_clicks_previous_page_link_on_the_data_table_on_batch_page() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().clickPaginationPreviousIcon();
 	}
 
 	@Then("Admin should see the previous page on the table on batch page")
 	public void admin_should_see_the_previous_page_on_the_table_on_batch_page() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().isPaginationFirstPageIconHighlighted();
 	}
 
 	@When("Admin clicks first page link on the data table on batch page")
 	public void admin_clicks_first_page_link_on_the_data_table_on_batch_page() {
-		// Write code here that turns the phrase above into concrete actions
+		testContext.getBatchPage().clickPaginationFirstPageIcon();
+	}
 
+	@When("Admin clicks second page link on the data table on batch page")
+	public void admin_clicks_second_page_link_on_the_data_table_on_batch_page() {
+		testContext.getBatchPage().clickPaginationSecondPageIcon();
 	}
 
 	@Then("Admin should see the very first page on the data table on batch page")
 	public void admin_should_see_the_very_first_page_on_the_data_table_on_batch_page() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().isPaginationFirstPageIconHighlighted();
 	}
 
 	@When("Admin enters the batch name in the search text box")
 	public void admin_enters_the_batch_name_in_the_search_text_box() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().enterTextInSearchBox("test");
+		
 	}
 
 	@Then("Admin should see the filtered batches in the data table")
 	public void admin_should_see_the_filtered_batches_in_the_data_table() {
-		// Write code here that turns the phrase above into concrete actions
-
+		testContext.getBatchPage().getFirstRowBatchName().contains("test");
+		
 	}
 
 	@When("Admin clicks on the logout button on batch page")
 	public void admin_clicks_on_the_logout_button_on_batch_page() throws InterruptedException {
 		testContext.getBatchPage().clickLogoutButton();
-		waitForMillis(1000);
-		try {
-			Assert.assertFalse(testContext.getBatchPage().isAddBatchPopupWindowVisible());
-		} catch (NoSuchElementException e) {
-		}
 	}
 
 	@Then("Admin should see the Login screen Page")
 	public void admin_should_see_the_login_screen_page() throws InterruptedException {
+		waitForMillis(500);
 		Properties prop = testContext.getConfigReader().initProperties();
-		String expectedUrl = prop.getProperty("LoginUrl");
-		 
+		
+		String expectedUrl = prop.getProperty("loginUrl");
 		String actualUrl = testContext.getHelper().getPageUrl();
          
 		Assert.assertEquals(actualUrl, expectedUrl);
-
 	}
 	
 	private void waitForMillis(long millis) {
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(millis);
 		} catch (InterruptedException e) {
 		}
 	}
