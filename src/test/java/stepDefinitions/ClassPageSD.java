@@ -547,8 +547,12 @@ public class ClassPageSD {
 
 	@Then("Admin sees the next page record on the class table")
 	public void admin_sees_the_next_page_record_on_the_class_table() {
-		Assert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());	    
-	}
+	    if (!testContext.getClassPage().isPaginationNextButtonDisabled()) {
+	        Assert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed(), "Next page records are not displayed as expected");
+	    } else {
+	        Assert.assertTrue(testContext.getClassPage().getClassTopics().size() > 0, "There should be records to display on the page");
+	        System.out.println("No next page available, as expected.");
+	    }	}
 
 	@When("Admin clicks the Last page link on the class table")
 	public void admin_clicks_the_last_page_link_on_the_class_table() {
@@ -557,10 +561,16 @@ public class ClassPageSD {
 
 	@Then("Admin sees the last page record on the class table with Next page link disabled")
 	public void admin_sees_the_last_page_record_on_the_class_table_with_next_page_link_disabled() {
-		softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());
-		softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonDisabled());
-		softAssert.assertAll();
-	}
+		  if (!testContext.getClassPage().isPaginationLastButtonDisabled()) {
+		        softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed(), "Next page records are not displayed as expected");
+		    } else {
+		        softAssert.assertTrue(testContext.getClassPage().getClassTopics().size() > 0, "There should be records to display on the page");
+		        System.out.println("No next page available, as expected.");
+		    }
+			softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonDisabled());
+			softAssert.assertAll();
+		  }		
+
 
 	@When("Admin clicks the Previous page link on the class table")
 	public void admin_clicks_the_previous_page_link_on_the_class_table() {

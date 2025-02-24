@@ -387,11 +387,9 @@ public class ClassPage extends BasePage {
 		
 		public boolean isNewPageRecordsDisplayed() {
 			List<String> newPageClassTopicsList = getClassTopics();
-			if (!newPageClassTopicsList.equals(currentPageClassTopicList)) {
-				return true;
-			}
-			return false;
+			return !newPageClassTopicsList.equals(currentPageClassTopicList);
 		}
+		
 		
 		public void clickPaginatorLastButton() {
 			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
