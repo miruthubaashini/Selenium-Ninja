@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import dependencyInjection.TestContext;
 import io.cucumber.java.en.Given;
@@ -14,7 +15,7 @@ import io.cucumber.java.en.When;
 public class BatchPageSD {
 
 	TestContext testContext;
-
+	private SoftAssert softAssert = new SoftAssert();
 	public BatchPageSD(TestContext testContext) {
 		this.testContext = testContext;
 	}
@@ -61,10 +62,11 @@ public class BatchPageSD {
 
 	@Then("Admin should see the enabled pagination controls under the data table in batch page")
 	public void admin_should_see_the_enabled_pagination_controls_under_the_data_table_in_batch_page() {
-		Assert.assertTrue(testContext.getBatchPage().isPaginationFirstIconDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isPaginationPreviousIconDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isPaginationNextIconDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isPaginationLastIconDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isPaginationFirstIconDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isPaginationPreviousIconDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isPaginationNextIconDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isPaginationLastIconDisplayed());
+		softAssert.assertAll();
 	}
 
 	@Then("Admin should see the edit icon in each row in batch page")
@@ -94,12 +96,13 @@ public class BatchPageSD {
 		String programNameHeader = testContext.getBatchPage().getTableHeaderText(6);
 		String actionsHeader = testContext.getBatchPage().getTableHeaderText(7);
 
-		Assert.assertEquals(batchNameHeader, "Batch Name");
-		Assert.assertEquals(batchDescriptionHeader, "Batch Description");
-		Assert.assertEquals(batchStatusHeader, "Batch Status");
-		Assert.assertEquals(numberOfClassesHeader, "No Of Classes");
-		Assert.assertEquals(programNameHeader, "Program Name");
-		Assert.assertEquals(actionsHeader, "Edit / Delete");
+		softAssert.assertEquals(batchNameHeader, "Batch Name");
+		softAssert.assertEquals(batchDescriptionHeader, "Batch Description");
+		softAssert.assertEquals(batchStatusHeader, "Batch Status");
+		softAssert.assertEquals(numberOfClassesHeader, "No Of Classes");
+		softAssert.assertEquals(programNameHeader, "Program Name");
+		softAssert.assertEquals(actionsHeader, "Edit / Delete");
+		softAssert.assertAll();
 	}
 
 	@Then("Admin should see the checkbox  in the datatable header row in batch page")
@@ -109,11 +112,12 @@ public class BatchPageSD {
 
 	@Then("Admin should see the sort icon next to all Datatable headers in batch page")
 	public void admin_should_see_the_sort_icon_next_to_all_datatable_headers_in_batch_page() {
-		Assert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(2));
-		Assert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(3));
-		Assert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(4));
-		Assert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(5));
-		Assert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(6));
+		softAssert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(2));
+		softAssert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(3));
+		softAssert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(4));
+		softAssert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(5));
+		softAssert.assertTrue(testContext.getBatchPage().isTableHeaderSortIconDisplayed(6));
+		softAssert.assertAll();
 	}
 
 	@Then("Admin should see sub menu in menu bar as {string}")
@@ -149,15 +153,16 @@ public class BatchPageSD {
 	@Then("The pop up should include the fields Batch Name, Number of classes and Description as text box, Program Name as drop downStatus as radio button")
 	public void the_pop_up_should_include_the_fields_batch_name_number_of_classes_and_description_as_text_box_program_name_as_drop_down_status_as_radio_button() {
 
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchProgramNameDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchNamePrefixDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchNameSuffixDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchDescriptionDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchStatusActiveDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchStatusInactiveDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchNumberOfClassesDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchCancelButtonDisplayed());
-		Assert.assertTrue(testContext.getBatchPage().isAddBatchSaveButtonDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchProgramNameDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchNamePrefixDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchNameSuffixDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchDescriptionDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchStatusActiveDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchStatusInactiveDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchNumberOfClassesDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchCancelButtonDisplayed());
+		softAssert.assertTrue(testContext.getBatchPage().isAddBatchSaveButtonDisplayed());
+		softAssert.assertAll();
 	}
 
 	@When("Admin selects program name present in the dropdown of batch pop up window")
