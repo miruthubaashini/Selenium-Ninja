@@ -26,6 +26,6 @@ public class TestRunner extends AbstractTestNGCucumberTests {
 	@BeforeTest
 	@Parameters("BrowserType")
 	public void defineBrowser(String browser) {
-		ConfigReader.setBrowserType(browser);
+	ConfigReader.setBrowserType(browser);
 	}
 }
