@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import pageObjects.BasePage;
 import pageObjects.LoginPage;
+import pageObjects.LogoutPage;
 import pageObjects.ClassPage;
 import pageObjects.HomePage;
 import utilities.ConfigReader;
@@ -24,6 +25,7 @@ public class TestContext {
 	private LoginPage loginPage;
 	private ClassPage classPage;
 	private HomePage homePage;
+	private LogoutPage logoutPage;
 	
 	public DriverManager getDriverManager() {
 		return driverManager==null ? driverManager=new DriverManager() : driverManager;
@@ -59,6 +61,10 @@ public class TestContext {
 
 	public HomePage getHomePage() {
 		return homePage==null ? homePage=new HomePage(DriverManager.getDriver()) : homePage;
+	}
+
+	public LogoutPage getLogoutPage() {
+		return logoutPage==null ? logoutPage=new LogoutPage(DriverManager.getDriver()) : logoutPage;
 	}
 
 }

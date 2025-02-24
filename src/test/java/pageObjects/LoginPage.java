@@ -13,11 +13,14 @@ import org.languagetool.rules.RuleMatch;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByTagName;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
@@ -30,13 +33,11 @@ import net.sourceforge.tess4j.TesseractException;
 
 
 public class LoginPage extends BasePage {
-	
-	WebDriverWait wait;
 
+	JavascriptExecutor js = (JavascriptExecutor) driver;
 	public LoginPage(WebDriver driver) {
 		super(driver);	
-		 this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));  // Adjust timeout as needed
-		   
+
 	}
 
 	@FindBy (xpath="//div[@class=\'signin-content\']") WebElement SignInPage;
@@ -50,8 +51,15 @@ public class LoginPage extends BasePage {
 
 	@FindBy (xpath="//*[@id=\'mat-form-field-label-1\']/span[2]") WebElement userStar;
 	@FindBy (xpath="//*[@id=\'mat-form-field-label-3\']/span[2]") WebElement pwdStar;
-	
+
 	@FindBy(xpath="//img[@src=\'assets/img/LMS-logo.jpg\']") WebElement appImage;
+
+	@FindBy(xpath="//mat-error[@id='mat-error-3']") WebElement userNameErrorMsg;
+	@FindBy(xpath="//mat-error[@id='mat-error-4']") WebElement passwordErrorMsg;
+	@FindBy(xpath="//img[@class='images']") WebElement imgClick;
+
+	@FindBy(xpath=("//div[@routerlink='/user']")) WebElement homepageElt;
+	@FindBy(xpath="//*[@class=\"mat-card-content\"]") WebElement inputFieldsLocation;
 
 	public void enterUsername(String userName) {
 		usernameField.sendKeys(userName);
@@ -70,11 +78,12 @@ public class LoginPage extends BasePage {
 	}
 
 	public void clickLoginbtn() {
-		
-		 WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("login"))); // Use the correct ID here
-	        
-	        // Click the button after it's clickable
-	        loginButton.click();	}
+		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+		js.executeScript("arguments[0].click();", loginButton);
+		// loginButton.click();	
+		//		Actions actions = new Actions(driver);
+		//		actions.moveToElement(loginButton).moveByOffset(10, 10).click().perform();
+	}
 
 	public boolean formLabelDisplayed() {
 		signInContent.isDisplayed();
@@ -82,14 +91,11 @@ public class LoginPage extends BasePage {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void textFields()
+	public int textFields()
 	{
 
 		List<WebElement> inputFields=SignInPage.findElements(By.tagName("input"));
-		System.out.println("Input Fields: ");
-		for (WebElement input : inputFields) {
-			System.out.println(input.getAttribute("formcontrolname"));
-		}	
+		return inputFields.size();
 	}
 	public boolean dropDownDisplay()
 	{
@@ -122,70 +128,47 @@ public class LoginPage extends BasePage {
 		return roleField.getText();
 	}
 
-	public boolean dropDownElementstsDisplayed()
+	public boolean dropDownElementstsDisplayed(String roleName)
 	{
-		// WebElement roleDropdownElement = driver.findElement(By.role("roleDropdown"));  // Modify the locator as necessary
 
-		// Step 3: Initialize the Select object to interact with the dropdown
-		Select roleDropdown = new Select(roleField);
+		List<WebElement> roleOptions=roleField.findElements(By.tagName("mat-option-text"));
+		for(WebElement roles:roleOptions)
+		{
+			String role=roles.getText();
 
-		// Step 4: Get all options in the dropdown
-		List<WebElement> options = roleDropdown.getOptions();
-
-		// Step 5: Verify the expected options ("Admin", "Staff", "Student")
-		boolean adminFound=false;
-		boolean staffFound=false;
-		boolean studentFound = false;
-
-		for (WebElement option : options) {
-			String optionText = option.getText();
-			if (optionText.equals("Admin")) {
-				adminFound = true;
-			} else if (optionText.equals("Staff")) {
-				staffFound = true;
-			} else if (optionText.equals("Student")) {
-				studentFound = true;
-			}
+			return role.contains(roleName);
 		}
-		if((adminFound && staffFound && studentFound)==true)
-			return true;
-		else
-			return false;
+		return false;
 	}
 
 	public boolean signInContentPosition() 
 	{
-		try {
-			Dimension inputFieldSize = signInContent.getSize();
-			Point inputFieldPosition = signInContent.getLocation();
+		try{
+			Dimension inputFieldSize = inputFieldsLocation.getSize();
+			Point inputFieldPosition = inputFieldsLocation.getLocation();
 
-			// Step 4: Get the size of the viewport (the visible area of the browser window)
 			Dimension viewportSize = driver.manage().window().getSize();
 
-			// Step 5: Calculate the center of the viewport
 			int viewportCenterX = viewportSize.width / 2;
 			int viewportCenterY = viewportSize.height / 2;
 
-			// Step 6: Calculate the center of the input field
 			int inputFieldCenterX = inputFieldPosition.getX() + (inputFieldSize.width / 2);
 			int inputFieldCenterY = inputFieldPosition.getY() + (inputFieldSize.height / 2);
+			System.out.println("inputFieldCenterX:"+inputFieldCenterX+",inputFieldCenterY"+inputFieldCenterY);
+			System.out.println("viewportCenterX:"+viewportCenterX+",viewportCenterY"+viewportCenterY);
 
-			// Step 7: Check if the input field is close to the center of the viewport
-			// You can adjust the tolerance (in pixels) as per your need
-			int tolerance = 50; // Tolerance range in pixels (you can adjust this)
-
+			int tolerance = 50; 
 			boolean isCenteredHorizontally = Math.abs(viewportCenterX - inputFieldCenterX) <= tolerance;
 			boolean isCenteredVertically = Math.abs(viewportCenterY - inputFieldCenterY) <= tolerance;
 
-			// Step 8: Validate the input field is close to the center
 			if (isCenteredHorizontally && isCenteredVertically) {
 				System.out.println("The input field is approximately centered on the webpage.");
 				return true;
 			} else {
 				System.out.println("The input field is NOT centered on the webpage.");
-				//return false; 
-			}
-		} catch (Exception e) {
+					}
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -202,65 +185,97 @@ public class LoginPage extends BasePage {
 
 		String rgbFormat = usernameField.getCssValue("color");
 		System.out.println(rgbFormat);
-		 return (rgbFormat.equals("rgba(0, 0, 0, 0.87)")) ? true : false ;
-		
+		return (rgbFormat.equals("rgba(0, 0, 0, 0.87)")) ? true : false ;
+
 	}
 	public boolean pwdtextColour()
 	{
 
 		String rgbFormat = usernameField.getCssValue("color");
 		System.out.println(rgbFormat);
-		
-		 return (rgbFormat.equals("rgba(0, 0, 0, 0.87)")) ? true : false ;
-		
+
+		return (rgbFormat.equals("rgba(0, 0, 0, 0.87)")) ? true : false ;
+
 	}
 
-public String appNameOnLogo() throws IOException, TesseractException {
-	
-	String imageURL = appImage.getAttribute("src");
-	URL url = new URL(imageURL);
-	BufferedImage image1 = ImageIO.read(url);
-	 Tesseract tesseract = new Tesseract();
-	 tesseract.setDatapath("C:\\Program Files\\Tesseract-OCR\\tessdata");
-	 tesseract.setLanguage("eng");
-	  String extractedText = tesseract.doOCR(image1);
+	public String appNameOnLogo() throws IOException, TesseractException {
 
-      System.out.println("Extracted Text: " + extractedText);
-      return extractedText;
-}
+		String imageURL = appImage.getAttribute("src");
+		URL url = new URL(imageURL);
+		BufferedImage image1 = ImageIO.read(url);
+		Tesseract tesseract = new Tesseract();
+		tesseract.setDatapath("C:\\Program Files\\Tesseract-OCR\\tessdata");
+		tesseract.setLanguage("eng");
+		String extractedText = tesseract.doOCR(image1);
 
-public boolean spellCheckSignInContents()
-{
-	return checkSpelling(FormContent);
-}
+		System.out.println("Extracted Text: " + extractedText);
+		return extractedText;
+	}
 
-public boolean checkSpelling(WebElement elt)
-{
-	try {
-        //WebElement elt
-        String pageText = elt.getText();
-        System.out.println(pageText);
-        @SuppressWarnings("deprecation")
-		JLanguageTool langTool = new JLanguageTool(new English());
+	public boolean spellCheckSignInContents()
+	{
+		return checkSpelling(FormContent);
+	}
 
-        // Step 4: Check for spelling and grammar errors
-        List<RuleMatch> matches = langTool.check(pageText);
+	public boolean checkSpelling(WebElement elt)
+	{
+		try {
+			String pageText = elt.getText();
+			System.out.println(pageText);
+			@SuppressWarnings("deprecation")
+			JLanguageTool langTool = new JLanguageTool(new English());
 
-        // Step 5: Output errors found
-        if (matches.isEmpty()) {
-            System.out.println("No spelling errors found!");
-            return true;
-        } else {
-            for (RuleMatch match : matches) {
-                System.out.println("Potential error at characters " + match.getFromPos() + "-" + match.getToPos() + ": " + match.getMessage());
-                System.out.println("Suggested correction: " + match.getSuggestedReplacements());
-            }
-        }
+			List<RuleMatch> matches = langTool.check(pageText);
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    } 
-	return false;
-}
+			if (matches.isEmpty()) {
+				System.out.println("No spelling errors found!");
+				return true;
+			} else {
+				for (RuleMatch match : matches) {
+					System.out.println("Potential error at characters " + match.getFromPos() + "-" + match.getToPos() + ": " + match.getMessage());
+					System.out.println("Suggested correction: " + match.getSuggestedReplacements());
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return false;
+	}
+
+	public void LoginBtnKeyboardClick()
+	{
+		//imgClick.click();
+		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+		Actions clickaction=new Actions(driver);
+		clickaction.moveToElement(loginButton).sendKeys(Keys.ENTER).click().perform();
+		wait.until(ExpectedConditions.elementToBeClickable(homepageElt));
+
+	}
+
+	public void fillLoginDetails(String username, String password, String userRole) {
+		System.out.println("values from sheet:username:"+username);
+		System.out.println("values from sheet:pwd"+password);
+		System.out.println("values from sheet:role:"+userRole);
+
+
+		enterUsername(username);
+		enterPassword(password);
+		clickRoleDD();
+		selectUserRole(userRole);
+		clickLoginbtn();
+
+	}
+
+	public boolean checkLoginErrorMsg(String errorMsg) {
+		List<WebElement> errorAlert= FormContent.findElements(By.tagName("mat-error"));
+		for(WebElement err : errorAlert)
+		{
+			System.out.println("error msg from webpage"+err.getText());
+			err.getText().equals(errorMsg);
+			return true;
+		}
+		return false;
+	}
 
 }

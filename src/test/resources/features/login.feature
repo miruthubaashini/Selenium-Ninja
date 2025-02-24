@@ -3,9 +3,9 @@ Feature: Login  Page Verification
   Background: 
     Given The browser is open
 
-  #	Scenario: Validate login with valid data in all field
-  #Given Admin user is logged in with valid credentials
-  #
+  	Scenario: Validate login with valid data in all field
+  Given Admin user is logged in with valid credentials
+  
   @login
   Scenario: Verify Admin is able to land on login page
     When Admin gives the correct LMS portal URL
@@ -73,10 +73,14 @@ Scenario: Verify placeholder in dropdown to select role
     When Admin gives the correct LMS portal URL
     Then Admin should see "Select the role" placeholder in dropdown
 @roleContents
-Scenario: Verify dropdown option to select role
+Scenario Outline: Verify dropdown option to select role
     When Admin gives the correct LMS portal URL
-    Then Admin should see "Admin , staff, student" options in dropdown
-   
+    Then Admin should see "<roleName>" options in dropdown
+   Examples:
+   |roleName|
+   |Admin|
+   |Staff|
+   |Student|
    
 Scenario: Verify the alignment input field for the login
     When Admin gives the correct LMS portal URL
@@ -96,4 +100,21 @@ Scenario: Verify input descriptive text in password field
     When Admin gives the correct LMS portal URL
     Then Admin should see password in gray color
     
- 
+@loginDDT    
+Scenario Outline: Validate login with invalid data
+    When Admin enter invalid "<sheetName>" ,<rowNo> and clicks login button 
+    Then Error message "<errorMsg>" is received
+    Examples:
+    |sheetName|rowNo|errorMsg|
+    |LoginData|1|invalid uername or password|
+    |LoginData|2|Please enter your user name|
+    |LoginData|3|Please enter your password|
+    
+Scenario: verify login button action through keyboard
+		When Admin enter valid credentials  and clicks login button through keyboard
+		Then Admin should land on home page
+		
+Scenario: verify login button action through mouse
+		When Admin enter valid credentials  and clicks login button through mouse
+		Then Admin should land on home page
+  

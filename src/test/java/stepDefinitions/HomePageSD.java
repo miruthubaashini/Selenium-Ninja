@@ -3,6 +3,7 @@ package stepDefinitions;
 import java.util.Properties;
 
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import dependencyInjection.TestContext;
 import io.cucumber.java.en.*;
@@ -10,7 +11,7 @@ import io.cucumber.java.en.*;
 public class HomePageSD {
 	Properties prop;
 	TestContext testContext;
-	
+	private SoftAssert softAssert=new SoftAssert();
 	public HomePageSD(TestContext testContext)
 	{
 		this.testContext=testContext;
@@ -43,12 +44,12 @@ public class HomePageSD {
 	@Then("Admin should see welcome message with user name and role")
 	public void admin_should_see_welcome_message_with_user_name_and_role() {
 		 prop = testContext.getConfigReader().initProperties();
-		Assert.assertTrue(testContext.getHomePage().checkUserNameAndRole(prop.getProperty("username"), prop.getProperty("role")));
+		softAssert.assertTrue(testContext.getHomePage().checkUserName(prop.getProperty("username")));
+		softAssert.assertTrue(testContext.getHomePage().checkRole(prop.getProperty("role")));
 	}
 	@Then("Admin should see bar chart for Active and inactive user")
 	public void admin_should_see_bar_chart_for_active_and_inactive_user() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new io.cucumber.java.PendingException();
+	  Assert.assertTrue(testContext.getHomePage().barChartDisplayed(),"barchart is displayed");
 	}
 
 	@Then("Admin should see user count")

@@ -24,7 +24,7 @@ Feature: HomePage
       | Logout  |     4 |
       
   @spellCheckHomeNavBar
-  Scenario: Validate navigation bar text
+  Scenario: Validate navigation bar text spelling
     Then Admin should see correct spelling in navigation bar text
     
   @pie-chart 

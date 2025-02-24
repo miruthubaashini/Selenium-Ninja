@@ -18,9 +18,10 @@ public class HomePage extends BasePage {
 	}
 	
 	@FindBy(xpath="//span[normalize-space()='LMS - Learning Management System']") WebElement home_LMS_Title;
-	@FindBy(xpath="//mat-toolbar[@class='mat-toolbar mat-primary mat-toolbar-single-row ng-star-inserted']") WebElement toolBar;
+	@FindBy(xpath="//mat-toolbar[@class='mat-toolbar mat-primary mat-toolbar-single-row ng-star-inserted']/div[1]") WebElement toolBar;
 	@FindBy(xpath="//mat-card[@class='mat-card mat-focus-indicator container']//div[@class='value']") WebElement homeUserCard;
-	@FindBy(xpath="//app-doughnutchart") WebElement pieChart;
+	@FindBy(xpath="//mat-card[@class='mat-card mat-focus-indicator container']//mat-grid-tile[2]//figure[1]") WebElement BarChart;
+	@FindBy(xpath="//app-doughnutchart//div[@class=\'chartjs-size-monitor\']") WebElement pieChart;
 	
 	@FindBy(xpath="//div[@routerlink='/user']") WebElement UserWidget;
 	@FindBy(xpath="//div[@class='widget yellow']//div[@class='value']") WebElement StaffWidget;
@@ -76,16 +77,13 @@ public class HomePage extends BasePage {
 	public boolean navBarSpellCheck()
 	{
 		try {
-	        //WebElement elt
 	        String pageText = toolBar.getText();
 	        System.out.println(pageText);
 	        @SuppressWarnings("deprecation")
 			JLanguageTool langTool = new JLanguageTool(new English());
 
-	        // Step 4: Check for spelling and grammar errors
 	        List<RuleMatch> matches = langTool.check(pageText);
 
-	        // Step 5: Output errors found
 	        if (matches.isEmpty()) {
 	            System.out.println("No spelling errors found!");
 	            return true;
@@ -102,17 +100,29 @@ public class HomePage extends BasePage {
 		return false;
 	}
 	
-	public boolean checkUserNameAndRole(String uname,String role)
+	public boolean checkUserName(String uname)
 	{
-		String role1=role.toLowerCase();
 		String UserText=homeUserCard.getText().toLowerCase();
 		System.out.println(UserText);
 		
-		if(UserText.contains(uname) && UserText.contains(role1))
+		if(UserText.contains(uname))
 			return true;
 		return false;
 	}
-
+	public boolean checkRole(String roleName)
+	{
+		String role1=roleName.toLowerCase();
+		String UserText=homeUserCard.getText().toLowerCase();
+		if(UserText.contains(role1))
+			return true;
+		return false;
+		
+	}
+	public boolean barChartDisplayed()
+	{
+		return BarChart.isDisplayed();
+	}
+	
 	public boolean pieChartDisplayed()
 	{
 		return pieChart.isDisplayed();

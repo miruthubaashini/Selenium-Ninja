@@ -3,9 +3,11 @@ package stepDefinitions;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.Properties;
 
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import dependencyInjection.TestContext;
 import io.cucumber.java.en.*
@@ -15,6 +17,11 @@ import net.sourceforge.tess4j.TesseractException;
 public class LoginPageSD {
 	Properties prop;
 	TestContext testContext;
+	private String username;
+	private String password;
+	private String userRole;
+	private String errorMsg;
+	private SoftAssert softAssert=new SoftAssert();
 	
 	public LoginPageSD(TestContext testContext)
 	{
@@ -86,8 +93,6 @@ public class LoginPageSD {
 			HttpURLConnection httpURLConnection = (HttpURLConnection) link.openConnection();
 			httpURLConnection.setConnectTimeout(3000); // Set connection timeout to 3 seconds
 			httpURLConnection.connect();
-
-
 			Assert.assertEquals(httpURLConnection.getResponseCode() >= 400 ,false);
 			}
 			catch(Exception e) {
@@ -100,16 +105,11 @@ public class LoginPageSD {
 	   Assert.assertTrue(testContext.getLoginPage().spellCheckSignInContents());
 	}
 
-	@Then("Admin should see appName {string}")                          //tesserect
+	@Then("Admin should see appName {string}")                         
 	public void admin_should_see_appName(String exp) throws IOException, TesseractException {
 	   Assert.assertEquals(testContext.getLoginPage().appNameOnLogo().contains(exp),true);
 	}
 
-	@Then("Admin should see company name below the app name")                    //tesserect
-	public void admin_should_see_company_name_below_the_app_name() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new io.cucumber.java.PendingException();
-	}
 
 	@Then("Admin should see {string}")
 	public void admin_should_see(String string) {
@@ -119,7 +119,7 @@ public class LoginPageSD {
 
 	@Then("Admin should see two text field")
 	public void admin_should_see_two_text_field() {
-	   testContext.getLoginPage().textFields();
+	   Assert.assertEquals(testContext.getLoginPage().textFields(),2);
 	}
 
 	@Then("Admin should {string} in the first text field")
@@ -158,9 +158,9 @@ public class LoginPageSD {
 	}
 
 	@Then("Admin should see {string} options in dropdown")
-	public void admin_should_see_options_in_dropdown(String string) {
+	public void admin_should_see_options_in_dropdown(String roleName) {
 
-		Assert.assertEquals(testContext.getLoginPage().dropDownElementstsDisplayed(), true);
+		softAssert.assertTrue(testContext.getLoginPage().dropDownElementstsDisplayed(roleName), "Dropdown element is present for "+roleName);
 	}
 
 	@Then("Admin should see input field on the centre of the page")
@@ -183,4 +183,61 @@ public class LoginPageSD {
 		Assert.assertTrue(testContext.getLoginPage().pwdtextColour());    
 		
 	}
+
+	@When("Admin enter invalid {string} ,{int} and clicks login button")
+	public void admin_enter_invalid_and_clicks_login_button(String sheetName, Integer rowNum) throws IOException {
+		
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		username = data.get("username");
+		password = data.get("password");
+		userRole = data.get("userRole");
+		
+		testContext.getLoginPage().fillLoginDetails(username, password, userRole);
+		}
+	
+	@Then("Error message {string} is received")
+	public void error_message_is_received(String errromsg) {
+		
+		Assert.assertTrue(testContext.getLoginPage().checkLoginErrorMsg(errromsg));
+	}
+
+	@When("Admin enter valid credentials  and clicks login button through keyboard")
+	public void admin_enter_valid_credentials_and_clicks_login_button_through_keyboard() throws InterruptedException {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String userName = prop.getProperty("username");
+		String passWord = prop.getProperty("password");
+		String userRole = prop.getProperty("role");
+		testContext.getLoginPage().enterUsername(userName);
+		testContext.getLoginPage().enterPassword(passWord);
+		testContext.getLoginPage().clickRoleDD();
+		testContext.getLoginPage().selectUserRole(userRole);
+		testContext.getLoginPage().LoginBtnKeyboardClick();
+	}
+
+	@Then("Admin should land on home page")
+	public void admin_should_land_on_home_page() {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String expectedUrl=prop.getProperty("homeUrl");
+		String actualURL = testContext.getHelper().getPageUrl();
+
+		Assert.assertEquals(actualURL, expectedUrl);
+	}
+
+	@When("Admin enter valid credentials  and clicks login button through mouse")
+	public void admin_enter_valid_credentials_and_clicks_login_button_through_mouse() {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String userName = prop.getProperty("username");
+		String passWord = prop.getProperty("password");
+		String userRole = prop.getProperty("role");
+
+		testContext.getLoginPage().enterUsername(userName);
+		testContext.getLoginPage().enterPassword(passWord);
+		testContext.getLoginPage().clickRoleDD();
+		testContext.getLoginPage().selectUserRole(userRole);
+		testContext.getLoginPage().clickLoginbtn();
+	}
+
+
+
+	
 }
