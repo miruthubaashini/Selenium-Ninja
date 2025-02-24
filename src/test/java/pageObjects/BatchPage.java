@@ -161,11 +161,11 @@ public class BatchPage extends BasePage {
 		return deleteButton.isDisplayed();
 	}
 	public boolean isAddBatchPopupWindowVisible() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		return addBatchPopupWindow.isDisplayed();
 	}
 
 	public void clickDeleteButton() {
-		//js.executeScript("arguments[0].click();", deleteButton);
 		Actions actions = new Actions(driver);
 		actions.moveToElement(deleteButton).moveByOffset(10, 10).click().perform();
 	}
@@ -213,7 +213,6 @@ public class BatchPage extends BasePage {
 	public void clickPaginationPreviousIcon() {
 		Actions actions = new Actions(driver);
 		actions.moveToElement(paginationPreviousIcon).moveByOffset(5, 5).click().perform();
-		// waitUntilElementIsClickableAndClick(paginationPreviousIcon);
 	}
 
 	public void clickPaginationNextIcon() {
@@ -263,7 +262,8 @@ public class BatchPage extends BasePage {
 
 	public void clickBatchMenuLink() {
 		waitUntilElementIsClickableAndClick(batchMenuLink);
-		waitForMillis(500);
+		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 	}
 	
 	public void clickAddNewBatch() {
@@ -537,12 +537,5 @@ public class BatchPage extends BasePage {
 		
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
-	}
-	
-	private void waitForMillis(long millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-		}
 	}
 }
