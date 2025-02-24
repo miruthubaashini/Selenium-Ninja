@@ -248,61 +248,108 @@ Feature: Class feature
      
        # ===============================Delete class===============================    
      
-  Scenario: Validate row level Delete icon
+  Scenario Outline: Validate row level Delete icon
   	Given Admin is on Manage Class page
-    When Admin clicks on the Delete icon on the Manage Class page
+    When Admin clicks on the Delete icon on the Manage Class page for Class Topic from "<sheetName>" and <rowNum>    
     Then Admin gets an alert with heading "Confirm" with Yes and No button
-  
-  @delete 
-  Scenario: Validate Yes button on the delete dialog box
-  	Given Admin is on delete Confirm dialog box
-    When Admin clicks on the Yes button on the dialog box
-    Then Admin gets "Successful" "Class Deleted" message and do not see that Class in the data table
-
-  Scenario: Validate No button on the delete dialog box
-  	Given Admin is on delete Confirm dialog box
+    
+   Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     26 | 
+     
+    Scenario Outline: Validate No button on the delete dialog box
+  	Given Admin is on Manage Class page
+    When Admin clicks on the Delete icon on the Manage Class page for Class Topic from "<sheetName>" and <rowNum>  
     When Admin clicks on the No button on the dialog box
     Then Admin sees the dialog box disappears without deleting the record
     
-  Scenario: Validate Close(X) icon on the delete dialog box
-  	Given Admin is on delete Confirm dialog box
+     Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     26 | 
+      
+  Scenario Outline: Validate Close(X) icon on the delete dialog box
+  	Given Admin is on Manage Class page
+    When Admin clicks on the Delete icon on the Manage Class page for Class Topic from "<sheetName>" and <rowNum>  
     When Admin clicks on the Close icon on the dialog box
-    Then Admin sees the dialog box disappears without deleting the record    
+    Then Admin sees the dialog box disappears without deleting the record  
+    
+     Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     26 | 
+      
+     
+  Scenario Outline: Validate Yes button on the delete dialog box
+  	Given Admin is on Manage Class page
+    When Admin clicks on the Delete icon on the Manage Class page for Class Topic from "<sheetName>" and <rowNum>  
+    When Admin clicks on the Yes button on the dialog box
+    Then Admin gets "Successful" "Class Deleted" message and do not see that Class in the data table
+    
+     Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     25 | 
+      
+
+  
      
          # ===============================Delete Multiple classes=============================== 
-    
-  Scenario: Validate the common Delete button enabled after clicking on any checkbox
+   
+  Scenario Outline: Validate the common Delete button enabled after clicking on any checkbox
   	Given Admin is on Manage Class page
-    When Admin clicks 1 checkbox in the data table on the Manage Class page
+    When Admin clicks checkboxs in the data table on the Manage Class page from "<sheetName>" and <rowNum> 
     Then Admin sees the common delete button enabled under header Manage Class
-	@delete
-  Scenario: Validate multiple class deletion by selecting single checkbox
+    
+       Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     28 |
+        
+	
+  Scenario Outline: Validate multiple class deletion by selecting single checkbox
   	Given Admin is on Manage Class page
-    When Admin clicks 1 checkbox in the data table on the Manage Class page
+    When Admin clicks checkboxs in the data table on the Manage Class page from "<sheetName>" and <rowNum> 
     And admin clicks Delete button on top of the page
     And Admin clicks on the Yes button on the dialog box
     Then Admin lands on Manage Class page and can see the selected class is deleted from the data table
     
-  Scenario: Validate multiple class deletion by selecting single checkbox
+       Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     27 |
+          
+  @wip   
+  Scenario Outline: Validate multiple class deletion by selecting single checkbox
   	Given Admin is on Manage Class page
-    When Admin clicks 1 checkbox in the data table on the Manage Class page
+    When Admin clicks checkboxs in the data table on the Manage Class page from "<sheetName>" and <rowNum> 
     And admin clicks Delete button on top of the page
     And Admin clicks on the No button on the dialog box
     Then Admin lands on Manage Class page and can see the selected class is not deleted from the data table
-  @delete  
-  Scenario: Validate multiple class deletion by selecting multiple check boxes
+    
+       Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     28 |
+          
+     
+  Scenario Outline: Validate multiple class deletion by selecting multiple check boxes
   	Given Admin is on Manage Class page
-    When Admin clicks multiple 2 checkboxes in the data table on the Manage Class page
+    When Admin clicks checkboxs in the data table on the Manage Class page from "<sheetName>" and <rowNum> 
     And admin clicks Delete button on top of the page
     And Admin clicks on the Yes button on the dialog box
     Then Admin lands on Manage Class page and can see the selected class is deleted from the data table   
-	
-  Scenario: Validate multiple class deletion by selecting multiple check boxes
+    
+       Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     29 |
+          
+	@wip 
+  Scenario Outline: Validate multiple class deletion by selecting multiple check boxes
   	Given Admin is on Manage Class page
-    When Admin clicks multiple 2 checkboxes in the data table on the Manage Class page
+    When Admin clicks checkboxs in the data table on the Manage Class page from "<sheetName>" and <rowNum> 
     And admin clicks Delete button on top of the page
     And Admin clicks on the No button on the dialog box
     Then Admin lands on Manage Class page and can see the selected class is not deleted from the data table
+
+       Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     30 |
+          
 
  # ===============================Search Box in Manage Class Page=============================== 
 	

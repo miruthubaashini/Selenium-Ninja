@@ -759,8 +759,6 @@ public class ClassPage extends BasePage {
 			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 
 			if (!paginatorNextButton.isEnabled()) {
-				System.out.println("4");
-
 				break;
 			}
 
@@ -781,10 +779,36 @@ public class ClassPage extends BasePage {
 	
 	
 	// Delete class related methods
-	public void clickDeleteIconOnAnyRow() {
-		js.executeScript("arguments[0].click();", deleteIcon);
-	}
+	public void clickDeleteIconOnRow(String classTopic) {
+		boolean isFound = false;
 
+	    while (!isFound) {
+	      
+	        for (WebElement currentClassTopic : classTopicList) {
+	            if (currentClassTopic.getText().equals(classTopic)) {
+	            	System.out.println("================currentClassTopic.getText(): "+currentClassTopic.getText());
+	            	System.out.println("================currentClassTopic.getText(): "+currentClassTopic.getText());
+
+	            	WebElement rowDeleteIcon = currentClassTopic.findElement(By.xpath("following-sibling::td[5]//button[@icon='pi pi-trash']"));
+	            	 js.executeScript("arguments[0].click()", rowDeleteIcon);
+	                isFound = true;  
+	            	System.out.println("================isFound: "+isFound);
+
+	                break;  
+	            }
+	        }
+	        
+	        if (!isFound) {
+	            if (!isPaginationNextButtonDisabled()) {
+	                js.executeScript("arguments[0].click()", paginatorNextButton);
+	            } else {
+	                System.out.println("Class topic not found after checking all pages.");
+	                break;  
+	            }
+	        }
+	    }
+	}
+		
 	public boolean isDeleteConfirmDialogBoxDisplayed() {
 		if (deleteConfirmDialogBox.isDisplayed()) {
 			return true;
@@ -835,31 +859,72 @@ public class ClassPage extends BasePage {
 	}
 
 	public List<String> getClassTopicAndClickCheckbox(int noOfRows) {
-		// checkboxList.stream().limit(noOfRows).forEach(checkbox ->
-		// js.executeScript("arguments[0].click()", checkbox));
+
 		List<String> classTopicsToBeDeleted = new ArrayList<String>();
 		for (int i = 0; i < noOfRows; i++) {
 			String classTopic = checkboxList.get(i).findElement(By.xpath("ancestor::td/following-sibling::td[2]"))
 					.getText();
 			classTopicsToBeDeleted.add(classTopic);
 			js.executeScript("arguments[0].click()", checkboxList.get(i));
-			// checkboxList.get(i).click();
 		}
 		return classTopicsToBeDeleted;
 	}
 
-	public void clickCheckBox(int noOfRows) {
+	public void clickCheckboxForClassTopics(List<String> classTopicsTextToBeDeleted) {
+	    for (String classTopic : classTopicsTextToBeDeleted) {
+	        boolean isClicked = false;
 
+	        while (!isClicked) {
+	            for (WebElement currentClassTopic : classTopicList) {
+	                if (currentClassTopic.getText().equals(classTopic)) {
+	                    WebElement checkbox = currentClassTopic.findElement(By.xpath("preceding-sibling::td//div[@role='checkbox']"));
+	                    js.executeScript("arguments[0].click()", checkbox);
+
+	                    isClicked = true;
+	                    break;  
+	                }
+	            }
+
+	            if (!isClicked) {
+	                // Check if there is a next page available
+	                if (!isPaginationNextButtonDisabled()) {
+	                    js.executeScript("arguments[0].click()", paginatorNextButton);
+	                } else {
+	                    System.out.println("Class topic '" + classTopic + "' not found after checking all pages.");
+	                    break;  
+	                }
+	            }
+	        }
+	    }
 	}
 
-	public boolean isMultipleClassesDeleted(List<String> classTopicsToBeDeleted) {
+
+	/*public boolean isMultipleClassesDeleted(List<String> classTopicsToBeDeleted) {
 		List<String> allClassTopics = getAllClassTopicsListed();
 		boolean classDeleted = classTopicsToBeDeleted.stream().noneMatch(topic -> allClassTopics.contains(topic));
 		System.out.println("================classDeleted " + classDeleted);
 		System.out.println("================classTopicsToBeDeleted " + classTopicsToBeDeleted);
 
 		return classDeleted;
+	}*/
+	
+	public boolean isMultipleClassesDeleted(List<String> classTopicsToBeDeleted) {
+		 List<String> allClassTopics = getAllClassTopicsListed();
+		    boolean classDeleted = true;  // Assume that all classes are deleted unless we find any of them still present
+		    System.out.println("================allClassTopics: " + allClassTopics);
+		    
+		    for (String topic : classTopicsToBeDeleted) {
+		        if (allClassTopics.contains(topic.trim())) {
+		            classDeleted = false;  // If the topic is found, it's not deleted
+		            System.out.println("================classTopicsToBeDeleted " + topic);
+		            // No return here, let the loop continue to check other topics
+		        }
+		    }
+		    
+		    System.out.println("================classDeleted " + classDeleted);
+		    return classDeleted;  
 	}
+
 
 	public boolean isHeaderDeleteIconEnabled() {
 		if (headerDeleteIcon.isEnabled()) {
