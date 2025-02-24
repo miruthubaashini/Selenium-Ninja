@@ -7,7 +7,7 @@ Feature: Class feature
 		
  	Scenario: Validate the navigation to Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
-    Then Admin lands on Manage Class page
+    Then Admin is redirected to Manage Class page
 
 			
  	Scenario: Validate the title on the Manage Class page
@@ -82,7 +82,7 @@ Feature: Class feature
   Scenario Outline: Validate add new class with valid data in only mandatory fields
   	Given Admin is on the Class Details Popup window
     When Admin enters mandatory fields in the Class Details form from "<sheetName>" and <rowNum>
-		And  admin clicks on Save button
+		And  admin clicks on Save button on Class Details popup
     Then Admin gets the message "Class Created" on Manage Class page
     
    Examples: 
@@ -100,7 +100,6 @@ Feature: Class feature
 
     Then Admin sees the No of Classes value is added automatically  
         
-  @toCheck  
   Scenario: Validate weekend dates are disabled in Class Dates calendar
   	Given Admin is on the Class Details Popup window
     When Admin clicks date picker 
@@ -110,20 +109,18 @@ Feature: Class feature
   Scenario Outline: Validate add new class with valid data in only optional fields
   	Given Admin is on the Class Details Popup window
     When Admin enters only optional fields in the Class Details form from "<sheetName>" and <rowNum>
-    And  admin clicks on Save button
+    And  admin clicks on Save button on Class Details popup
     Then Admin sees error messages below each mandatory fields    
     
   Examples: 
       | sheetName | rowNum | 
       | ClassData |     6 |
          
- 
- 	#for invalid data scenario create test scripts to enter the values rather than selecting from dropdown or date picker
  	
   Scenario Outline: Validate add new class with invalid data
   	Given Admin is on the Class Details Popup window
     When Admin enters invalid data in all the fields in the Class Details form from "<sheetName>" and <rowNum>
-    And  admin clicks on Save button
+    And  admin clicks on Save button on Class Details popup
     Then Admin sees error messages below each fields    
     
   Examples: 
@@ -143,13 +140,16 @@ Feature: Class feature
   	Given Admin is on the Class Details Popup window
     When Admin clicks Close(X) button on Class Details form
     Then Admin sees the Class Details popup window getting closed  
-          
-   @toCheck   
-  Scenario: Validate Save button on Class Details form
+ 
+  Scenario Outline: Validate Save button on Class Details form
   	Given Admin is on the Class Details Popup window
-  	When Admin enters the values for input fields on Class Details form
-    When Admin clicks Save button on Class Details form
-    Then Admin sees success message and new class is added to the data table       
+  	When Admin enters the values for input fields on Class Details form from "<sheetName>" and <rowNum>
+    When admin clicks on Save button on Class Details popup
+    Then Admin gets the message "Class Created" and new class is added to the data table 
+    
+  Examples: 
+      | sheetName | rowNum | 
+      | ClassData |     24 |          
       
    # ===============================Edit class===============================  
      
@@ -171,7 +171,7 @@ Feature: Class feature
   Scenario Outline: Validate if the Class Details fields are updated with valid data 
   	Given Admin is on the Edit Class Popup window
     When Admin updates the fields with valid data from "<sheetName>" and <rowNum>
-    And  admin clicks on Save button
+    And  admin clicks on Save button on Class Details popup
     Then Admin gets message "Class Updated" and see the updated values in data table  
     
   Examples: 
@@ -181,7 +181,7 @@ Feature: Class feature
   Scenario Outline: Validate if the Class Details fields are updated with invalid data 
   	Given Admin is on the Edit Class Popup window
     When Admin updates the fields with invalid data from "<sheetName>" and <rowNum>
-    And  admin clicks on Save button
+    And  admin clicks on Save button on Class Details popup
     Then Admin sees error messages below each fields
     
   Examples: 
@@ -191,7 +191,7 @@ Feature: Class feature
   Scenario Outline: Validate if the mandatory fields are updated with valid data 
   	Given Admin is on the Edit Class Popup window
     When Admin updates the mandatory fields with valid values from "<sheetName>" and <rowNum>
-    And  admin clicks on Save button
+    And  admin clicks on Save button on Class Details popup
     Then Admin gets message "Class Updated" and see the updated values in data table   
  
   Examples: 
@@ -201,7 +201,7 @@ Feature: Class feature
   Scenario Outline: Validate if the optional fields are updated with valid data 
   	Given Admin is on the Edit Class Popup window
     When Admin updates the optional fields with valid values from "<sheetName>" and <rowNum> 
-    And  admin clicks on Save button
+    And  admin clicks on Save button on Class Details popup
     Then Admin gets message "Class Updated" and see the updated values in data table  
  
    Examples: 
@@ -344,19 +344,52 @@ Feature: Class feature
   	Given Admin is on Manage Class page
     When Admin clicks the Next page link on the class table 
     Then Admin sees the next page record on the class table  
- 		@wip
+ 		
     Scenario: Validate  Last page link(>>) on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks the Last page link on the class table 
     Then Admin sees the last page record on the class table with Next page link disabled
-   @wip 
+    
    Scenario: Validate Previous page link(<) on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks the Previous page link on the class table 
     Then Admin sees the previous page record on the class table  
-    @wip
+   
    Scenario: Validate First page link(<<) on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks the First page link on the class table 
-    Then Admin sees the very first page record on the table with Previous page link are disabled       
+    Then Admin sees the very first page record on the table with Previous page link are disabled      
+    
+    # ===============================Navigation from Manage Class to other Pages===============================
+    
+
+   Scenario: Validate Class link on navigation bar on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks the Class link on navigation bar on Home page
+    Then Admin is redirected to Manage Class page 
+
+   Scenario: Validate Batch link on navigation bar on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks on Batch link on Manage Class page
+    Then Admin is redirected to Batch page  
+
+   Scenario: Validate Program link on navigation bar on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks on Program link on Manage Class page
+    Then Admin is redirected to Program page  
+
+   Scenario: Validate Home link on navigation bar on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks on Home link on Manage Class page
+    Then Admin is redirected to Home page
+
+   Scenario: Validate Logout link on navigation bar on Manage Class page
+  	Given Admin is on Manage Class page
+    When Admin clicks on Logout link on Manage Class page
+    Then Admin is redirected to Login page    
+    
+    
+    
+    
+      
       
