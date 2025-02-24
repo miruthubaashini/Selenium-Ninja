@@ -20,7 +20,7 @@ public class ClassPageSD {
 
 	TestContext testContext;
 	private SoftAssert softAssert = new SoftAssert();
-
+	private Properties prop;
 	private String batchname;
 	private String classtopic;
 	private String classdescription;
@@ -44,9 +44,9 @@ public class ClassPageSD {
 		testContext.getBasePage().clickClass();
 	}
 
-	@Then("Admin lands on Manage Class page")
+	@Then("Admin is redirected to Manage Class page")
 	public void admin_lands_on_manage_class_page() {
-		Properties prop = testContext.getConfigReader().initProperties();
+		prop = testContext.getConfigReader().initProperties();
 		String expectedClassUrl = prop.getProperty("classUrl");
 		String actualClassURL = testContext.getHelper().getPageUrl();
 
@@ -169,7 +169,7 @@ public class ClassPageSD {
 				classstatus, classcomments, classnotes, recordingpath);
 	}
 
-	@When("admin clicks on Save button")
+	@When("admin clicks on Save button on Class Details popup")
 	public void admin_clicks_on_save_button() {
 		testContext.getClassPage().clickSaveButton();
 	}
@@ -265,8 +265,6 @@ public class ClassPageSD {
 
 	@Then("Admin sees the Class Details popup window getting closed")
 	public void admin_sees_the_class_details_popup_window_getting_closed() {
-		System.out.println(
-				"-----------------Is dialog box closed? " + testContext.getClassPage().isClassDetailsDialogClosed());
 		Assert.assertTrue(testContext.getClassPage().isClassDetailsDialogClosed());
 	}
 
@@ -275,19 +273,27 @@ public class ClassPageSD {
 		testContext.getClassPage().clickCloseIcon();
 	}
 
-	@When("Admin enters the values for input fields on Class Details form")
-	public void admin_enters_the_values_for_input_fields_on_class_details_form() {
+	@When("Admin enters the values for input fields on Class Details form from {string} and {int}")
+	public void admin_enters_the_values_for_input_fields_on_class_details_form(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		batchname = data.get("batchName");
+		classtopic = data.get("classTopic");
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
 
+		testContext.getClassPage().fillClassDetailsForm(batchname, classtopic, classdescription, classdates, staffname,
+				classstatus, classcomments, classnotes, recordingpath);
 	}
 
-	@When("Admin clicks Save button on Class Details form")
-	public void admin_clicks_save_button_on_class_details_form() {
-
-	}
-
-	@Then("Admin sees success message and new class is added to the data table")
-	public void admin_sees_success_message_and_new_class_is_added_to_the_data_table() {
-
+	@Then("Admin gets the message {string} and new class is added to the data table")
+	public void admin_sees_success_message_and_new_class_is_added_to_the_data_table(String expectedToastMessage) {
+		softAssert.assertEquals(testContext.getClassPage().getSuccessToastMessage(), expectedToastMessage);
+		softAssert.assertTrue(testContext.getClassPage().isNewClassListedInClassTable(classtopic));
 	}
 
 	// ---------------Edit class test cases-------------
@@ -575,11 +581,73 @@ public class ClassPageSD {
 	public void admin_sees_the_very_first_page_record_on_the_table_with_previous_page_link_are_disabled() {
 		softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isPaginationPreviousButtonDisabled());
-		softAssert.assertAll();
-	    
+		softAssert.assertAll();	    
 	}
 	
+	// ---------------Navigation to other pages from Class page--------------
 	
+	
+	@When("Admin clicks on Batch link on Manage Class page")
+	public void admin_clicks_on_batch_link_on_manage_class_page() {
+		testContext.getClassPage().clickBatchMenuLink();	    
+	}
+
+	@Then("Admin is redirected to Batch page")
+	public void admin_is_redirected_to_batch_page() {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String expectedUrl = prop.getProperty("batchUrl");
+		String actualUrl = testContext.getHelper().getPageUrl();
+
+		Assert.assertEquals(actualUrl, expectedUrl);	    
+	}
+
+	@When("Admin clicks on Program link on Manage Class page")
+	public void admin_clicks_on_program_link_on_manage_class_page() {
+	    
+	    
+	}
+
+	@Then("Admin is redirected to Program page")
+	public void admin_is_redirected_to_program_page() {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String expectedUrl = prop.getProperty("programUrl");
+		String actualUrl = testContext.getHelper().getPageUrl();
+
+		Assert.assertEquals(actualUrl, expectedUrl);    
+	    
+	}
+
+	@When("Admin clicks on Home link on Manage Class page")
+	public void admin_clicks_on_home_link_on_manage_class_page() {
+	    
+	    
+	}
+
+	@Then("Admin is redirected to Home page")
+	public void admin_is_redirected_to_home_page() {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String expectedUrl = prop.getProperty("homeUrl");
+		String actualUrl = testContext.getHelper().getPageUrl();
+
+		Assert.assertEquals(actualUrl, expectedUrl);  	    
+	}
+
+	@When("Admin clicks on Logout link on Manage Class page")
+	public void admin_clicks_on_logout_link_on_manage_class_page() {
+	    
+	    
+	}
+
+	@Then("Admin is redirected to Login page")
+	public void admin_is_redirected_to_logout_page() {
+		Properties prop = testContext.getConfigReader().initProperties();
+		String expectedUrl = prop.getProperty("");
+		String actualUrl = testContext.getHelper().getPageUrl();
+
+		Assert.assertEquals(actualUrl, expectedUrl); 
+	    
+	}
+
 	
 	
 	

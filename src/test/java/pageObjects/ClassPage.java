@@ -483,13 +483,18 @@ public class ClassPage extends BasePage {
 					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
 		}
 		// Enter class comments
+		if (classComments != null) {
 		classCommentsInput.sendKeys(classComments);
+		}
 
 		// Enter class notes
+		if (classNotes != null) {
 		classNotesInput.sendKeys(classNotes);
-
+		}
 		// Enter class recordings
+		if (classRecordingPath != null) {
 		classRecordingsInput.sendKeys(classRecordingPath);
+		}
 	}
 
 	// To check if input field text box is present
@@ -739,6 +744,17 @@ public class ClassPage extends BasePage {
 		return allClassTopics;
 	}
 
+	//Newly add class is listed in the class table
+	public boolean isNewClassListedInClassTable (String classtopic) {
+		if (getAllClassTopicsListed().contains(classtopic)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
 	// Delete class related methods
 	public void clickDeleteIconOnAnyRow() {
 		js.executeScript("arguments[0].click();", deleteIcon);
@@ -943,5 +959,14 @@ public class ClassPage extends BasePage {
 			}
 		}
 	}
+	
+//Batch
+	@FindBy(xpath = "//app-header/mat-toolbar/div/button[3]")
+	WebElement batchMenuLink;
+	
+	public void clickBatchMenuLink() {
+		js.executeScript("arguments[0].click()", batchMenuLink);
+	}
+
 
 }
