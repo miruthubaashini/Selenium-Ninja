@@ -41,7 +41,7 @@ public class ClassPageSD {
 
 	@When("Admin clicks the Class link on navigation bar on Home page")
 	public void admin_clicks_the_class_link_on_navigation_bar_on_home_page() {
-		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickClassLink();
 	}
 
 	@Then("Admin is redirected to Manage Class page")
@@ -116,7 +116,7 @@ public class ClassPageSD {
 
 	@Given("Admin is on Manage Class page")
 	public void admin_is_on_manage_class_page() {
-		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickClassLink();
 	}
 
 	@When("Admin clicks Add New Class from the Class dropdown")
@@ -147,7 +147,7 @@ public class ClassPageSD {
 
 	@Given("Admin is on the Class Details Popup window")
 	public void admin_is_on_the_class_details_popup_window() {
-		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickClassLink();
 		testContext.getClassPage().clickAddNewClassButton();
 	}
 
@@ -197,12 +197,12 @@ public class ClassPageSD {
 
 	@When("Admin clicks date picker")
 	public void admin_clicks_date_picker() {
-
+		testContext.getClassPage().clickDatePicker();
 	}
 
 	@Then("Admin sees weekends dates are disabled in the calender")
 	public void admin_sees_weekends_dates_are_disabled_in_the_calender() {
-
+		Assert.assertTrue(testContext.getClassPage().isCalenderWeekendDatesDisabled());
 	}
 
 	@When("Admin enters only optional fields in the Class Details form from {string} and {int}")
@@ -320,7 +320,7 @@ public class ClassPageSD {
 
 	@Given("Admin is on the Edit Class Popup window")
 	public void admin_is_on_the_edit_class_popup_window() {
-		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickClassLink();
 		testContext.getClassPage().clickEditIcon();
 	}
 
@@ -429,7 +429,7 @@ public class ClassPageSD {
 
 	@Given("Admin is on delete Confirm dialog box")
 	public void admin_is_on_delete_confirm_dialog_box() {
-		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickClassLink();
 		classTopicToBeDeleted = testContext.getClassPage().getClassTopicOfToBeDeletedClass();
 
 		testContext.getClassPage().clickDeleteIconOnAnyRow();
@@ -589,7 +589,7 @@ public class ClassPageSD {
 	
 	@When("Admin clicks on Batch link on Manage Class page")
 	public void admin_clicks_on_batch_link_on_manage_class_page() {
-		testContext.getClassPage().clickBatchMenuLink();	    
+		testContext.getClassPage().clickBatchLink();	    
 	}
 
 	@Then("Admin is redirected to Batch page")
@@ -603,8 +603,7 @@ public class ClassPageSD {
 
 	@When("Admin clicks on Program link on Manage Class page")
 	public void admin_clicks_on_program_link_on_manage_class_page() {
-	    
-	    
+		testContext.getClassPage().clickProgramLink();	    
 	}
 
 	@Then("Admin is redirected to Program page")
@@ -619,8 +618,7 @@ public class ClassPageSD {
 
 	@When("Admin clicks on Home link on Manage Class page")
 	public void admin_clicks_on_home_link_on_manage_class_page() {
-	    
-	    
+		testContext.getClassPage().clickHomeLink();  
 	}
 
 	@Then("Admin is redirected to Home page")
@@ -634,14 +632,13 @@ public class ClassPageSD {
 
 	@When("Admin clicks on Logout link on Manage Class page")
 	public void admin_clicks_on_logout_link_on_manage_class_page() {
-	    
-	    
+		 testContext.getLogoutPage().logoutClick();	    
 	}
 
 	@Then("Admin is redirected to Login page")
 	public void admin_is_redirected_to_logout_page() {
 		Properties prop = testContext.getConfigReader().initProperties();
-		String expectedUrl = prop.getProperty("");
+		String expectedUrl = prop.getProperty("loginUrl");
 		String actualUrl = testContext.getHelper().getPageUrl();
 
 		Assert.assertEquals(actualUrl, expectedUrl); 

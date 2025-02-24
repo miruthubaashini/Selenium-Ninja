@@ -26,8 +26,12 @@ public class ClassPage extends BasePage {
 		super(driver);
 	}
 	
-
-
+	@FindBy(xpath = "//span[text()='Home']")
+	private WebElement homeLink;
+	@FindBy(xpath = "//span[text()='Program']")
+	private WebElement programLink;
+	@FindBy(xpath = "//span[text()='Batch']")
+	WebElement batchLink;
 	@FindBy(xpath = "//span[text()='Class']")
 	private WebElement classLink;
 	@FindBy(xpath = "//mat-card-title/div[1]")
@@ -100,6 +104,8 @@ public class ClassPage extends BasePage {
 	// date picker
 	@FindBy(xpath = "//button[contains(@class,'p-datepicker-trigger')]")
 	private WebElement calenderIcon;
+	@FindBy(xpath = "//table[contains(@class,'p-datepicker-calendar')]")
+	WebElement calenderPopup;
 	@FindBy(xpath = "//span[contains(@class,'p-datepicker-year')]")
 	private WebElement calenderYear;
 	@FindBy(xpath = "//span[contains(@class,'p-datepicker-month')]")
@@ -163,6 +169,23 @@ public class ClassPage extends BasePage {
 	
 	
 	//
+	
+	public void clickHomeLink() {
+		js.executeScript("arguments[0].click();", homeLink);
+	}
+	
+	public void clickProgramLink() {
+		js.executeScript("arguments[0].click();", programLink);
+	}
+	
+	public void clickBatchLink() {
+		js.executeScript("arguments[0].click()", batchLink);
+	}
+	
+	public void clickClassLink() {
+		js.executeScript("arguments[0].click();", classLink);
+	}
+	
 	public boolean getClassHeader(String header) {
 		if (classHeader.getText().equals(header)) {
 			return true;
@@ -456,7 +479,7 @@ public class ClassPage extends BasePage {
 		System.out.println("======================== > " + classDate);
 		if (classDate != null && !classDate.isEmpty()) {
 			// Open date picker
-			js.executeScript("arguments[0].click();", calenderIcon);
+			clickDatePicker();
 			// calenderIcon.click();
 			datePicker(classDate);
 
@@ -562,6 +585,10 @@ public class ClassPage extends BasePage {
 		}
 	}
 
+	public void clickDatePicker() {
+		js.executeScript("arguments[0].click();", calenderIcon);
+	}
+	
 	public void clickSaveButton() {
 		js.executeScript("arguments[0].click();", saveButton);
 		// saveButton.click();
@@ -888,6 +915,19 @@ public class ClassPage extends BasePage {
 		return true;
 	}
 
+	public boolean isCalenderWeekendDatesDisabled() {
+		int calenderRows = calenderPopup.findElements(By.xpath("tbody/tr")).size();
+
+		for (int i=1; i<=calenderRows; i++) {
+			WebElement sundayDate =  calenderPopup.findElement(By.xpath("tbody/tr[" + i + "]/td[1]/span"));
+			WebElement saturdayDate =  calenderPopup.findElement(By.xpath("tbody/tr[" + i + "]/td[7]/span"));
+			if (!sundayDate.getDomAttribute("class").contains("p-disabled") && !saturdayDate.getDomAttribute("class").contains("p-disabled")) {
+				return false;
+			} 
+		}
+		return true;
+	}
+	
 	// Date picker logic to select date from calender
 	public void datePicker(String classDate) {
 		System.out.println("====================================== " + classDate);
@@ -960,13 +1000,6 @@ public class ClassPage extends BasePage {
 		}
 	}
 	
-//Batch
-	@FindBy(xpath = "//app-header/mat-toolbar/div/button[3]")
-	WebElement batchMenuLink;
-	
-	public void clickBatchMenuLink() {
-		js.executeScript("arguments[0].click()", batchMenuLink);
-	}
 
 
 }

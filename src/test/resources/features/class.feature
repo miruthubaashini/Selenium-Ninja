@@ -100,7 +100,6 @@ Feature: Class feature
 
     Then Admin sees the No of Classes value is added automatically  
         
-  @toCheck  
   Scenario: Validate weekend dates are disabled in Class Dates calendar
   	Given Admin is on the Class Details Popup window
     When Admin clicks date picker 
@@ -363,32 +362,27 @@ Feature: Class feature
     
     # ===============================Navigation from Manage Class to other Pages===============================
     
-   		     
-   @wip
+
    Scenario: Validate Class link on navigation bar on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin is redirected to Manage Class page 
-        
-   @wip
+
    Scenario: Validate Batch link on navigation bar on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks on Batch link on Manage Class page
     Then Admin is redirected to Batch page  
-    
-   @wip
+
    Scenario: Validate Program link on navigation bar on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks on Program link on Manage Class page
     Then Admin is redirected to Program page  
-    
-   @wip
+
    Scenario: Validate Home link on navigation bar on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks on Home link on Manage Class page
     Then Admin is redirected to Home page
-    
-   @wip
+
    Scenario: Validate Logout link on navigation bar on Manage Class page
   	Given Admin is on Manage Class page
     When Admin clicks on Logout link on Manage Class page
