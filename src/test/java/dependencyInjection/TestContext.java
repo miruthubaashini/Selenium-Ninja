@@ -8,6 +8,7 @@ import pageObjects.BasePage;
 import pageObjects.BatchPage;
 import pageObjects.LoginPage;
 import pageObjects.LogoutPage;
+import pageObjects.ProgramPage2;
 import pageObjects.ClassPage;
 import pageObjects.HomePage;
 import utilities.ConfigReader;
@@ -28,6 +29,8 @@ public class TestContext {
 	private HomePage homePage;
 	private LogoutPage logoutPage;
 	private BatchPage batchPage;
+	private ProgramPage2 programPage;
+
 	public DriverManager getDriverManager() {
 		return driverManager == null ? driverManager = new DriverManager() : driverManager;
 	}
@@ -66,11 +69,16 @@ public class TestContext {
 	}
 
 	public HomePage getHomePage() {
-		return homePage==null ? homePage=new HomePage(DriverManager.getDriver()) : homePage;
+		return homePage == null ? homePage = new HomePage(DriverManager.getDriver()) : homePage;
 	}
 
 	public LogoutPage getLogoutPage() {
-		return logoutPage==null ? logoutPage=new LogoutPage(DriverManager.getDriver()) : logoutPage;
+		return logoutPage == null ? logoutPage = new LogoutPage(DriverManager.getDriver()) : logoutPage;
+	}
+
+	public ProgramPage2 getProgramPage2() {
+
+		return programPage == null ? programPage = new ProgramPage2(DriverManager.getDriver()) : programPage;
 	}
 
 }
