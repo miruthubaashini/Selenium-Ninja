@@ -24,15 +24,6 @@ public class BatchPageSD {
 		admin_clicks_on_the_batch_menu_from_the_header();
 	}
 
-	@Given("Admin is on the Home page")
-	public void admin_is_on_the_home_page() {
-		Properties prop = testContext.getConfigReader().initProperties();
-		String expectedUrl = prop.getProperty("homeUrl");
-		String actualUrl = testContext.getHelper().getPageUrl();
-
-		Assert.assertEquals(actualUrl, expectedUrl);
-	}
-
 	@When("Admin clicks Batch on the navigation bar")
 	public void admin_clicks_on_the_batch_menu_from_the_header() {
 		testContext.getBatchPage().clickBatchMenuLink();
