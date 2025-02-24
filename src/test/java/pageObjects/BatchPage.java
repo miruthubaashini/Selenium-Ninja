@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class BatchPage extends BasePage {
+	JavascriptExecutor js = (JavascriptExecutor) driver;
 
 	public BatchPage(WebDriver driver) {
 		super(driver);
@@ -31,7 +33,7 @@ public class BatchPage extends BasePage {
 	@FindBy(xpath = "//mat-card-title/div[2]/div[1]/button")
 	WebElement deleteButton;
 
-	@FindBy(className = "p-input-icon-left") // *[@id="filterGlobal"]
+	@FindBy(xpath = "//*[@id=\"filterGlobal\"]")
 	WebElement searchBox;
 
 	@FindBy(xpath = "//*[@id=\"dashboard\"]")
@@ -163,6 +165,7 @@ public class BatchPage extends BasePage {
 	}
 
 	public void clickDeleteButton() {
+		//js.executeScript("arguments[0].click();", deleteButton);
 		Actions actions = new Actions(driver);
 		actions.moveToElement(deleteButton).moveByOffset(10, 10).click().perform();
 	}
@@ -174,8 +177,8 @@ public class BatchPage extends BasePage {
 	}
 	
 	public void enterTextInSearchBox(String text) {
-		waitUntilElementIsClickable(logoutButton);
-		logoutButton.sendKeys(text);
+		waitUntilElementIsClickable(searchBox);
+		searchBox.sendKeys(text);
 	}
 	
 	public String getFirstRowBatchName() {
