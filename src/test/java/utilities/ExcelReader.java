@@ -18,7 +18,7 @@ public class ExcelReader {
 	public synchronized LinkedHashMap<String, String> getTestData(String sheetname, int rowNum) throws IOException {
 		LinkedHashMap<String, String> currCelValue = new LinkedHashMap<>();
 
-		String path = System.getProperty("user.dir") + "/src/test/resources/testdata/Team08-TestData.xlsx";
+		String path = System.getProperty("user.dir") + "/src/test/resources/testdata/TestData1.xlsx";
 		FileInputStream fis = new FileInputStream(path);
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		XSSFSheet sheet = workbook.getSheet(sheetname);
