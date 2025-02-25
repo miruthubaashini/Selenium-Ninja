@@ -1,8 +1,5 @@
 package stepDefinitions;
 
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Properties;
 
 import org.testng.Assert;
@@ -31,36 +28,18 @@ public class LogoutPageSD {
 	Assert.assertEquals(testContext.getHelper().getPageUrl(), expUrl);   
 	}
 
-	@Given("Admin is in login page")
-	public void admin_is_in_login_page() {
-	    
-	}
-
+	
 	@When("Admin clicks  browser back button")
 	public void admin_clicks_browser_back_button() {
-	   // DriverManager.getDriver().navigate().back();
+	   DriverManager.getDriver().navigate().back();
 	}
 
 	@Then("Admin should receive error message")
 	public void admin_should_receive_error_message() {
-		URL link;
-		try {
-			prop=testContext.getConfigReader().initProperties();
-			
-			link = new URL(prop.getProperty("url"));
-		HttpURLConnection httpURLConnection = (HttpURLConnection) link.openConnection();
-		httpURLConnection.setConnectTimeout(3000); // Set connection timeout to 3 seconds
-		httpURLConnection.connect();
-		 DriverManager.getDriver().navigate().back();
-		 System.out.println(httpURLConnection.getResponseCode());
-		//Assert.assertEquals(httpURLConnection.getResponseCode() >= 400 ,false);
+		String expUrl=prop.getProperty("url");
+		Assert.assertEquals(testContext.getHelper().getPageUrl(),expUrl);
 		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+			}
 
 
 
-}
