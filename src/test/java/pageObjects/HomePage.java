@@ -161,13 +161,13 @@ public class HomePage extends BasePage {
 	}
 	public boolean firstPageDisabled()
 	{
-		if(FirstPage.getAttribute("disabled").equals("true"))
+		if(FirstPage.getDomAttribute("disabled").equals("true"))
 			return true;
 		return false;	
 	}
 	public boolean previousPageDisabled()
 	{
-		if(PreviousPage.getAttribute("disabled").equals("true"))
+		if(PreviousPage.getDomAttribute("disabled").equals("true"))
 			return true;
 		return false;	
 	}

@@ -93,11 +93,7 @@ public class LoginPage extends BasePage {
 		}
 	public void clickLoginBtn()
 	{
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
-			//wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
 		js.executeScript("arguments[0].click();", loginButton);
 		
 	}

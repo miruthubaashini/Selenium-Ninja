@@ -29,7 +29,6 @@ public class Hooks {
 	public void setUp() {
 		prop = testContext.getConfigReader().initProperties();
 		portalUrl = prop.getProperty("url");
-		//browserName = ConfigReader.getBrowserType() != null ? ConfigReader.getBrowserType(): prop.getProperty("browser");
 		browserName = System.getProperty("browser") !=null ? System.getProperty("browser") : ConfigReader.getBrowserType();
 		System.out.println("===========browserName: "+browserName);
 	}

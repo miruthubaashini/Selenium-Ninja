@@ -46,6 +46,7 @@ public class HomePageSD {
 		prop = testContext.getConfigReader().initProperties();
 		softAssert.assertTrue(testContext.getHomePage().checkUserName(prop.getProperty("username")));
 		softAssert.assertTrue(testContext.getHomePage().checkRole(prop.getProperty("role")));
+		softAssert.assertAll();
 	}
 	@Then("Admin should see bar chart for Active and inactive user")
 	public void admin_should_see_bar_chart_for_active_and_inactive_user() {
@@ -75,6 +76,7 @@ public class HomePageSD {
 	public void admin_should_see_staff_table_with_pagination_icons() {
 		softAssert.assertTrue(testContext.getHomePage().StaffDataPaginationDisplay());
 		softAssert.assertTrue(testContext.getHomePage().StaffDataTableDisplay());
+		softAssert.assertAll();
 	}
 
 	@Then("Admin should see {int} staff data in a page")
