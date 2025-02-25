@@ -10,7 +10,7 @@ import io.cucumber.testng.CucumberOptions;
 import utilities.ConfigReader;
 
 @CucumberOptions(features = {"src/test/resources/features/class.feature"}, glue = { "stepDefinitions", "hooks" },
-		//tags="@wip",
+		tags="@wip",
 		monochrome = false, publish = true, plugin = { "pretty",
 				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
 				"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
