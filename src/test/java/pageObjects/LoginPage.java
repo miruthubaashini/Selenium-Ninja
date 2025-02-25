@@ -34,26 +34,26 @@ public class LoginPage extends BasePage {
 
 	}
 
-	@FindBy (xpath="//div[@class=\'signin-content\']") WebElement SignInPage;
+	@FindBy (xpath="//div[@class='signin-content']") WebElement SignInPage;
 	@FindBy (xpath="//p[normalize-space()='Please login to LMS application']") WebElement signInContent;
-	@FindBy(xpath="//div[@class=\"signin-content\"]") WebElement FormContent;
+	@FindBy(xpath="//div[@class='signin-content']") WebElement FormContent;
 	@FindBy (id= "username") WebElement usernameField;
 	@FindBy (id= "password") WebElement passwordField;
 	@FindBy (id= "mat-select-value-1") WebElement roleField;
 	@FindBy (className= "mat-option-text") List <WebElement> roleDropdown;
 	@FindBy (id= "login") WebElement loginButton;
 
-	@FindBy (xpath="//*[@id=\'mat-form-field-label-1\']/span[2]") WebElement userStar;
-	@FindBy (xpath="//*[@id=\'mat-form-field-label-3\']/span[2]") WebElement pwdStar;
+	@FindBy (xpath="//*[@id='mat-form-field-label-1']/span[2]") WebElement userStar;
+	@FindBy (xpath="//*[@id='mat-form-field-label-3']/span[2]") WebElement pwdStar;
 
-	@FindBy(xpath="//img[@src=\'assets/img/LMS-logo.jpg\']") WebElement appImage;
+	@FindBy(xpath="//img[@src='assets/img/LMS-logo.jpg']") WebElement appImage;
 
 	@FindBy(xpath="//mat-error[@id='mat-error-3']") WebElement userNameErrorMsg;
 	@FindBy(xpath="//mat-error[@id='mat-error-4']") WebElement passwordErrorMsg;
 	@FindBy(xpath="//img[@class='images']") WebElement imgClick;
 
 	@FindBy(xpath=("//mat-table[@role='grid']")) WebElement homepageElt;
-	@FindBy(xpath="//*[@class=\"mat-card-content\"]") WebElement inputFieldsLocation;
+	@FindBy(xpath="//*[@class='mat-card-content']") WebElement inputFieldsLocation;
 
 	public void enterUsername(String userName) {
 		if(!(userName==null))
@@ -102,7 +102,6 @@ public class LoginPage extends BasePage {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	public int textFields()
 	{
 
@@ -114,15 +113,13 @@ public class LoginPage extends BasePage {
 		return roleField.isDisplayed();
 	}
 
-	@SuppressWarnings("deprecation")
 	public String usernamePlaceholder()
 	{
-		return usernameField.getAttribute("data-placeholder");
+		return usernameField.getDomAttribute("data-placeholder");
 	}
-	@SuppressWarnings("deprecation")
 	public String passwordPlaceholder()
 	{
-		return passwordField.getAttribute("data-placeholder");
+		return passwordField.getDomAttribute("data-placeholder");
 	}
 
 	public boolean userStarDisplayed()
@@ -210,7 +207,10 @@ public class LoginPage extends BasePage {
 
 	public String appNameOnLogo() throws IOException, TesseractException {
 
-		String imageURL = appImage.getAttribute("src");
+		try
+		{
+			String imageURL = appImage.getDomAttribute("src");
+		@SuppressWarnings("deprecation")
 		URL url = new URL(imageURL);
 		BufferedImage image1 = ImageIO.read(url);
 		Tesseract tesseract = new Tesseract();
@@ -221,6 +221,12 @@ public class LoginPage extends BasePage {
 		System.out.println("Extracted Text: " + extractedText);
 		return extractedText;
 	}
+		catch(Exception e)
+		{
+		e.printStackTrace();
+			}
+		return "error occured";
+		}
 
 	public boolean spellCheckSignInContents()
 	{
