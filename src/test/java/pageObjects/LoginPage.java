@@ -78,7 +78,8 @@ public class LoginPage extends BasePage {
 	}
 
 	public void clickLoginbtn() {
-		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+		//wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@role='listbox']")));
 		js.executeScript("arguments[0].click();", loginButton);
 		// loginButton.click();	
 		//		Actions actions = new Actions(driver);
