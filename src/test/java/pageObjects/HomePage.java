@@ -2,14 +2,15 @@ package pageObjects;
 
 import java.util.List;
 
+
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.English;
 import org.languagetool.rules.RuleMatch;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage extends BasePage {
 
@@ -21,7 +22,7 @@ public class HomePage extends BasePage {
 	@FindBy(xpath="//mat-toolbar[@class='mat-toolbar mat-primary mat-toolbar-single-row ng-star-inserted']/div[1]") WebElement toolBar;
 	@FindBy(xpath="//mat-card[@class='mat-card mat-focus-indicator container']//div[@class='value']") WebElement homeUserCard;
 	@FindBy(xpath="//mat-card[@class='mat-card mat-focus-indicator container']//mat-grid-tile[2]//figure[1]") WebElement BarChart;
-	@FindBy(xpath="//app-doughnutchart//div[@class=\'chartjs-size-monitor\']") WebElement pieChart;
+	@FindBy(xpath="//app-doughnutchart//div[@class='chartjs-size-monitor']") WebElement pieChart;
 	
 	@FindBy(xpath="//div[@routerlink='/user']") WebElement UserWidget;
 	@FindBy(xpath="//div[@class='widget yellow']//div[@class='value']") WebElement StaffWidget;
@@ -40,7 +41,6 @@ public class HomePage extends BasePage {
 	
 	public boolean titlePosition()
 	{
-		//Point positionxy=home_LMS_Title.getLocation();
 		int x = home_LMS_Title.getLocation().getX();
         int y = home_LMS_Title.getLocation().getY();
         System.out.println("position of title"+x + y);
@@ -54,23 +54,17 @@ public class HomePage extends BasePage {
 	
 	 List<WebElement> toolbar = toolBar.findElements(By.tagName("button"));
 
-	    // Check if the place is valid (i.e., within the range of the toolbar list)
 	    if (place < 0 || place >= toolbar.size()) {
 	        System.out.println("Invalid place index: " + place);
-	        return false; // Invalid place index
+	        return false; 
 	    }
 
-	    // Get the button text at the specified place
 	    String actualTab = toolbar.get(place).getText().trim();
 	    System.out.println("Tab at position " + place + ": " + actualTab);
-
-	    // Compare the button text at the specified place with the expected tab
 	    if (!actualTab.equals(tab)) {
 	        System.out.println("Tab does not match. Expected: " + tab + ", Found: " + actualTab);
 	        return false;
 	    }
-
-	    // If it reaches here, the specified tab exists at the specified position
 	    return true;
 	}
 	
@@ -120,39 +114,43 @@ public class HomePage extends BasePage {
 	}
 	public boolean barChartDisplayed()
 	{
-		return BarChart.isDisplayed();
+		wait.until(ExpectedConditions.elementToBeClickable(BarChart));
+			return BarChart.isDisplayed();
 	}
 	
 	public boolean pieChartDisplayed()
 	{
+		wait.until(ExpectedConditions.elementToBeClickable(pieChart));
+		
 		return pieChart.isDisplayed();
 	}
 	
 	public boolean UserwidgetDisplay()
 	{
-		System.out.println(UserWidget.getText());
 		return UserWidget.isDisplayed();
 	}
 	public boolean staffwidgetDisplay()
 	{
-		System.out.println(StaffWidget.getText());
 		return StaffWidget.isDisplayed();
 	}
 	public boolean batchwidgetDisplay()
 	{
-		System.out.println(BatchWidget.getText());
 		return BatchWidget.isDisplayed();
 	}
 	public boolean programwidgetDisplay()
 	{
-		System.out.println(ProgramWidget.getText());
 		return ProgramWidget.isDisplayed();
 	}
 
 	public boolean StaffDataTableDisplay()
 	{
-		return staffDataTable.isDisplayed() && staffDataPagination.isDisplayed();
+		return staffDataTable.isDisplayed(); 
+		}
+	public boolean StaffDataPaginationDisplay()
+	{
+		return staffDataPagination.isDisplayed();
 	}
+	
 
 	public boolean StaffDataRowsCheck()
 	{

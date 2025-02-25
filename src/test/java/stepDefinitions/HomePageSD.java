@@ -18,13 +18,13 @@ public class HomePageSD {
 	}
 	@Then("Admin should see LMS -Learning management system as title")
 	public void admin_should_see_lms_learning_management_system_as_title() {
-	Assert.assertTrue(testContext.getHomePage().titleDispalyed());   
+		Assert.assertTrue(testContext.getHomePage().titleDispalyed());   
 	}
 
 	@Then("LMS title should be on the top left corner of page")
 	public void lms_title_should_be_on_the_top_left_corner_of_page() {
 		Assert.assertTrue(testContext.getHomePage().titlePosition());   
-		
+
 	}
 	@Then("Admin should see {string} in {int}")
 	public void admin_should_see_home_in_the_1st_place(String tab,int place) {
@@ -38,23 +38,23 @@ public class HomePageSD {
 	}
 	@Then("Admin should see piechart")
 	public void admin_should_see_piechart() {
-	    Assert.assertTrue(testContext.getHomePage().pieChartDisplayed());
+		Assert.assertTrue(testContext.getHomePage().pieChartDisplayed());
 	}
 
 	@Then("Admin should see welcome message with user name and role")
 	public void admin_should_see_welcome_message_with_user_name_and_role() {
-		 prop = testContext.getConfigReader().initProperties();
+		prop = testContext.getConfigReader().initProperties();
 		softAssert.assertTrue(testContext.getHomePage().checkUserName(prop.getProperty("username")));
 		softAssert.assertTrue(testContext.getHomePage().checkRole(prop.getProperty("role")));
 	}
 	@Then("Admin should see bar chart for Active and inactive user")
 	public void admin_should_see_bar_chart_for_active_and_inactive_user() {
-	  Assert.assertTrue(testContext.getHomePage().barChartDisplayed(),"barchart is displayed");
+		Assert.assertTrue(testContext.getHomePage().barChartDisplayed(),"barchart is displayed");
 	}
 
 	@Then("Admin should see user count")
 	public void admin_should_see_user_count() {
-	   Assert.assertTrue(testContext.getHomePage().UserwidgetDisplay());
+		Assert.assertTrue(testContext.getHomePage().UserwidgetDisplay());
 	}
 
 	@Then("Admin should see staff count")
@@ -73,7 +73,8 @@ public class HomePageSD {
 	}
 	@Then("Admin should see staff table with pagination icons")
 	public void admin_should_see_staff_table_with_pagination_icons() {
-		Assert.assertTrue(testContext.getHomePage().StaffDataTableDisplay());
+		softAssert.assertTrue(testContext.getHomePage().StaffDataPaginationDisplay());
+		softAssert.assertTrue(testContext.getHomePage().StaffDataTableDisplay());
 	}
 
 	@Then("Admin should see {int} staff data in a page")
