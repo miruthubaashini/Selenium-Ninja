@@ -43,6 +43,7 @@ public class ClassPageSD {
 
 	@When("Admin clicks the Class link on navigation bar on Home page")
 	public void admin_clicks_the_class_link_on_navigation_bar_on_home_page() {
+		testContext.getLogger().info("Admin clicks the Class link");
 		testContext.getClassPage().clickClassLink();
 	}
 
@@ -53,17 +54,18 @@ public class ClassPageSD {
 		String actualClassURL = testContext.getHelper().getPageUrl();
 
 		Assert.assertEquals(actualClassURL, expectedClassUrl);
+		testContext.getLogger().info("Admin is on Manage Class page");
 	}
 
 	@Then("Admin sees the {string} title on Manage Class page")
 	public void admin_sees_the_title_on_manage_class_page(String title) {
-
+		testContext.getLogger().info("Admin should see page titile");
 		Assert.assertTrue(testContext.getBasePage().getPortalTitle(title));
 	}
 
 	@Then("Admin sees the {string} header on Manage Class page")
 	public void admin_sees_the_header_on_manage_class_page(String header) {
-
+		testContext.getLogger().info("Admin should see the header of class page");
 		Assert.assertTrue(testContext.getClassPage().getClassHeader(header));
 	}
 
@@ -118,16 +120,19 @@ public class ClassPageSD {
 
 	@Given("Admin is on Manage Class page")
 	public void admin_is_on_manage_class_page() {
+		testContext.getLogger().info("User is on Manage Class page");
 		testContext.getClassPage().clickClassLink();
 	}
 
 	@When("Admin clicks Add New Class from the Class dropdown")
 	public void admin_clicks_add_new_class_from_the_class_dropdown() {
+		testContext.getLogger().info("User clicks Add New Class link");
 		testContext.getClassPage().clickAddNewClassButton();
 	}
 
 	@Then("Admin sees the Class Details popup with SAVE and CANCEL button and Close\\(X) Icon")
 	public void admin_sees_the_class_details_popup_with_save_and_cancel_button_and_close_x_icon() {
+		testContext.getLogger().info("User is on Class Details popup");
 		softAssert.assertTrue(testContext.getClassPage().isClassDetailsPopupDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isSaveButtonDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isCancelButtonDisplayed());
@@ -149,6 +154,7 @@ public class ClassPageSD {
 
 	@Given("Admin is on the Class Details Popup window")
 	public void admin_is_on_the_class_details_popup_window() {
+		testContext.getLogger().info("User is on Class Details popup");
 		testContext.getClassPage().clickClassLink();
 		testContext.getClassPage().clickAddNewClassButton();
 	}
@@ -167,22 +173,26 @@ public class ClassPageSD {
 		classnotes = data.get("notes");
 		recordingpath = data.get("recording");
 
+		testContext.getLogger().info("Admin enters mandatory fields in the form");
 		testContext.getClassPage().fillClassDetailsForm(batchname, classtopic, classdescription, classdates, staffname,
 				classstatus, classcomments, classnotes, recordingpath);
 	}
 
 	@When("admin clicks on Save button on Class Details popup")
 	public void admin_clicks_on_save_button() {
+		testContext.getLogger().info("Admin clicks Save button");
 		testContext.getClassPage().clickSaveButton();
 	}
 
 	@Then("Admin gets the message {string} on Manage Class page")
 	public void admin_gets_the_message_on_manage_class_page(String expectedToastMessage) {
+		testContext.getLogger().info("Admin gets Class Created success message");
 		Assert.assertEquals(testContext.getClassPage().getSuccessToastMessage(), expectedToastMessage);
 	}
 
 	@When("Admin selects class dates in date picker")
 	public void admin_selects_class_dates_in_date_picker(DataTable dataTable) {
+		testContext.getLogger().info("Admin selects class dates on date picker");
 		classDatesList = dataTable.asList(String.class);
 		for (String classDate : classDatesList) {
 			testContext.getClassPage().selectClassDates(classDate);
@@ -194,16 +204,19 @@ public class ClassPageSD {
 
 	@Then("Admin sees the No of Classes value is added automatically")
 	public void admin_sees_the_no_of_classes_value_is_added_automatically() {
+		testContext.getLogger().info("Admin should see No. of classes auto-populated");
 		Assert.assertTrue(testContext.getClassPage().isNoOfClassesPopulated());
 	}
 
 	@When("Admin clicks date picker")
 	public void admin_clicks_date_picker() {
+		testContext.getLogger().info("Admin clicks date picker");
 		testContext.getClassPage().clickDatePicker();
 	}
 
 	@Then("Admin sees weekends dates are disabled in the calender")
 	public void admin_sees_weekends_dates_are_disabled_in_the_calender() {
+		testContext.getLogger().info("Admin sees weekend dates are disabled");
 		Assert.assertTrue(testContext.getClassPage().isCalenderWeekendDatesDisabled());
 	}
 
@@ -220,13 +233,15 @@ public class ClassPageSD {
 		classcomments = data.get("comments");
 		classnotes = data.get("notes");
 		recordingpath = data.get("recording");
-
+		
+		testContext.getLogger().info("Admin enters only optional fields in class form");
 		testContext.getClassPage().fillClassDetailsForm(batchname, classtopic, classdescription, classdates, staffname,
 				classstatus, classcomments, classnotes, recordingpath);
 	}
 
 	@Then("Admin sees error messages below each mandatory fields")
 	public void admin_sees_error_messages_below_each_mandatory_fields() {
+		testContext.getLogger().info("Admin sees error messages for mandatory fields in the class form");
 		softAssert.assertTrue(testContext.getClassPage().isBatchNameFieldErrorMessageDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isClassTopicFieldErrorMessageDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isClassDatesFieldErrorMessageDisplayed());
@@ -250,6 +265,7 @@ public class ClassPageSD {
 		classnotes = data.get("notes");
 		recordingpath = data.get("recording");
 
+		testContext.getLogger().info("Admin enters invalid data in all the fields");
 		testContext.getClassPage().fillClassDetailsForm(batchname, classtopic, classdescription, classdates, staffname,
 				classstatus, classcomments, classnotes, recordingpath);
 
@@ -262,6 +278,7 @@ public class ClassPageSD {
 
 	@When("Admin clicks Cancel button on Class Details form")
 	public void admin_clicks_cancel_button_on_class_details_form() {
+		testContext.getLogger().info("Admin clicks Cancel button");
 		testContext.getClassPage().clickCancelButton();
 	}
 

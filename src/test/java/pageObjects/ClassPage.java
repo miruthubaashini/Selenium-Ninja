@@ -733,8 +733,11 @@ public class ClassPage extends BasePage {
 
 		// Select status radio button
 		if (status != null) {
-			statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
-					.forEach(s -> s.findElement(By.xpath("p-radiobutton/div/div[2]")).click());
+			 statusRadioButtons.stream().filter(s -> s.getText().trim().equals(status))
+	            .forEach(s -> {
+	                WebElement statusToClick = s.findElement(By.xpath("p-radiobutton/div/div[2]"));	                
+	                js.executeScript("arguments[0].click();", statusToClick);
+	                });
 		}
 		// Enter class comments
 		// classCommentsInput.clear();
