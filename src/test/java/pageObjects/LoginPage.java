@@ -1,9 +1,9 @@
 package pageObjects;
 import java.awt.image.BufferedImage;
-import java.io.File;
+
+
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -11,25 +11,19 @@ import org.languagetool.language.English;
 import org.languagetool.JLanguageTool;
 import org.languagetool.rules.RuleMatch;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByTagName;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.io.FileHandler;
-import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+
 
 
 public class LoginPage extends BasePage {
@@ -40,34 +34,40 @@ public class LoginPage extends BasePage {
 
 	}
 
-	@FindBy (xpath="//div[@class=\'signin-content\']") WebElement SignInPage;
+	@FindBy (xpath="//div[@class='signin-content']") WebElement SignInPage;
 	@FindBy (xpath="//p[normalize-space()='Please login to LMS application']") WebElement signInContent;
-	@FindBy(xpath="//div[@class=\"signin-content\"]") WebElement FormContent;
+	@FindBy(xpath="//div[@class='signin-content']") WebElement FormContent;
 	@FindBy (id= "username") WebElement usernameField;
 	@FindBy (id= "password") WebElement passwordField;
 	@FindBy (id= "mat-select-value-1") WebElement roleField;
 	@FindBy (className= "mat-option-text") List <WebElement> roleDropdown;
 	@FindBy (id= "login") WebElement loginButton;
 
-	@FindBy (xpath="//*[@id=\'mat-form-field-label-1\']/span[2]") WebElement userStar;
-	@FindBy (xpath="//*[@id=\'mat-form-field-label-3\']/span[2]") WebElement pwdStar;
+	@FindBy (xpath="//*[@id='mat-form-field-label-1']/span[2]") WebElement userStar;
+	@FindBy (xpath="//*[@id='mat-form-field-label-3']/span[2]") WebElement pwdStar;
 
-	@FindBy(xpath="//img[@src=\'assets/img/LMS-logo.jpg\']") WebElement appImage;
+	@FindBy(xpath="//img[@src='assets/img/LMS-logo.jpg']") WebElement appImage;
 
 	@FindBy(xpath="//mat-error[@id='mat-error-3']") WebElement userNameErrorMsg;
 	@FindBy(xpath="//mat-error[@id='mat-error-4']") WebElement passwordErrorMsg;
 	@FindBy(xpath="//img[@class='images']") WebElement imgClick;
 
-	@FindBy(xpath=("//div[@routerlink='/user']")) WebElement homepageElt;
-	@FindBy(xpath="//*[@class=\"mat-card-content\"]") WebElement inputFieldsLocation;
+	@FindBy(xpath=("//mat-table[@role='grid']")) WebElement homepageElt;
+	@FindBy(xpath="//*[@class='mat-card-content']") WebElement inputFieldsLocation;
 
 	public void enterUsername(String userName) {
+		if(!(userName==null))
+		{
 		usernameField.sendKeys(userName);
-	}
+		}
+		}
 
 	public void enterPassword(String password) {
+		if(!(password==null))
+		{
 		passwordField.sendKeys(password);
-	}
+		}
+		}
 
 	public void clickRoleDD() {
 		roleField.click();
@@ -77,12 +77,24 @@ public class LoginPage extends BasePage {
 		roleDropdown.stream().filter(r->r.getText().equals(role)).forEach(e->e.click());
 	}
 
-	public void clickLoginbtn() {
+	public void clickLoginbtnToHome() {
+		try
+		{
 		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
 		js.executeScript("arguments[0].click();", loginButton);
-		// loginButton.click();	
-		//		Actions actions = new Actions(driver);
-		//		actions.moveToElement(loginButton).moveByOffset(10, 10).click().perform();
+		wait.until(ExpectedConditions.elementToBeClickable(homepageElt));
+		
+		js.executeScript("arguments[0].click();", homepageElt);
+		}
+		catch(NullPointerException e) {
+			e.printStackTrace();
+		}
+		}
+	public void clickLoginBtn()
+	{
+		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+		js.executeScript("arguments[0].click();", loginButton);
+		
 	}
 
 	public boolean formLabelDisplayed() {
@@ -90,7 +102,6 @@ public class LoginPage extends BasePage {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	public int textFields()
 	{
 
@@ -102,15 +113,13 @@ public class LoginPage extends BasePage {
 		return roleField.isDisplayed();
 	}
 
-	@SuppressWarnings("deprecation")
 	public String usernamePlaceholder()
 	{
-		return usernameField.getAttribute("data-placeholder");
+		return usernameField.getDomAttribute("data-placeholder");
 	}
-	@SuppressWarnings("deprecation")
 	public String passwordPlaceholder()
 	{
-		return passwordField.getAttribute("data-placeholder");
+		return passwordField.getDomAttribute("data-placeholder");
 	}
 
 	public boolean userStarDisplayed()
@@ -154,9 +163,7 @@ public class LoginPage extends BasePage {
 
 			int inputFieldCenterX = inputFieldPosition.getX() + (inputFieldSize.width / 2);
 			int inputFieldCenterY = inputFieldPosition.getY() + (inputFieldSize.height / 2);
-			System.out.println("inputFieldCenterX:"+inputFieldCenterX+",inputFieldCenterY"+inputFieldCenterY);
-			System.out.println("viewportCenterX:"+viewportCenterX+",viewportCenterY"+viewportCenterY);
-
+			
 			int tolerance = 50; 
 			boolean isCenteredHorizontally = Math.abs(viewportCenterX - inputFieldCenterX) <= tolerance;
 			boolean isCenteredVertically = Math.abs(viewportCenterY - inputFieldCenterY) <= tolerance;
@@ -200,7 +207,10 @@ public class LoginPage extends BasePage {
 
 	public String appNameOnLogo() throws IOException, TesseractException {
 
-		String imageURL = appImage.getAttribute("src");
+		try
+		{
+			String imageURL = appImage.getDomAttribute("src");
+		@SuppressWarnings("deprecation")
 		URL url = new URL(imageURL);
 		BufferedImage image1 = ImageIO.read(url);
 		Tesseract tesseract = new Tesseract();
@@ -211,6 +221,12 @@ public class LoginPage extends BasePage {
 		System.out.println("Extracted Text: " + extractedText);
 		return extractedText;
 	}
+		catch(Exception e)
+		{
+		e.printStackTrace();
+			}
+		return "error occured";
+		}
 
 	public boolean spellCheckSignInContents()
 	{
@@ -245,7 +261,6 @@ public class LoginPage extends BasePage {
 
 	public void LoginBtnKeyboardClick()
 	{
-		//imgClick.click();
 		wait.until(ExpectedConditions.elementToBeClickable(loginButton));
 		Actions clickaction=new Actions(driver);
 		clickaction.moveToElement(loginButton).sendKeys(Keys.ENTER).click().perform();
@@ -263,7 +278,7 @@ public class LoginPage extends BasePage {
 		enterPassword(password);
 		clickRoleDD();
 		selectUserRole(userRole);
-		clickLoginbtn();
+		
 
 	}
 

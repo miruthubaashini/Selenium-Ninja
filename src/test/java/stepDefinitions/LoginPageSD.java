@@ -1,26 +1,22 @@
 package stepDefinitions;
 
 import java.io.IOException;
+
+
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedHashMap;
 import java.util.Properties;
 
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 import dependencyInjection.TestContext;
-import io.cucumber.java.en.*
- ;
+import io.cucumber.java.en.*;
 import net.sourceforge.tess4j.TesseractException;
 
 public class LoginPageSD {
 	Properties prop;
 	TestContext testContext;
-	private String username;
-	private String password;
-	private String userRole;
-	private String errorMsg;
 	private SoftAssert softAssert=new SoftAssert();
 	
 	public LoginPageSD(TestContext testContext)
@@ -39,11 +35,7 @@ public class LoginPageSD {
 		testContext.getLoginPage().enterPassword(passWord);
 		testContext.getLoginPage().clickRoleDD();
 		testContext.getLoginPage().selectUserRole(userRole);
-		testContext.getLoginPage().clickLoginbtn();
-	}
-	@Given("The browser is open")
-	public void the_browser_is_open() {
-	   
+		testContext.getLoginPage().clickLoginBtn();
 	}
 
 	@When("Admin gives the correct LMS portal URL")
@@ -107,9 +99,9 @@ public class LoginPageSD {
 
 	@Then("Admin should see appName {string}")                         
 	public void admin_should_see_appName(String exp) throws IOException, TesseractException {
-	   Assert.assertEquals(testContext.getLoginPage().appNameOnLogo().contains(exp),true);
+		Assert.assertEquals(testContext.getLoginPage().appNameOnLogo().contains(exp),true);
 	}
-
+	
 
 	@Then("Admin should see {string}")
 	public void admin_should_see(String string) {
@@ -183,17 +175,17 @@ public class LoginPageSD {
 		Assert.assertTrue(testContext.getLoginPage().pwdtextColour());    
 		
 	}
-
-	@When("Admin enter invalid {string} ,{int} and clicks login button")
-	public void admin_enter_invalid_and_clicks_login_button(String sheetName, Integer rowNum) throws IOException {
 		
-		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
-		username = data.get("username");
-		password = data.get("password");
-		userRole = data.get("userRole");
+	
+	@When("Admin enter invalid {string} ,{string} and {string} clicks login button")
+	public void admin_enter_invalid_and_clicks_login_button(String uname,String pwd,String roleName) throws IOException {
 		
-		testContext.getLoginPage().fillLoginDetails(username, password, userRole);
-		}
+		testContext.getLoginPage().enterUsername(uname);
+		testContext.getLoginPage().enterPassword(pwd);
+		testContext.getLoginPage().clickRoleDD();
+		testContext.getLoginPage().selectUserRole(roleName);
+		testContext.getLoginPage().clickLoginBtn();
+	}
 	
 	@Then("Error message {string} is received")
 	public void error_message_is_received(String errromsg) {
@@ -218,6 +210,7 @@ public class LoginPageSD {
 	public void admin_should_land_on_home_page() {
 		Properties prop = testContext.getConfigReader().initProperties();
 		String expectedUrl=prop.getProperty("homeUrl");
+		//String exp="https://feb-ui-hackathon-bbfd38d67ea9.herokuapp.com/dashboard";
 		String actualURL = testContext.getHelper().getPageUrl();
 
 		Assert.assertEquals(actualURL, expectedUrl);
@@ -234,7 +227,7 @@ public class LoginPageSD {
 		testContext.getLoginPage().enterPassword(passWord);
 		testContext.getLoginPage().clickRoleDD();
 		testContext.getLoginPage().selectUserRole(userRole);
-		testContext.getLoginPage().clickLoginbtn();
+		testContext.getLoginPage().clickLoginbtnToHome();
 	}
 
 
