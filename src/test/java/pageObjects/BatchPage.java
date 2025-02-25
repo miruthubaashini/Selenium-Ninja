@@ -499,6 +499,7 @@ public class BatchPage extends BasePage {
 	}
 
 	public void clickConfirmAlertCloseIcon() {
+		
 		waitUntilElementIsClickableAndClick(deleteBatchConfirmCloseIcon);
 	}
 	
