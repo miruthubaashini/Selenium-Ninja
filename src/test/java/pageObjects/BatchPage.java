@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class BatchPage extends BasePage {
+	JavascriptExecutor js = (JavascriptExecutor) driver;
 
 	public BatchPage(WebDriver driver) {
 		super(driver);
@@ -31,7 +33,7 @@ public class BatchPage extends BasePage {
 	@FindBy(xpath = "//mat-card-title/div[2]/div[1]/button")
 	WebElement deleteButton;
 
-	@FindBy(className = "p-input-icon-left") // *[@id="filterGlobal"]
+	@FindBy(xpath = "//*[@id=\"filterGlobal\"]")
 	WebElement searchBox;
 
 	@FindBy(xpath = "//*[@id=\"dashboard\"]")
@@ -159,6 +161,7 @@ public class BatchPage extends BasePage {
 		return deleteButton.isDisplayed();
 	}
 	public boolean isAddBatchPopupWindowVisible() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		return addBatchPopupWindow.isDisplayed();
 	}
 
@@ -174,8 +177,8 @@ public class BatchPage extends BasePage {
 	}
 	
 	public void enterTextInSearchBox(String text) {
-		waitUntilElementIsClickable(logoutButton);
-		logoutButton.sendKeys(text);
+		waitUntilElementIsClickable(searchBox);
+		searchBox.sendKeys(text);
 	}
 	
 	public String getFirstRowBatchName() {
@@ -210,7 +213,6 @@ public class BatchPage extends BasePage {
 	public void clickPaginationPreviousIcon() {
 		Actions actions = new Actions(driver);
 		actions.moveToElement(paginationPreviousIcon).moveByOffset(5, 5).click().perform();
-		// waitUntilElementIsClickableAndClick(paginationPreviousIcon);
 	}
 
 	public void clickPaginationNextIcon() {
@@ -260,7 +262,8 @@ public class BatchPage extends BasePage {
 
 	public void clickBatchMenuLink() {
 		waitUntilElementIsClickableAndClick(batchMenuLink);
-		waitForMillis(500);
+		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 	}
 	
 	public void clickAddNewBatch() {
@@ -496,6 +499,7 @@ public class BatchPage extends BasePage {
 	}
 
 	public void clickConfirmAlertCloseIcon() {
+		
 		waitUntilElementIsClickableAndClick(deleteBatchConfirmCloseIcon);
 	}
 	
@@ -534,12 +538,5 @@ public class BatchPage extends BasePage {
 		
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.elementToBeClickable(element)).click();
-	}
-	
-	private void waitForMillis(long millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-		}
 	}
 }

@@ -8,8 +8,10 @@ import pageObjects.BasePage;
 import pageObjects.BatchPage;
 import pageObjects.LoginPage;
 import pageObjects.LogoutPage;
+import pageObjects.ProgramPage2;
 import pageObjects.ClassPage;
 import pageObjects.HomePage;
+import pageObjects.ProgramPart1Page;
 import utilities.ConfigReader;
 import utilities.ExcelReader;
 import utilities.Helper;
@@ -28,6 +30,9 @@ public class TestContext {
 	private HomePage homePage;
 	private LogoutPage logoutPage;
 	private BatchPage batchPage;
+	private ProgramPage2 programPage;
+	private ProgramPart1Page programPart1;
+
 	public DriverManager getDriverManager() {
 		return driverManager == null ? driverManager = new DriverManager() : driverManager;
 	}
@@ -66,11 +71,21 @@ public class TestContext {
 	}
 
 	public HomePage getHomePage() {
-		return homePage==null ? homePage=new HomePage(DriverManager.getDriver()) : homePage;
+		return homePage == null ? homePage = new HomePage(DriverManager.getDriver()) : homePage;
 	}
 
 	public LogoutPage getLogoutPage() {
-		return logoutPage==null ? logoutPage=new LogoutPage(DriverManager.getDriver()) : logoutPage;
+		return logoutPage == null ? logoutPage = new LogoutPage(DriverManager.getDriver()) : logoutPage;
 	}
 
+	public ProgramPage2 getProgramPage2() {
+
+		return programPage == null ? programPage = new ProgramPage2(DriverManager.getDriver()) : programPage;
+	}
+
+	
+	public ProgramPart1Page getProgramPart1Page() {
+		
+		return programPart1==null ? programPart1=new ProgramPart1Page(DriverManager.getDriver()) : programPart1;
+	}
 }
