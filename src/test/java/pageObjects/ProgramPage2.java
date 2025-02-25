@@ -2,8 +2,12 @@ package pageObjects;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -19,12 +23,13 @@ import utilities.ExcelReader;
 public class ProgramPage2 {
 
 	private WebDriver driver;
-	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	WebDriverWait wait ;
 	JavascriptExecutor js;
 
 	public ProgramPage2(WebDriver driver) {
 		this.driver = driver;
 		this.js = (JavascriptExecutor) driver;
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		PageFactory.initElements(driver, this);
 		dataSetup();
 	}
@@ -47,8 +52,6 @@ public class ProgramPage2 {
 	private WebElement searchTable;
 	@FindBy(xpath = "//tbody//tr")
 	private List<WebElement> searchTableRows;
-//	@FindBy(xpath = "//span[@class='p-paginator-current ng-star-inserted']")
-//	private WebElement countText;
 	@FindBy(xpath = "//p-paginator/div/span[contains(@class,'p-paginator-current')]")
 	private WebElement countText;
 	@FindBy(xpath = "//app-batch/p-confirmdialog")
@@ -73,9 +76,24 @@ public class ProgramPage2 {
 			+ "')]/following-sibling::td//button[@id='deleteProgram']";
 	String xpathValueDelNo = "//button[@class='ng-tns-c118-10 p-confirm-dialog-reject p-ripple p-button p-component ng-star-inserted']";
 	String xpathValueDelYes = "//button[@class='ng-tns-c118-10 p-confirm-dialog-accept p-ripple p-button p-component ng-star-inserted']";
-	String xpathDelX = "//div/button[@class='ng-tns-c118-10 p-dialog-header-icon p-dialog-header-close p-link ng-star-inserted']";
 	@FindBy(xpath = "//p-dialog[1]/div/div")
 	WebElement addProgramPopupWindow;
+	
+	String xpathDelX = "//button[contains(@class,'p-dialog-header-close')]";
+	
+	
+	@FindBy(xpath = "//div[contains(@class,'p-confirm-dialog')]")
+	private WebElement deleteConfirmDialogBox;
+	@FindBy(xpath = "//div[contains(@class,'p-confirm-dialog')]//span[contains(@class,'p-dialog-title')]")
+	private WebElement deleteConfirmDialogHeader;
+	@FindBy(xpath = "//button[contains(@class,'p-confirm-dialog-accept')]")
+	private WebElement deleteConfirmYesButton;
+	@FindBy(xpath = "//button[contains(@class,'p-confirm-dialog-reject')]")
+	private WebElement deleteConfirmNoButton;
+	@FindBy(xpath = "//button[contains(@class,'p-dialog-header-close')]")
+	private WebElement deleteConfirmCloseIcon;
+	@FindBy(xpath = "//tr[1]//button[@icon='pi pi-trash']")
+	private WebElement deleteIcon;
 
 	// Pagination
 	@FindBy(xpath = "//button[contains(@class,'p-paginator-first')]")
@@ -142,23 +160,27 @@ public class ProgramPage2 {
 	private WebElement activeRadioButton;
 	@FindBy(xpath = "//p-radiobutton[@name='category']//input[@id='Inactive']")
 	private WebElement inActiveRadioButton;
-
+	@FindBy(xpath = "//tbody/tr//div[@role='checkbox']")
+	private List<WebElement> checkboxList;
+	@FindBy(xpath = "//div[@class='box']//button[@icon='pi pi-trash']")
+	private WebElement headerDeleteIcon;
+	
+	//
 	public boolean pagination(int page) {
 		try {
 			WebElement pageButton = driver.findElement(By.xpath("//button[text()='" + page + "']"));
+			if(pageButton.isEnabled()) {
 			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", pageButton);
 			wait.until(ExpectedConditions.elementToBeClickable(pageButton));
 			pageButton.click();
+			}
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public boolean isDelSuccess() {
-		return delConfirmBox.isDisplayed();
-	}
-
+	
 	public void clickYesDelete() {
 		driver.findElement(By.xpath(xpathValueDelYes)).click();
 	}
@@ -170,7 +192,7 @@ public class ProgramPage2 {
 	public void clickXDelete() {
 		driver.findElement(By.xpath(xpathDelX)).click();
 	}
-
+//
 	public boolean isDialogDisappeared(By dialogLocator) {
 		try {
 			return wait.until(ExpectedConditions.invisibilityOfElementLocated(dialogLocator));
@@ -178,7 +200,7 @@ public class ProgramPage2 {
 			return true;
 		}
 	}
-
+//
 	public boolean isDialogDisapearTrue() {
 		boolean flag = false;
 		if (isDialogDisappeared(delConfirmBoxX)) {
@@ -186,116 +208,83 @@ public class ProgramPage2 {
 		}
 		return flag;
 	}
-
+//
 	public boolean isDeleteConfirmationVisible() {
 		return delConfirmText.getText().equalsIgnoreCase("Confirm");
 	}
-
+//
 	public boolean isDeleteMultipleVisible() {
 		return deleteButtonMultiple.isEnabled();
 	}
-
+//
 	public void clickDeleteMultiple() {
 		deleteButtonMultiple.click();
 	}
 
-	public void deleteProgramMultiple() {
-		int pagetotal = 20;
-		int itemCount = 2;
-		for (int p = 1; p < pagetotal; p++) {
-			try {
-				for (String p1 : delMultiData) {
-					System.out.println("entering for loop");
-					String delList = "//td[(text()='" + p1 + "')]";
-					String rData = "//td[(text()='" + p1 + "')]/preceding-sibling::td[1]";
-					By xpathCheckBox = By.xpath(rData);
-					WebElement searchElement = searchTable.findElement(By.xpath(delList));
-					System.out.println(searchElement.getText());
-					if (searchElement.isDisplayed()) {
-						driver.findElement(xpathCheckBox).click();
-						itemCount = itemCount - 1;
-					}
-				}
-			} catch (Exception e) {
-
-			}
-			if (itemCount == 0) {
+	//
+	public void selectSingleDelete() {	
+		CallDeleteData(deleteSingleData);
+			js.executeScript("arguments[0].click();", deleteIcon);
+	}
+	
+	//delete multiple recent
+	public List<String> selectCheckBoxMultiple() {		
+		List<String> programToBeDeleted=searchAndClickCheckboxForProgram(2);
+		return programToBeDeleted;
+	}
+	//
+	public void clickHeaderDeleteIcon() {
+		js.executeScript("arguments[0].click()", headerDeleteIcon);
+	}
+	//
+	public void clickDialogDeleteIcon() {
+		js.executeScript("arguments[0].click()", deleteConfirmCloseIcon);
+	}
+	
+	//
+	public List<String> searchAndClickCheckboxForProgram(int noOfRows) {
+		// checkboxList.stream().limit(noOfRows).forEach(checkbox ->
+		// js.executeScript("arguments[0].click()", checkbox));
+		List<String> programToBeDeleted = new ArrayList<String>();
+		for (int i = 0; i < noOfRows; i++) {
+			String programNames = checkboxList.get(i).findElement(By.xpath("ancestor::td/following-sibling::td[1]"))
+					.getText();
+			programToBeDeleted.add(programNames);
+			js.executeScript("arguments[0].click()", checkboxList.get(i));
+			// checkboxList.get(i).click();
+		}
+		return programToBeDeleted;
+	}
+	//
+	public boolean isprogramDeleted(List<String> programForDeletion) {
+		List<String> allProgramList = getAllProgramListed();
+		Set<String> delMultiDataSet = new HashSet<>(Arrays.asList(delMultiData));
+		boolean programDeleted = allProgramList.stream().noneMatch(topic -> delMultiDataSet.contains(topic));
+		return programDeleted;
+	}
+	
+	//
+	public List<String> getAllProgramListed() {
+		List<String> allProgramList = new ArrayList<String>();
+		while (true) {
+			wait.until(ExpectedConditions.visibilityOfAllElements(programList));
+			List<String> pList = programList.stream().map(c -> c.getText()).collect(Collectors.toList());
+			System.out.println(pList);
+			allProgramList.addAll(pList);
+			js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+			if (!paginatorNextButton.isEnabled()) {
 				break;
 			}
-			if (!pagination(p + 1)) {
-				System.out.println("entering paging loop" + p);
-				break;
-			}
+			js.executeScript("arguments[0].click();", paginatorNextButton);
 		}
+		return allProgramList;
 	}
 
-	public boolean deleteProgramNavigation(String type) {
-		int pagetotal = 20;
-		boolean setResult = false;
-		for (int p = 1; p < pagetotal; p++) {
-			try {
-				System.out.println("entering for loop");
-				WebElement searchElement = searchTable.findElement(By.xpath(xpathValue));
-				System.out.println(searchElement.getText());
-				if (searchElement.isDisplayed()) {
-					searchTable.findElement(By.xpath(xpathValueDel)).click();
-					if (type.equalsIgnoreCase("Yes")) {
-						System.out.println("in yes click");
-						searchTable.findElement(By.xpath(xpathValueDelYes)).click();
-						System.out.println("came out yes");
-						String alertTxt = alertBox.getText();
-						if (alertTxt.equalsIgnoreCase("Successful")) {
-							setResult = true;
-						}
-					}
-					if (type.equalsIgnoreCase("No")) {
-						searchTable.findElement(By.xpath(xpathValueDelNo)).click();
-						if (!searchTable.findElement(By.xpath(xpathValueDelNo)).isDisplayed()) {
-							setResult = true;
-						}
-					}
-					if (type.equalsIgnoreCase("Pop")) {
-						if (driver.findElement(By.xpath(xpathDelX)).isDisplayed()) {
-							setResult = true;
-						}
-					}
-					if (type.equalsIgnoreCase("X")) {
-						driver.findElement(By.xpath(xpathDelX)).click();
-						{
-							setResult = true;
-						}
-					}
-
-					return setResult;
-				}
-			} catch (Exception e) {
-
-			}
-			if (!pagination(p + 1)) {
-				System.out.println("entering paging loop" + p);
-				break;
-			}
-		}
-
-		return setResult;
-	}
-
-	public void searchDelete() {
-		searchProgram.clear();
-		searchProgram.sendKeys(deleteSingleData);
-		List<WebElement> elements = driver.findElements(By.xpath("//tr[td[(text()= '" + deleteSingleData + "')]]"));
-		if (elements.isEmpty()) {
-			// 0 records
-		} else {
-			driver.findElement(By.xpath(xpathValueDel)).click();
-			driver.findElement(By.xpath(xpathValueDelYes)).click();
-		}
-	}
-
+	
+	
+//
 	public void clickSortIcon(String columnHeader) {
-		System.out.println("==========ColumnHeader from feature: " + columnHeader);
 		for (WebElement header : datatableHeaders) {
-			System.out.println("==========ColumnHeader from app: " + header.getText().trim());
 			if (header.getText().trim().equals(columnHeader)) {
 				WebElement sortIcon = header.findElement(By.xpath("p-sorticon/i"));
 				js.executeScript("arguments[0].click();", sortIcon);
@@ -303,107 +292,110 @@ public class ProgramPage2 {
 			}
 		}
 	}
-
+//
 	public void clickProgramButton() {
 		bodyProgram.click();
 	}
-
+//
 	public void searchProgram() {
 		searchProgram.clear();
 		searchProgram.sendKeys(searchData);
 	}
+	//
+	public void searchEditProgram() {
+		searchProgram.clear();
+		String searchEditedData = editData[0] + " " + "test";
+		searchProgram.sendKeys(searchEditedData);
+	}
 
+	//
 	public List<WebElement> getSearchElement() {
 		List<WebElement> elements = searchTable
 				.findElements(By.xpath("//tr[td[contains(text(), '" + searchData + "')]]"));
 		return elements;
 	}
-
-	public String getCountMsg() {
-		
+//
+	public String getCountMsg() {		
 		String countMsg = countText.getText();
 		return countMsg;
 	}
 
-	public boolean ConfirmationPage(String type) {
-		boolean setResult = false;
-		if (type.equalsIgnoreCase("Yes")) {
-			System.out.println("in yes click");
-			searchTable.findElement(By.xpath(xpathValueDelYes)).click();
-			System.out.println("came out yes");
-			String alertTxt = alertBox.getText();
-			if (alertTxt.equalsIgnoreCase("Successful")) {
-				setResult = true;
-			}
+	//
+	public boolean isDeleteConfirmDialogBoxDisplayed() {
+		if (deleteConfirmDialogBox.isDisplayed()) {
+			return true;
 		}
-		if (type.equalsIgnoreCase("No")) {
-			searchTable.findElement(By.xpath(xpathValueDelNo)).click();
-			if (!searchTable.findElement(By.xpath(xpathValueDelNo)).isDisplayed()) {
-				setResult = true;
-			}
-		}
-		if (type.equalsIgnoreCase("Pop")) {
-			if (driver.findElement(By.xpath(xpathDelX)).isDisplayed()) {
-				setResult = true;
-			}
-		}
-		if (type.equalsIgnoreCase("X")) {
-			driver.findElement(By.xpath(xpathDelX)).click();
-			{
-				setResult = true;
-			}
-		}
-		return setResult;
-
+		return false;
 	}
+	
+	//
+	public boolean deleteSuccessDialogCheck(String type) {
+		boolean setResult = false;
+	if (type.equalsIgnoreCase("Yes")) {
+		System.out.println("in yes click");
+		searchTable.findElement(By.xpath(xpathValueDelYes)).click();
+		System.out.println("came out yes");
+		String alertTxt = alertBox.getText();
+		if (alertTxt.equalsIgnoreCase("Successful")) {
+			setResult = true;
+		}
+	}
+		return setResult;
+	
+	}
+	
+	
 
 	// pagination
 	public boolean isPreviousPage() {
 		return paginatorPreviousButton.isDisplayed();
 	}
-
+//
 	public boolean isNextEnabled() {
 		return paginatorNextButton.isEnabled();
 	}
-
+	//
+	public void CallEditData() {
+		searchProgram.clear();
+		searchProgram.sendKeys(searchData);
+	}
+	//
+	public void CallDeleteData(String value) {
+		searchProgram.clear();
+		searchProgram.sendKeys(value);
+	}
+	//
+	public void searchDeleteData() {
+		searchProgram.clear();
+		searchProgram.sendKeys(deleteSingleData);
+	}
+	//
 	public void clickPreviousPage() {
 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", paginatorPreviousButton);
 		wait.until(ExpectedConditions.elementToBeClickable(paginatorPreviousButton));
 		paginatorPreviousButton.click();
 	}
-
+//
 	public void clickNextPage() {
 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", paginatorNextButton);
 		wait.until(ExpectedConditions.elementToBeClickable(paginatorNextButton));
 		paginatorNextButton.click();
 	}
-
+//
 	public void clickLastPage() {
 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", paginatorLastButton);
 		wait.until(ExpectedConditions.elementToBeClickable(paginatorLastButton));
 		paginatorLastButton.click();
 	}
 
-	public boolean isPaginationFirstButtonDisplayed() {
-		return paginatorFirstButton.isDisplayed();
+	
+	//
+	public boolean isExpected() {
+		return (driver.getTitle().equalsIgnoreCase("LMS"));
 	}
 
-	public boolean isAddBatchPopupWindowVisible() {
-		return addProgramPopupWindow.isDisplayed();
-	}
-
-	public boolean isPaginationPreviousButtonDisplayed() {
-		return paginatorPreviousButton.isDisplayed();
-	}
-
-	public boolean isPaginationNextButtonDisplayed() {
-		return paginatorNextButton.isDisplayed();
-	}
-
-	public boolean isPaginationLastButtonDisplayed() {
-		return paginatorLastButton.isDisplayed();
-	}
-
+	
+//
 	public void dataSetup() {
 		try {
 			ExcelReader rdr = new ExcelReader();
@@ -417,8 +409,6 @@ public class ProgramPage2 {
 			editData = new String[] { editDataMap.get("program_name"), editDataMap.get("program_descption"),
 					editDataMap.get("status") };
 
-			LinkedHashMap<String, String> addDataMap = rdr.getTestData("Program2", 1);
-			String[] addData1 = { addDataMap.get("program_name"), addDataMap.get("program_descption") };
 
 			LinkedHashMap<String, String> deleteMultipleDataMap = rdr.getTestData("Program2", 6);
 			delMultiData = new String[] { deleteMultipleDataMap.get("program_name"),
@@ -428,7 +418,7 @@ public class ProgramPage2 {
 
 		}
 	}
-
+//
 	public boolean checkSortedAscending(String columnHeader) {
 		switch (columnHeader.trim()) {
 		case "{Program Name": {
@@ -467,60 +457,69 @@ public class ProgramPage2 {
 		}
 	}
 
-	public void editProgramNavigateClick() {
-		String xpathValueEdit = "//td[(text()='" + editData[0] + "')]/following-sibling::td//button[@id='editProgram']";
-		String xpathValueEditInPage = "//td[(text()='" + editData[0] + "')]";
-		searchProgram.clear();
-		searchProgram.sendKeys(editData[0]);
-		List<WebElement> elements = driver.findElements(By.xpath("//tr[td[(text()= '" + editData[0] + "')]]"));
-		if (elements.isEmpty()) {
-			// 0 records
-		} else {
-			driver.findElement(By.xpath(xpathValueEdit)).click();
-		}
 
+//
+	public boolean isProgramPopupDisplayed() {
+		return programDetailsPopup.isDisplayed();
 	}
-
-	public void dataSelectProgramNavigation() {
+//
+	public boolean programPopupNameCheck() {
+		String popTitle = programPopUpTitle.getText();
+		return popTitle.equalsIgnoreCase("Program Details");
+	}
+	
+//
+	public void programNameInput(String type) {
+		String updateProgramNameTxt = editData[0] + " " + "test";
+		programNameInput.clear();
+		programNameInput.sendKeys(updateProgramNameTxt);
+		if(type.equalsIgnoreCase("SAVE"))
+		{
+		saveButton.click();
+		}
+		if(type.equalsIgnoreCase("CANCEL"))
+		{
+		cancelButton.click();
+		}
+		if(type.equalsIgnoreCase("CLOSE"))
+		{
+		closeIcon.click();
+		}
+	}
+	//
+	public void dataSelectProgramEditNavigation() {
+		CallEditData();
 		String xpathValueEdit = "//td[(text()='" + editData[0] + "')]/following-sibling::td//button[@id='editProgram']";
 		String xpathValueEditInPage = "//td[(text()='" + editData[0] + "')]";
-		int pagetotal = 20;
-		for (int p = 1; p < pagetotal; p++) {
+		int pagetotal = 1;
+		for (int p = 1; p <=pagetotal; p++) {
 			try {
-				System.out.println("entering for loop");
 				WebElement searchElement = searchTable.findElement(By.xpath(xpathValueEditInPage));
-				System.out.println(searchElement.getText());
 				if (searchElement.isDisplayed()) {
 					searchTable.findElement(By.xpath(xpathValueEdit)).click();
 				}
 			} catch (Exception e) {
 
 			}
-			if (!pagination(p + 1)) {
-				System.out.println("entering paging loop" + p);
-				break;
-			}
 		}
-	}
+			
+		}
+	//	
+		public void dataSelectProgramEditStatusNavigation() {
+			CallEditData();
+			String xpathValueEdit = "//td[(text()='" + editData[0] + " " +"test"+"')]/following-sibling::td//button[@id='editProgram']";
+			String xpathValueEditInPage = "//td[(text()='" + editData[0] + " " +"test"+ "')]";
+			int pagetotal = 1;
+			for (int p = 1; p <=pagetotal; p++) {
+				try {
+					WebElement searchElement = searchTable.findElement(By.xpath(xpathValueEditInPage));
+					if (searchElement.isDisplayed()) {
+						searchTable.findElement(By.xpath(xpathValueEdit)).click();
+					}
+				} catch (Exception e) {
 
-	public boolean isProgramPopupDisplayed() {
-		return programDetailsPopup.isDisplayed();
-	}
-
-	public boolean programPopupNameCheck() {
-		String popTitle = programPopUpTitle.getText();
-		return popTitle.equalsIgnoreCase("Program Details");
-	}
-
-	public boolean isNameMandatoryIconDisplayed() {
-		return nameMandatoryIcon.isDisplayed();
-	}
-
-	public void programNameInput() {
-		String updateProgramNameTxt = editData[0] + " " + "test";
-		programNameInput.clear();
-		programNameInput.sendKeys(updateProgramNameTxt);
-		saveButton.click();
+				}
+			}
 	}
 
 	public void programDespInput() {
@@ -529,9 +528,9 @@ public class ProgramPage2 {
 		programDescriptionInput.sendKeys(updateProgramDespTxt);
 		saveButton.click();
 	}
-
+//
 	public void programStatusInput() {
-		String updateProgramStatusTxt = editData[2];
+		String updateProgramStatusTxt = editData[2]+" "+ "test";
 		if (updateProgramStatusTxt.equalsIgnoreCase("Active")) {
 			js.executeScript("arguments[0].click();", activeRadioButton);
 		}
@@ -540,15 +539,14 @@ public class ProgramPage2 {
 		}
 		saveButton.click();
 	}
-
+	
+	//program name update
 	public boolean checkProgramNameInputUpdated() {
 		boolean isUpdated = false;
 		String updateProgramNameTxt = editData[0] + " " + "test";
 		try {
 			String xpathValueEditInPage = "//td[(text()='" + updateProgramNameTxt + "')]";
-			System.out.println(xpathValueEditInPage);
 			WebElement searchElement = searchTable.findElement(By.xpath(xpathValueEditInPage));
-			System.out.println(searchElement.getText());
 			if (searchElement.isDisplayed()) {
 				isUpdated = true;
 			}
@@ -557,7 +555,9 @@ public class ProgramPage2 {
 		}
 		return isUpdated;
 	}
-
+	
+	
+//program description update
 	public boolean checkProgramDespInputUpdated() {
 		boolean isUpdated = false;
 		String updateProgramDespTxt = editData[1] + " " + "test";
@@ -574,4 +574,44 @@ public class ProgramPage2 {
 		}
 		return isUpdated;
 	}
+	
+	public boolean checkProgramStatusInputUpdated() {
+		boolean isUpdated = false;
+		String updateProgramStatusTxt = editData[2] ;
+		try {
+			String xpathValueEditInPage = "//td[(text()='" + updateProgramStatusTxt + "')]";
+			System.out.println(xpathValueEditInPage);
+			WebElement searchElement = searchTable.findElement(By.xpath(xpathValueEditInPage));
+			System.out.println(searchElement.getText());
+			if (searchElement.isDisplayed()) {
+				isUpdated = true;
+			}
+		} catch (Exception e) {
+
+		}
+		return isUpdated;
+	}
+	
+	public void deleteSingleProgram() {
+		CallEditData();
+		String xpathValueEdit = "//td[(text()='" + editData[0] + "')]/following-sibling::td//button[@id='editProgram']";
+		String xpathValueEditInPage = "//td[(text()='" + editData[0] + "')]";
+		int pagetotal = 1;
+		for (int p = 1; p <=pagetotal; p++) {
+			try {
+				System.out.println("entering for loop");
+				System.out.println("xpathValueEdit");
+				System.out.println("xpathValueEditInPage");
+				WebElement searchElement = searchTable.findElement(By.xpath(xpathValueEditInPage));
+				System.out.println(searchElement.getText());
+				if (searchElement.isDisplayed()) {
+					searchTable.findElement(By.xpath(xpathValueEdit)).click();
+					System.out.println("edit button clicked");
+				}
+			} catch (Exception e) {
+
+			}
+		}
+			
+		}
 }

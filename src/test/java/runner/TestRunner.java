@@ -9,8 +9,7 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 import utilities.ConfigReader;
 
-@CucumberOptions(features = {"src/test/resources/features"}, glue = { "stepDefinitions", "hooks" },
-		// tags="@roleContents",
+@CucumberOptions(features = "src/test/resources/features", glue = { "stepDefinitions", "hooks" },
 		monochrome = false, publish = true, plugin = { "pretty",
 				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
 				"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",

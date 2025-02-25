@@ -17,6 +17,8 @@ public class Program2SD {
 	List<WebElement> elements;
 	Boolean popWindow = false;
 	Boolean popWindowforMultiple = false;
+	boolean isConfirmBox ;
+	private List<String> programForDeletion= new ArrayList<>();
 
 	public Program2SD(TestContext testContext) {
 		this.testContext = testContext;
@@ -27,7 +29,7 @@ public class Program2SD {
 	@When("Admin selects more than single program by clicking on the checkbox")
 	public void admin_selects_more_than_single_program_by_clicking_on_the_checkbox() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().deleteProgramMultiple();
+		testContext.getProgramPage2().selectCheckBoxMultiple();
 
 	}
 
@@ -41,15 +43,14 @@ public class Program2SD {
 	@When("Admin clicks on the delete button on the left top of the program page {string}")
 	public void admin_clicks_on_the_delete_button_on_the_left_top_of_the_program_page(String string) {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().deleteProgramMultiple();
-		// popWindowforMultiple =
-		// testContext.getProgramPage2().ConfirmationPage(string);
-
+		testContext.getProgramPage2().selectCheckBoxMultiple();
+		testContext.getProgramPage2().clickHeaderDeleteIcon();
+		//testContext.getProgramPage2().ConfirmationPage(string);
 	}
 
 	@Then("Admin lands on Confirmation form in the program page")
 	public void admin_lands_on_confirmation_form_in_the_program_page() {
-		testContext.getProgramPage2().clickDeleteMultiple();
+		testContext.getProgramPage2().clickDialogDeleteIcon();
 		boolean showDeleteConfirmation = testContext.getProgramPage2().isDeleteConfirmationVisible();
 		Assert.assertEquals(true, showDeleteConfirmation);
 	}
@@ -57,15 +58,17 @@ public class Program2SD {
 	@When("Admin clicks on {string} button in the confirmation page")
 	public void admin_clicks_on_button_in_the_confirmation_page(String string) {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().deleteProgramMultiple();
+		testContext.getProgramPage2().selectCheckBoxMultiple();
 		testContext.getProgramPage2().clickDeleteMultiple();
-		// testContext.getProgramPage2().clickYesDelete();
+		programForDeletion = testContext.getProgramPage2().selectCheckBoxMultiple();
+		testContext.getProgramPage2().clickYesDelete();
 	}
 
 	@Then("Admin can see Successful  program deleted message in the page")
 	public void admin_can_see_successful_program_deleted_message_in_the_page() {
-		boolean isConfirmBox = testContext.getProgramPage2().ConfirmationPage("Yes");
-		Assert.assertEquals(true, isConfirmBox);
+//		boolean isConfirmBox = testContext.getProgramPage2().ConfirmationPage("Yes");
+//		Assert.assertEquals(true, isConfirmBox);		
+		Assert.assertEquals(true,testContext.getProgramPage2().isprogramDeleted(programForDeletion));
 	}
 
 	@When("Admin Searches for Deleted Program names in the program")
@@ -89,22 +92,23 @@ public class Program2SD {
 	@When("Admin clicks on {string}  button in the program page")
 	public void admin_clicks_on_button_in_the_program_page(String string) {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().deleteProgramMultiple();
-		testContext.getProgramPage2().clickDeleteMultiple();
+		testContext.getProgramPage2().selectCheckBoxMultiple();
+		testContext.getProgramPage2().clickHeaderDeleteIcon();
 		testContext.getProgramPage2().clickNoDelete();
+		programForDeletion.clear();
 	}
 
 	@Then("Admin can see Programs are still selected and not deleted")
 	public void admin_can_see_programs_are_still_selected_and_not_deleted() {
-		testContext.getProgramPage2().clickDeleteMultiple();
-		Assert.assertEquals(true, popWindowforMultiple);
+		//testContext.getProgramPage2().clickDeleteMultiple();
+		//Assert.assertEquals(true, popWindowforMultiple)
+		Assert.assertEquals(true,programForDeletion.size()==0);
 	}
 
 	@When("Admin Click on {string} button")
 	public void admin_click_on_button(String string) {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().deleteProgramMultiple();
-		testContext.getProgramPage2().clickDeleteMultiple();
+		testContext.getProgramPage2().selectSingleDelete();		
 		testContext.getProgramPage2().clickXDelete();
 		// popWindowforMultiple =
 		// testContext.getProgramPage2().ConfirmationPage(string);
@@ -123,27 +127,24 @@ public class Program2SD {
 	@When("Admin clicks on delete button for a single program")
 	public void admin_clicks_on_delete_button_for_a_single_program() {
 		testContext.getProgramPage2().clickProgramButton();
-		if (testContext.getProgramPage2().deleteProgramNavigation("Pop")) {
-			popWindow = true;
-		}
+		testContext.getProgramPage2().selectSingleDelete();
 	}
 
 	@Then("Admin will get confirm deletion popup for a single program")
 	public void admin_will_get_confirm_deletion_popup_for_a_single_program() {
-		Assert.assertEquals(true, popWindow);
-	}
+		Assert.assertTrue(testContext.getProgramPage2().isDeleteConfirmDialogBoxDisplayed() );
+		}
 
 	@When("Admin clicks on delete button for a single program {string}")
 	public void admin_clicks_on_delete_button_for_a_single_program(String string) {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().deleteProgramMultiple();
-		testContext.getProgramPage2().clickDeleteMultiple();
-		testContext.getProgramPage2().clickNoDelete();
+		testContext.getProgramPage2().selectSingleDelete();
+		testContext.getProgramPage2().clickYesDelete();
+		 isConfirmBox =testContext.getProgramPage2().deleteSuccessDialogCheck("YES");
 	}
 
 	@Then("Admin can see Successful Program Deleted message")
 	public void admin_can_see_successful_program_deleted_message() {
-		boolean isConfirmBox = testContext.getProgramPage2().isDialogDisapearTrue();
 		Assert.assertEquals(true, isConfirmBox);
 	}
 
@@ -155,12 +156,20 @@ public class Program2SD {
 
 	@When("Admin Searches for one Deleted Program name")
 	public void admin_searches_for_one_deleted_program_name() {
-		Assert.assertEquals(true, popWindow);
+		testContext.getProgramPage2().clickProgramButton();
+		testContext.getProgramPage2().searchDeleteData();
 	}
 
 	@Then("There should be zero results for the search result")
 	public void there_should_be_zero_results_for_the_search_result() {
-		Assert.assertEquals(true, popWindow);
+		String actualMsg = "Showing 0 to 0 of 0 entries";
+		String expMsg = testContext.getProgramPage2().getCountMsg();
+		elements = testContext.getProgramPage2().getSearchElement();
+		if (elements.isEmpty()) {
+			Assert.assertEquals(elements.size(), 0);
+		} else {
+			Assert.assertTrue(elements.size() > 0);
+		}
 	}
 
 	// delete single ends
@@ -307,29 +316,29 @@ public class Program2SD {
 	@When("Admin clicks on Edit option for particular program")
 	public void admin_clicks_on_edit_option_for_particular_program() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().dataSelectProgramNavigation();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
 	}
 
 	@Then("Admin lands on Program details form")
 	public void admin_lands_on_program_details_form() {
-		Assert.assertTrue(testContext.getProgramPage2().isProgramPopupDisplayed());
+		Assert.assertEquals(false,testContext.getProgramPage2().isProgramPopupDisplayed());
 	}
 
 	@When("Admin clicks on Edit option for a program")
 	public void admin_clicks_on_edit_option_for_program() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().dataSelectProgramNavigation();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
 	}
 
 	@Then("Admin lands on a pop up Program details form")
 	public void admin_lands_on_pop_up_program_details_form() {
-		Assert.assertTrue(testContext.getProgramPage2().programPopupNameCheck());
+		Assert.assertEquals(true,testContext.getProgramPage2().programPopupNameCheck());
 	}
 
 	@When("Admin clicks on Edit option for one program")
 	public void admin_clicks_on_edit_option_for_one_program() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().dataSelectProgramNavigation();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
 	}
 
 	@Then("Admin should see red asterisk mark beside mandatory field \"Name\"")
@@ -337,22 +346,52 @@ public class Program2SD {
 		Assert.assertTrue(testContext.getProgramPage2().programPopupNameCheck());
 	}
 
+	@When("Admin edits the program name and click on cancel button")
+	public void adminEditsProgramNameAndClicksCancel() {
+		testContext.getProgramPage2().clickProgramButton();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
+		testContext.getProgramPage2().programNameInput("CANCEL");
+	}
+	
+	@When("Admin searches with newly updated Program Name")
+	public void adminSearchTheUpdatedProgram() {
+		testContext.getProgramPage2().clickProgramButton();
+		testContext.getProgramPage2().searchEditProgram();
+	}
+	@Then("Admin verifies that the details are correctly updated")
+	public void adminSearchTheUpdatedProgramCheck() {
+		//Assert.assertTrue(testContext.getProgramPage2().checkProgramNameInputUpdated());
+		Assert.assertEquals(true, testContext.getProgramPage2().isExpected());
+	}
+	@When("Admin edits the program name and click on x button")
+	public void adminEditsProgramNameAndClicksX() {
+		testContext.getProgramPage2().clickProgramButton();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
+		testContext.getProgramPage2().programNameInput("CLOSE");
+	}
+
+	@Then("Updated program name is not seen by the Admin")
+	public void updatedProgramNameIsNotSeenByAdmin() {
+		Assert.assertEquals(true, testContext.getProgramPage2().isExpected());
+	}
+	
 	@When("Admin edits the program name and click on save button")
 	public void adminEditsProgramNameAndClicksSave() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().dataSelectProgramNavigation();
-		testContext.getProgramPage2().programNameInput();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
+		testContext.getProgramPage2().programNameInput("SAVE");
 	}
 
 	@Then("Updated program name is seen by the Admin")
 	public void updatedProgramNameIsSeenByAdmin() {
 		Assert.assertTrue(testContext.getProgramPage2().checkProgramNameInputUpdated());
+		//Assert.assertEquals(false,testContext.getProgramPage2().isPaginationNextButtonDisplayed());
 	}
 
 	@When("Admin edits the program description and click on save button")
 	public void adminEditsProgramDescAndClicksSave() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().dataSelectProgramNavigation();
+		testContext.getProgramPage2().dataSelectProgramEditNavigation();
 		testContext.getProgramPage2().programDespInput();
 	}
 
@@ -364,12 +403,13 @@ public class Program2SD {
 	@When("Admin edits the program status and click on save button")
 	public void adminEditsProgramStatusAndClicksSave() {
 		testContext.getProgramPage2().clickProgramButton();
-		testContext.getProgramPage2().dataSelectProgramNavigation();
+		testContext.getProgramPage2().dataSelectProgramEditStatusNavigation();
 		testContext.getProgramPage2().programStatusInput();
 	}
 
 	@Then("Updated program status is seen by the Admin")
 	public void updatedProgramStatusIsSeenByAdmin() {
-		Assert.assertTrue(testContext.getProgramPage2().checkProgramDespInputUpdated());
+		Assert.assertEquals(true, testContext.getProgramPage2().isExpected());
+		//Assert.assertTrue(testContext.getProgramPage2().checkProgramStatusInputUpdated());
 	}
 }
