@@ -31,6 +31,9 @@ public class ClassPageSD {
 	private String classnotes;
 	private String recordingpath;
 	private List<String> classDatesList;
+	private String classTopicToBeDeleted;
+	private List<String> classTopicsToBeDeleted;
+	private String searchText;
 
 	public ClassPageSD(TestContext testContext) {
 		this.testContext = testContext;
@@ -87,7 +90,7 @@ public class ClassPageSD {
 		softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonVisible());
 		softAssert.assertTrue(testContext.getClassPage().isPaginationLastButtonVisible());
 		softAssert.assertTrue(testContext.getClassPage().isPaginationPagesButtonAvailable());
-
+		softAssert.assertAll();
 	}
 
 	@Then("Admin sees the sort icon for the following data table headings on the Manage Class page:")
@@ -127,6 +130,7 @@ public class ClassPageSD {
 		softAssert.assertTrue(testContext.getClassPage().isSaveButtonDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isCancelButtonDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isCloseIconDisplayed());
+		softAssert.assertAll();
 	}
 
 	@Then("Admin sees few input fields and their respective text boxes in the Class Details form")
@@ -136,6 +140,7 @@ public class ClassPageSD {
 		for (String inputField : inputFieldNames) {
 			softAssert.assertTrue(testContext.getClassPage().isInputFieldLabelPresent(inputField));
 			softAssert.assertTrue(testContext.getClassPage().isInputFieldPresent(inputField));
+			softAssert.assertAll();
 		}
 
 	}
@@ -226,7 +231,7 @@ public class ClassPageSD {
 		softAssert.assertTrue(testContext.getClassPage().isNoOfClassesFieldErrorMessageDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isStaffNameFieldErrorMessageDisplayed());
 		softAssert.assertTrue(testContext.getClassPage().isStatusFieldErrorMessageDisplayed());
-
+		softAssert.assertAll();
 	}
 
 	@When("Admin enters invalid data in all the fields in the Class Details form from {string} and {int}")
@@ -284,5 +289,308 @@ public class ClassPageSD {
 	public void admin_sees_success_message_and_new_class_is_added_to_the_data_table() {
 
 	}
+
+	// ---------------Edit class test cases-------------
+
+	@When("Admin clicks on the edit icon on the Manage Class page")
+	public void admin_clicks_on_the_edit_icon_on_the_manage_class_page() {
+		testContext.getClassPage().clickEditIcon();
+	}
+
+	@Then("Admin sees a pop up with class details displayed")
+	public void admin_sees_a_pop_up_with_class_details_displayed() {
+		Assert.assertTrue(testContext.getClassPage().isClassDetailsPopupDisplayed());
+	}
+
+	@Then("Admin sees that batch Name field is disabled")
+	public void admin_sees_that_batch_name_field_is_disabled() {
+		Assert.assertTrue(testContext.getClassPage().isBatchNameFieldDisabled());
+	}
+
+	@Then("Admin sees that Class Topic field is disabled")
+	public void admin_sees_that_class_topic_field_is_disabled() {
+		Assert.assertTrue(testContext.getClassPage().isClassTopicFieldDisabled());
+	}
+
+	@Given("Admin is on the Edit Class Popup window")
+	public void admin_is_on_the_edit_class_popup_window() {
+		testContext.getBasePage().clickClass();
+		testContext.getClassPage().clickEditIcon();
+	}
+
+	@When("Admin updates the fields with valid data from {string} and {int}")
+	public void admin_updates_the_fields_with_valid_data(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
+
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname, classstatus,
+				classcomments, classnotes, recordingpath);
+	}
+
+	@Then("Admin gets message {string} and see the updated values in data table")
+	public void admin_gets_message_and_see_the_updated_values_in_data_table(String expectedToastMessage) {
+		Assert.assertEquals(testContext.getClassPage().getSuccessToastMessage(), expectedToastMessage);
+	}
+
+	@When("Admin updates the fields with invalid data from {string} and {int}")
+	public void admin_updates_the_fields_with_invalid_data(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
+
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname, classstatus,
+				classcomments, classnotes, recordingpath);
+	}
+
+	@When("Admin updates the mandatory fields with valid values from {string} and {int}")
+	public void admin_updates_the_mandatory_fields_with_valid_values(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
+
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname, classstatus,
+				classcomments, classnotes, recordingpath);
+	}
+
+	@When("Admin updates the optional fields with valid values from {string} and {int}")
+	public void admin_updates_the_optional_fields_with_valid_values(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		classdescription = data.get("classDescription");
+		classdates = data.get("classDates");
+		staffname = data.get("staffName");
+		classstatus = data.get("status");
+		classcomments = data.get("comments");
+		classnotes = data.get("notes");
+		recordingpath = data.get("recording");
+
+		testContext.getClassPage().updateClassDetailsForm(classdescription, classdates, staffname, classstatus,
+				classcomments, classnotes, recordingpath);
+	}
+
+	@When("Admin clicks Cancel button on edit popup")
+	public void admin_clicks_cancel_button_on_edit_popup() {
+		testContext.getClassPage().clickCancelButton();
+	}
+
+	@Then("Admin can see the class details popup disappears and can see nothing changed for particular Class")
+	public void admin_can_see_the_class_details_popup_disappears_and_can_see_nothing_changed_for_particular_class() {
+		Assert.assertTrue(testContext.getClassPage().isClassDetailsDialogClosed());
+	}
+
+	// ---------------Sort class test cases-------------
+
+	@When("Admin clicks on Sort icon next to {string} table header")
+	public void admin_clicks_on_sort_icon_next_to_table_header(String columnHeader) {
+		testContext.getClassPage().clickSortIcon(columnHeader);
+	}
+
+	@Then("Admin sees that class details are sorted by {string}")
+	public void admin_sees_that_class_details_are_sorted_by_column_header(String columnHeader) {
+		Assert.assertTrue(testContext.getClassPage().checkSortedAscending(columnHeader));
+	}
+
+	// ---------------Delete Class test cases-------------
+
+	@When("Admin clicks on the Delete icon on the Manage Class page")
+	public void admin_clicks_on_the_delete_icon_on_the_manage_class_page() {
+		testContext.getClassPage().clickDeleteIconOnAnyRow();
+	}
+
+	@Then("Admin gets an alert with heading {string} with Yes and No button")
+	public void admin_gets_an_alert_with_heading_with_yes_and_no_button(String deleteConfirmHeader) {
+		softAssert.assertTrue(testContext.getClassPage().isDeleteConfirmDialogBoxDisplayed());
+		softAssert.assertEquals(testContext.getClassPage().getdeleteConfirmDialogHeader(), deleteConfirmHeader);
+		softAssert.assertTrue(testContext.getClassPage().isDeleteConfirmYesButtonDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isDeleteConfirmNoButtonDisplayed());
+		softAssert.assertAll();
+	}
+
+	@Given("Admin is on delete Confirm dialog box")
+	public void admin_is_on_delete_confirm_dialog_box() {
+		testContext.getBasePage().clickClass();
+		classTopicToBeDeleted = testContext.getClassPage().getClassTopicOfToBeDeletedClass();
+
+		testContext.getClassPage().clickDeleteIconOnAnyRow();
+	}
+
+	@When("Admin clicks on the Yes button on the dialog box")
+	public void admin_clicks_on_the_yes_button_on_the_dialog_box() {
+		testContext.getClassPage().clickDeleteConfirmYesButton();
+	}
+
+	@Then("Admin gets {string} {string} message and do not see that Class in the data table")
+	public void admin_gets_message_and_do_not_see_that_class_in_the_data_table(String toastSummary,
+			String toastMessage) {
+		// softAssert.assertEquals(testContext.getClassPage().getSuccessToastSummary(),
+		// toastSummary);
+		softAssert.assertEquals(testContext.getClassPage().getSuccessToastMessage(), toastMessage);
+		softAssert.assertTrue(testContext.getClassPage().isClassDeleted(classTopicToBeDeleted));
+		softAssert.assertAll();
+	}
+
+	@When("Admin clicks on the No button on the dialog box")
+	public void admin_clicks_on_the_no_button_on_the_dialog_box() {
+		testContext.getClassPage().clickDeleteConfirmNoButton();
+	}
+
+	@Then("Admin sees the dialog box disappears without deleting the record")
+	public void admin_sees_the_dialog_box_disappears_without_deleting_the_record() {
+		softAssert.assertFalse(testContext.getClassPage().isDeleteConfirmDialogBoxDisplayed());
+	}
+
+	@When("Admin clicks on the Close icon on the dialog box")
+	public void admin_clicks_on_the_close_icon_on_the_dialog_box() {
+		testContext.getClassPage().clickDeleteConfirmCloseIcon();
+	}
+
+	// ---------------Delete Classes from header delete icon test cases-------------
+
+	@When("Admin clicks {int} checkbox in the data table on the Manage Class page")
+	public void admin_clicks_any_checkbox_in_the_data_table_on_the_manage_class_page(int noOfRows) {
+		classTopicsToBeDeleted = testContext.getClassPage().getClassTopicAndClickCheckbox(noOfRows);
+		System.out.println("============classTopicsToBeDeleted " + classTopicsToBeDeleted);
+	}
+
+	@Then("Admin sees the common delete button enabled under header Manage Class")
+	public void admin_sees_the_common_delete_button_enabled_under_header_manage_class() {
+		System.out.println("=============Assertion");
+		Assert.assertTrue(testContext.getClassPage().isHeaderDeleteIconEnabled());
+	}
+
+	@When("admin clicks Delete button on top of the page")
+	public void admin_clicks_delete_button_on_top_of_the_page() {
+		testContext.getClassPage().clickHeaderDeleteIcon();
+	}
+
+	@Then("Admin lands on Manage Class page and can see the selected class is deleted from the data table")
+	public void admin_lands_on_manage_class_page_and_can_see_the_selected_class_is_deleted_from_the_data_table() {
+		Assert.assertTrue(testContext.getClassPage().isMultipleClassesDeleted(classTopicsToBeDeleted));
+	}
+
+	@Then("Admin lands on Manage Class page and can see the selected class is not deleted from the data table")
+	public void admin_lands_on_manage_class_page_and_can_see_the_selected_class_is_not_deleted_from_the_data_table() {
+		softAssert.assertFalse(testContext.getClassPage().isDeleteConfirmDialogBoxDisplayed());
+		System.out.println("===============isDeleteConfirmDialogBoxDisplayed "
+				+ testContext.getClassPage().isDeleteConfirmDialogBoxDisplayed());
+		softAssert.assertFalse(testContext.getClassPage().isMultipleClassesDeleted(classTopicsToBeDeleted));
+		System.out.println("===============isMultipleClassesDeleted "
+				+ testContext.getClassPage().isMultipleClassesDeleted(classTopicsToBeDeleted));
+		softAssert.assertAll();
+	}
+
+	@When("Admin clicks multiple {int} checkboxes in the data table on the Manage Class page")
+	public void admin_clicks_multiple_checkboxes_in_the_data_table_on_the_manage_class_page(int noOfRows) {
+		classTopicsToBeDeleted = testContext.getClassPage().getClassTopicAndClickCheckbox(noOfRows);
+	}
+
+//  ---------------Search Box in Class--------------
+
+	@When("Admin enters a Batch Name in Search textbox from {string} and {int}")
+	public void admin_enters_a_batch_name_in_search_textbox(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		searchText = data.get("batchName");
+		System.out.println("==========searchText" + searchText);
+		testContext.getClassPage().enterSearchText(searchText);
+	}
+
+	@Then("Admin sees Class details are searched by {string}")
+	public void admin_sees_class_details_are_searched_by_batch_name(String columnName) {
+		Assert.assertTrue(testContext.getClassPage().areClassDetailsFilteredByValidSearchText(searchText));
+	}
+
+	@When("Admin enters a Class Topic in Search textbox from {string} and {int}")
+	public void admin_enters_a_class_topic_in_search_textbox(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		searchText = data.get("classTopic");
+		System.out.println("==========searchText" + searchText);
+
+		testContext.getClassPage().enterSearchText(searchText);
+	}
+
+	@When("Admin enters a Staff Name in Search textbox from {string} and {int}")
+	public void admin_enters_a_staff_name_in_search_textbox(String sheetName, int rowNum) throws IOException {
+		LinkedHashMap<String, String> data = testContext.getExcelReader().getTestData(sheetName, rowNum);
+		searchText = data.get("staffName");
+		System.out.println("==========searchText" + searchText);
+
+		testContext.getClassPage().enterSearchText(searchText);
+	}
+	
+//  ---------------Pagination in Class--------------
+	
+	@When("Admin clicks the Next page link on the class table")
+	public void admin_clicks_the_next_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorNextButton();	    
+	}
+
+	@Then("Admin sees the next page record on the class table")
+	public void admin_sees_the_next_page_record_on_the_class_table() {
+		Assert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());	    
+	}
+
+	@When("Admin clicks the Last page link on the class table")
+	public void admin_clicks_the_last_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorLastButton();	    
+	}
+
+	@Then("Admin sees the last page record on the class table with Next page link disabled")
+	public void admin_sees_the_last_page_record_on_the_class_table_with_next_page_link_disabled() {
+		softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationNextButtonDisabled());
+		softAssert.assertAll();
+	}
+
+	@When("Admin clicks the Previous page link on the class table")
+	public void admin_clicks_the_previous_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorPreviousButton();	    
+	}
+
+	@Then("Admin sees the previous page record on the class table")
+	public void admin_sees_the_previous_page_record_on_the_class_table() {
+		Assert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());	 	    
+	}
+	
+	@When("Admin clicks the First page link on the class table")
+	public void admin_clicks_the_first_page_link_on_the_class_table() {
+		testContext.getClassPage().clickPaginatorFirstButton();
+	}  
+	
+	@Then("Admin sees the very first page record on the table with Previous page link are disabled")
+	public void admin_sees_the_very_first_page_record_on_the_table_with_previous_page_link_are_disabled() {
+		softAssert.assertTrue(testContext.getClassPage().isNewPageRecordsDisplayed());
+		softAssert.assertTrue(testContext.getClassPage().isPaginationPreviousButtonDisabled());
+		softAssert.assertAll();
+	    
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

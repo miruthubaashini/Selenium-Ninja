@@ -94,24 +94,25 @@
 			<version>2.29.1</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- Tesseract OCR -->
+	
+<!-- Tesseract OCR -->
     <dependency>
         <groupId>net.sourceforge.tess4j</groupId>
         <artifactId>tess4j</artifactId>
         <version>5.10.0</version> <!-- Use the latest version -->
+         <exclusions>
+        <exclusion>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </exclusion>
+    </exclusions>
     </dependency>
-               <!-- To check spelling-->
-	<!--<dependency>
-    <groupId>org.languagetool</groupId>
-    <artifactId>languagetool-core</artifactId>
-    <version>5.7</version> <! Use the latest version -->
-<!--</dependency>-->
-
 <dependency>
     <groupId>org.languagetool</groupId>
     <artifactId>language-en</artifactId>
     <version>6.5</version>
 </dependency>
+
 	</dependencies>
 
 	<build>
@@ -143,21 +144,9 @@
 							<value>2</value>
 						</property>
 					</properties>
-					<!--to stop logback in tess4j-->
-					<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
 
-  <logger name="org.apache.fontbox" level="ERROR"/>
-  <logger name="org.apache.pdfbox" level="ERROR"/>
+				</configuration>
 
-  <root level="INFO">
-    <appender-ref ref="STDOUT" />
-  </root>
-</configuration>
-			
 			</plugin>
 
 		</plugins>
