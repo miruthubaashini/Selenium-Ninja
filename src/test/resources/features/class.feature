@@ -4,24 +4,25 @@ Feature: Class feature
   
 	Background: 
 		Given Admin user is logged in with valid credentials
-		
+	
+	@wip	
  	Scenario: Validate the navigation to Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin is redirected to Manage Class page
 
-			
+	@wip		
  	Scenario: Validate the title on the Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin sees the "LMS - Learning Management System" title on Manage Class page
-  	 
+  @wip	 
  	Scenario: Validate the header on the Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin sees the "Manage Class" header on Manage Class page
-  	
+  @wip	
  	Scenario: Validate the search bar on the Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin sees the Search bar on Manage Class page 
-  	
+  @wip	
  	Scenario: Validate the data table headers on the Manage Class page
     When Admin clicks the Class link on navigation bar on Home page
     Then Admin sees the following data table headings on the Manage Class page:
@@ -57,12 +58,12 @@ Feature: Class feature
     Then Admin sees the "In total there are x classes." on Manage Class page    
     
    # ===============================Add new class scenarios ===============================
-  
+  @wip
   Scenario: Validate the Class Details popup
   	Given Admin is on Manage Class page
     When Admin clicks Add New Class from the Class dropdown
     Then Admin sees the Class Details popup with SAVE and CANCEL button and Close(X) Icon       
-   
+  @wip 
   Scenario: Validate input fields and their text boxes in Class Details form
   	Given Admin is on Manage Class page
     When Admin clicks Add New Class from the Class dropdown
@@ -78,7 +79,7 @@ Feature: Class feature
       | Notes         |
       | Recording     |   
   
-      
+  @wip    
   Scenario Outline: Validate add new class with valid data in only mandatory fields
   	Given Admin is on the Class Details Popup window
     When Admin enters mandatory fields in the Class Details form from "<sheetName>" and <rowNum>
@@ -92,20 +93,20 @@ Feature: Class feature
       | ClassData |     3 | 
       | ClassData |     4 | 
       | ClassData |     5 | 
- 
+ @wip
   Scenario: Validate updation of No of Classes on selecting class dates
   	Given Admin is on the Class Details Popup window
     When Admin selects class dates in date picker 
     	| 03/28/2025 |
 
     Then Admin sees the No of Classes value is added automatically  
-        
+  @wip      
   Scenario: Validate weekend dates are disabled in Class Dates calendar
   	Given Admin is on the Class Details Popup window
     When Admin clicks date picker 
     Then Admin sees weekends dates are disabled in the calender
   
-    
+   @wip 
   Scenario Outline: Validate add new class with valid data in only optional fields
   	Given Admin is on the Class Details Popup window
     When Admin enters only optional fields in the Class Details form from "<sheetName>" and <rowNum>
