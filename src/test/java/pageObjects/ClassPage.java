@@ -299,12 +299,7 @@ public class ClassPage extends BasePage {
 	}
 
 	public void clickAddNewClassButton() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		if (addNewClassButton.isDisplayed()) {
 			addNewClassButton.click();
 		} else {

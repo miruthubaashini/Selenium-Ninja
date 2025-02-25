@@ -1,3 +1,4 @@
+
 package pageObjects;
 import java.awt.image.BufferedImage;
 
@@ -74,8 +75,9 @@ public class LoginPage extends BasePage {
 	}
 
 	public void selectUserRole(String role) {
-		roleDropdown.stream().filter(r->r.getText().equals(role)).forEach(e->e.click());
+		  roleDropdown.stream().filter(r -> r.getText().equals(role)).findFirst().ifPresent(e -> e.click()); 
 	}
+
 
 	public void clickLoginbtnToHome() {
 		try
@@ -206,6 +208,7 @@ public class LoginPage extends BasePage {
 	}
 
 	public String appNameOnLogo() throws IOException, TesseractException {
+
 
 		try
 		{
