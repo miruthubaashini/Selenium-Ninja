@@ -23,12 +23,8 @@ public class BasePage {
 	}
 	
 	//Should go in HomePage.java
-	@FindBy (xpath= "//span[text()='Class']") WebElement classLink;
 	@FindBy (xpath= "//app-header/mat-toolbar/span[1]") WebElement pageTitle;
 	
-	public void clickClass() {
-		classLink.click();
-	}
 	
 	public boolean getPortalTitle(String title) {
 		String actualTitle = pageTitle.getText();

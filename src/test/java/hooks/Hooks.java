@@ -27,12 +27,10 @@ public class Hooks {
 	
 	@Before(order = 0)
 	public void setUp() {
-		// String scenarioName = scenario.getName();
-		// scenario.log("Starting scenario: "+scenarioName);
 		prop = testContext.getConfigReader().initProperties();
 		portalUrl = prop.getProperty("url");
-		browserName = ConfigReader.getBrowserType() != null ? ConfigReader.getBrowserType()
-				: prop.getProperty("browser");
+		//browserName = ConfigReader.getBrowserType() != null ? ConfigReader.getBrowserType(): prop.getProperty("browser");
+		browserName = System.getProperty("browser") !=null ? System.getProperty("browser") : ConfigReader.getBrowserType();
 	}
 
 	@Before(order = 1)
