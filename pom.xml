@@ -140,7 +140,7 @@
 					<properties>
 						<property>
 							<name>dataproviderthreadcount</name>
-							<value>2</value>
+							<value>4</value>
 						</property>
 					</properties>
 				</configuration>

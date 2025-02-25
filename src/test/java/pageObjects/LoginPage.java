@@ -74,7 +74,7 @@ public class LoginPage extends BasePage {
 	}
 
 	public void selectUserRole(String role) {
-		roleDropdown.stream().filter(r->r.getText().equals(role)).forEach(e->e.click());
+		  roleDropdown.stream().filter(r -> r.getText().equals(role)).findFirst().ifPresent(e -> e.click()); 
 	}
 
 	public void clickLoginbtn() {
@@ -109,12 +109,12 @@ public class LoginPage extends BasePage {
 	@SuppressWarnings("deprecation")
 	public String usernamePlaceholder()
 	{
-		return usernameField.getAttribute("data-placeholder");
+		return usernameField.getDomAttribute("data-placeholder");
 	}
 	@SuppressWarnings("deprecation")
 	public String passwordPlaceholder()
 	{
-		return passwordField.getAttribute("data-placeholder");
+		return passwordField.getDomAttribute("data-placeholder");
 	}
 
 	public boolean userStarDisplayed()
@@ -204,7 +204,7 @@ public class LoginPage extends BasePage {
 
 	public String appNameOnLogo() throws IOException, TesseractException {
 
-		String imageURL = appImage.getAttribute("src");
+		String imageURL = appImage.getDomAttribute("src");
 		URL url = new URL(imageURL);
 		BufferedImage image1 = ImageIO.read(url);
 		Tesseract tesseract = new Tesseract();
